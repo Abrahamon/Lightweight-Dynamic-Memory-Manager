@@ -9,23 +9,34 @@
 #define SRC_VHEAP_H_
 
 #include "xTable.h"
+#include "vRef.h"
 #include <stdlib.h>
+#include "garbageCollector.h"
 
 class vHeap{
 
 private:
+	static vHeap* HEAP;
+
 	int size;
 	int overweight;
 	xTable* tabla;
 	void* memoriaFisica;
+	void* ptrNextPosicion;
+	garbageCollector* ColectorDeBasura;
 
 public:
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
-/*vRef*/void vMalloc(int pSize, std::string pType);
+
+	static vHeap* getInstancia();
+
+	vRef* vMalloc(int pSize, std::string pType);
 	void vFree(/*vRef*/);
 	void vFreeAll();
 
+
+	void dumpMemory();
 
 };
 

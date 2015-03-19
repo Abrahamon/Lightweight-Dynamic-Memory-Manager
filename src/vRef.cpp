@@ -17,7 +17,5 @@ vRef::~vRef() {}
 
 void vRef::setID(int pID){ _ID = pID; }
 int vRef::getID(){ return _ID;}
-int* vRef::getMemPos(){
-	_xReference->
-}
+int* vRef::getMemPos(){}
 
