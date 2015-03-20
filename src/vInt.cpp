@@ -6,10 +6,21 @@
  */
 
 #include "vInt.h"
+//vInt::
 
-vInt::vInt(void* pData)  {
+int vInt::getData() {
+	std::cout<<"Hola soy un dato"<<endl;
 
-	// TODO Auto-generated constructor stub
-
+//	int *num = int(*(vObjectData));
+	return 5;
 }
 
+void vInt::operator= (const int& s){
+	//vIntData = &s;
+	setVObjectData((void*)vIntData);
+	std::cout<<*vIntData<<endl;
+	return ;
+}
+ vInt::vInt(){
+
+}
