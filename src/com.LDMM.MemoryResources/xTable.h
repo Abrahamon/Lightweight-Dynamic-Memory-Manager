@@ -7,7 +7,7 @@
 
 #ifndef SRC_XTABLE_H_
 #define SRC_XTABLE_H_
-#include "vLinkedList.h"
+#include "../com.LDMM.DataStructures/vLinkedList.h"
 #include "xEntry.h"
 
 class xTable {

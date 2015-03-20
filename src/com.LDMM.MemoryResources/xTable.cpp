@@ -7,7 +7,8 @@
 #include <stdlib.h>
 #include "xTable.h"
 #include "xEntry.h"
-#include "vLinkedList.h"
+#include "../com.LDMM.DataStructures/vLinkedList.h"
+#include "../Constants.h"
 
 
 /*xTable::xTable() {}
