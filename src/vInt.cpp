@@ -16,7 +16,7 @@ int vInt::getData() {
 }
 
 void vInt::operator= (const int& s){
-	//vIntData = &s;
+	//vIntData = &s;//
 	setVObjectData((void*)vIntData);
 	std::cout<<*vIntData<<endl;
 	return ;
