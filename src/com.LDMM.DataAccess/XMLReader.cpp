@@ -14,12 +14,27 @@ XMLReader::XMLReader() { root = 0; }
 
 XMLReader::~XMLReader() {}
 
+/*
+ * loadFile()
+ * Carga el archivo config.xml que se encuentra en
+ * la carpeta raíz del programa
+ */
 void XMLReader::loadFile(){
 	if(!documento.LoadFile("src/config.xml")){
 		std::cout << "404 XML Not Found" << std::endl;
 	}
 
 }
+/*
+ * getParameter()
+ * TiXmlHandle hDoc(&documento), permite manejar el documento XML
+ * por medio de los elementos (nodos XML), moviendose con un
+ * puntero "pElem".
+ *
+ * Retorna un string con el valor del parámetro especificado. Si
+ * el parámetro ingresado no existe, indica esto mostrando en
+ * consola el error asociado.
+ */
 string XMLReader::getParameter(string pParameter){
 	TiXmlHandle hDoc(&documento);
 	TiXmlElement* pElem;
@@ -29,6 +44,12 @@ string XMLReader::getParameter(string pParameter){
 		cout <<"Failed to load file: No root element"<< endl;
 		documento.Clear();
 	}
-	pElem = root->FirstChildElement(pParameter);
-	return pElem->GetText();
+	if(pElem = root->FirstChildElement(pParameter)){
+		return pElem->GetText();
+	}
+	else{
+		return "Error: Not such parameter. Please check your entry";
+	}
+
+
 }

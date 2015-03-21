@@ -10,8 +10,19 @@
 #include <tinyxml.h>
 #include <string>
 
+/**
+ * XMLReader
+ * Clase que permite la lectura de archivos XML simples.
+ *
+ * @author Fabian Solano Madriz
+ * @date 03/20/2015
+ */
 class XMLReader {
 private:
+	/**
+	 * TiXmlDocument documento: carga el documento XML especificado
+	 * TiXmlElement* root: Nodo XML cargado inicialmente
+	 */
 	TiXmlDocument documento;
 	TiXmlElement* root;
 public:
