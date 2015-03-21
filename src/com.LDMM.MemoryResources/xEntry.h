@@ -25,6 +25,8 @@ public:
 	xEntry(int pID, int pSize, int pOffset, string pType);
 	virtual ~xEntry();
 
+	int getMemPos();
+
 	int getSize();
 	int getOffset();
 	int getReferenceCounter();
