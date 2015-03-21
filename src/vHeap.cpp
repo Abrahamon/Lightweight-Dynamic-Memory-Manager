@@ -12,11 +12,12 @@ vHeap* vHeap::HEAP = 0;
 vHeap::vHeap(int pSize, int pOverweight)
 {
 	this->memoriaFisica = calloc(1,pSize);
-	this->ptrNextPosicion = memoriaFisica;
+	this->offsetVHeap = 0;
 	this->overweight = pOverweight;
 	this->size = pSize;
 	this->tabla = new xTable();
 	this->ColectorDeBasura = new garbageCollector();
+	this->zonaCritica = 0;
 };
 
 
@@ -41,12 +42,13 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 
 	if(pType == "vInt"){
 		//if(size-ptrNextPosicion)
-			cout <<"estoy ingresando un int"<<ptrNextPosicion<<"\n";
+			//cout <<"estoy ingresando un int"<<offsetVHeap<<"\n";
 	}
 	else if(pType == "vChar"){}
 	else if(pType == "vFloat"){}
 	else if(pType == "vLong"){}
 	else{std::cout <<"vHeap.vMalloc con pType erroneo";};
+//	tabla->addEntry(pSize,   , pType);
 };
 
 void vHeap::vFree(){};

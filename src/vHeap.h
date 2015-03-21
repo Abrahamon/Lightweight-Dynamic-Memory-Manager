@@ -22,8 +22,9 @@ private:
 	int overweight;
 	xTable* tabla;
 	void* memoriaFisica;
-	void* ptrNextPosicion;
+	void* offsetVHeap;
 	garbageCollector* ColectorDeBasura;
+	bool zonaCritica;
 
 public:
 	vHeap(int pSize, int pOverweight);
