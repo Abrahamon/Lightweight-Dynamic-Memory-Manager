@@ -44,3 +44,8 @@ int xTable::addEntry(int pSize,void* pOffset,string pType){
 	_ObjectsList->insertTail(temp);
 	return pID;
 }
+
+vLinkedList<xEntry*>* xTable::getList()
+{
+	return this->_ObjectsList;
+}
