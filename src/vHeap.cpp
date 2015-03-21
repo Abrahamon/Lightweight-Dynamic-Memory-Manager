@@ -40,7 +40,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 {
 
 	if(pType == "vInt"){
-		if( true)
+		//if(size-ptrNextPosicion)
 			cout <<"estoy ingresando un int"<<ptrNextPosicion<<"\n";
 	}
 	else if(pType == "vChar"){}
@@ -52,7 +52,10 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 void vHeap::vFree(){};
 void vHeap::vFreeAll(){};
 
-void vHeap::d
+void vHeap::dumpMemory()
+{
+
+}
 
 
 
