@@ -5,7 +5,7 @@
  *      Author: abrahamon
  */
 
-#include "garbageCollector.h"
+#include "../com.LDMM.MemoryManager/garbageCollector.h"
 
 garbageCollector::garbageCollector() {
 	// TODO Auto-generated constructor stub

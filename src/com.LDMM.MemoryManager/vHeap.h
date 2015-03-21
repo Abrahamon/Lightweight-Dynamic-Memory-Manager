@@ -8,10 +8,11 @@
 #ifndef SRC_VHEAP_H_
 #define SRC_VHEAP_H_
 
-#include "xTable.h"
-#include "vRef.h"
+#include "../com.LDMM.MemoryResources/xTable.h"
+#include "../com.LDMM.MemoryResources/vRef.h"
 #include <stdlib.h>
-#include "garbageCollector.h"
+
+#include "../com.LDMM.MemoryManager/garbageCollector.h"
 
 class vHeap{
 

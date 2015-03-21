@@ -5,7 +5,7 @@
  *      Author: abrahamon
  */
 
-#include "vHeap.h"
+#include "../com.LDMM.MemoryManager/vHeap.h"
 
 vHeap* vHeap::HEAP = 0;
 
@@ -41,8 +41,14 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 {
 
 	if(pType == "vInt"){
+<<<<<<< HEAD:src/vHeap.cpp
 		//if(size-ptrNextPosicion)
 			//cout <<"estoy ingresando un int"<<offsetVHeap<<"\n";
+=======
+		if( true){
+			//cout <<"estoy ingresando un int"<<ptrNextPosicion<<"\n";
+		}
+>>>>>>> f593d0a6354e07c2692216b744d54330796daab9:src/com.LDMM.MemoryManager/vHeap.cpp
 	}
 	else if(pType == "vChar"){}
 	else if(pType == "vFloat"){}
@@ -54,10 +60,13 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 void vHeap::vFree(){};
 void vHeap::vFreeAll(){};
 
+<<<<<<< HEAD:src/vHeap.cpp
 void vHeap::dumpMemory()
 {
 
 }
 
+=======
+>>>>>>> f593d0a6354e07c2692216b744d54330796daab9:src/com.LDMM.MemoryManager/vHeap.cpp
 
 
