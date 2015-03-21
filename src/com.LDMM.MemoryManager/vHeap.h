@@ -10,22 +10,22 @@
 
 #include "../com.LDMM.MemoryResources/xTable.h"
 #include "../com.LDMM.MemoryResources/vRef.h"
-#include <stdlib.h>
-
 #include "../com.LDMM.MemoryManager/garbageCollector.h"
+#include "../Constants.h"
+#include <stdlib.h>
+#include <unistd.h>
 
 class vHeap{
 
 private:
 	static vHeap* HEAP;
 
-	int size;
-	int overweight;
-	xTable* tabla;
-	void* memoriaFisica;
-	void* offsetVHeap;
+	int tamanovHeap;
+	xTable* tablaMetadatos;
+	void* ptrInicioMemoria;
+	void* ptrUltimaMemoriaLibre;
 	garbageCollector* ColectorDeBasura;
-	bool zonaCritica;
+	bool zonaCritica;//todos los metodos al final deben asignarle false
 
 public:
 	vHeap(int pSize, int pOverweight);

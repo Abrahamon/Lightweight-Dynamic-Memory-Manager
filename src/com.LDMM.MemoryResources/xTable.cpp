@@ -34,7 +34,7 @@ xEntry* xTable::getObjectInfo(int pID){
 	return tmpEntry->getData();
 }
 
-int xTable::addEntry(int pSize,int pOffset,string pType){
+int xTable::addEntry(int pSize,void* pOffset,string pType){
 	int pID = _ObjectsList->getLength();
 	/*int* pointer = (int*)malloc(1 * sizeof(xEntry));
 	xEntry temp = new xEntry(pID,pSize,pOffset,pType);

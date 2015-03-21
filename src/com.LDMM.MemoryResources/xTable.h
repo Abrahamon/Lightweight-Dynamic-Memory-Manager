@@ -21,7 +21,7 @@ public:
 	//virtual ~xTable();
 	static xTable* getInstance();
 	xEntry* getObjectInfo(int pID);
-	int addEntry(int pSize,int pOffset,string pType);
+	int addEntry(int pSize,void* pOffset,string pType);
 
 };
 

@@ -11,18 +11,22 @@ vHeap* vHeap::HEAP = 0;
 
 vHeap::vHeap(int pSize, int pOverweight)
 {
-	this->memoriaFisica = calloc(1,pSize);
-	this->offsetVHeap = 0;
-	this->overweight = pOverweight;
-	this->size = pSize;
-	this->tabla = new xTable();
+	if(vDEBUG){
+		std::cout << "creo un vHeap de : "<<pSize<<" bytes"<<"\n";
+		std:: cout <<"\n";
+	}
+	this->tamanovHeap = pSize;
+	this->ptrInicioMemoria = calloc(1,pSize);
+	this->ptrUltimaMemoriaLibre = ptrInicioMemoria;
+	this->tablaMetadatos = new xTable();
 	this->ColectorDeBasura = new garbageCollector();
 	this->zonaCritica = 0;
 };
 
 
 vHeap::~vHeap(){
-	free(this->memoriaFisica);
+	this->ptrUltimaMemoriaLibre = 0;
+	free(this->ptrInicioMemoria);
 };
 
 vHeap* vHeap::getInstancia()
@@ -31,7 +35,7 @@ vHeap* vHeap::getInstancia()
 	{
 		return HEAP;
 	}else{
-		HEAP = new vHeap(200,0);
+		HEAP = new vHeap(SIZE,0);
 
 		return HEAP;
 	}
@@ -39,34 +43,47 @@ vHeap* vHeap::getInstancia()
 
 vRef* vHeap::vMalloc(int pSize, std::string pType)
 {
-
-	if(pType == "vInt"){
-<<<<<<< HEAD:src/vHeap.cpp
-		//if(size-ptrNextPosicion)
-			//cout <<"estoy ingresando un int"<<offsetVHeap<<"\n";
-=======
-		if( true){
-			//cout <<"estoy ingresando un int"<<ptrNextPosicion<<"\n";
-		}
->>>>>>> f593d0a6354e07c2692216b744d54330796daab9:src/com.LDMM.MemoryManager/vHeap.cpp
+	while(zonaCritica){				//esperar hasta que se libere de zona critica
+		usleep(medioDeSegundoMili);
 	}
+	this->zonaCritica = true;
+
+	long b = reinterpret_cast<long>(ptrInicioMemoria);
+	long a = reinterpret_cast<long>(ptrUltimaMemoriaLibre);
+	int memLibre = tamanovHeap-b+a;
+
+	if(vDEBUG){
+		std:: cout<< "  llamada a vMaloc:" <<"\n";
+		cout<<"ptr Inicio de memoria :"<<b<<"\n";
+		cout<<"ptr Fin de memoria :"<<a<<"\n";
+		cout<<memLibre <<" bytes de memoria libre  \n";
+	}
+
+	if(memLibre >= pSize)
+	{
+		if(vDEBUG){
+			cout <<"hay espacio suficiente para un "<<pType<<"\n";
+		}
+		tablaMetadatos->addEntry(pSize,ptrUltimaMemoriaLibre,pType);
+	}
+
+	if(pType == "vInt"){}
 	else if(pType == "vChar"){}
 	else if(pType == "vFloat"){}
 	else if(pType == "vLong"){}
 	else{std::cout <<"vHeap.vMalloc con pType erroneo";};
 //	tabla->addEntry(pSize,   , pType);
+	this->zonaCritica = false;
+
 };
 
 void vHeap::vFree(){};
 void vHeap::vFreeAll(){};
 
-<<<<<<< HEAD:src/vHeap.cpp
 void vHeap::dumpMemory()
 {
 
 }
 
-=======
->>>>>>> f593d0a6354e07c2692216b744d54330796daab9:src/com.LDMM.MemoryManager/vHeap.cpp
 
 
