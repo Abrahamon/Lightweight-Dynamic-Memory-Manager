@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<root>
+    <Size> 100 </Size>
+    <Overweight> 50 </Overweight>
+    <dump_frecuency> 10 </dump_frecuency>
+    <vdebug> true </vdebug>
+    <vdebug-file-path> src/ </vdebug-file-path>
+    <gc_frecuency> 25 </gc_frecuency>
+</root>
