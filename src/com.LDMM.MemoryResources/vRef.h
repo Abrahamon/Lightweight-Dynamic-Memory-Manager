@@ -7,14 +7,15 @@
 
 #ifndef SRC_VREF_H_
 #define SRC_VREF_H_
-#include "src/xEntry.h"
+#include "xEntry.h"
+//#include "src/xEntry.h"
 
 class vRef {
 private:
 	int _ID;
-	xEntry* _xReference;
+//	xEntry* _xReference;
 public:
-	vRef(int pID, xEntry* pRef);
+	vRef(int pID);
 	virtual ~vRef();
 
 	void setID(int pID);

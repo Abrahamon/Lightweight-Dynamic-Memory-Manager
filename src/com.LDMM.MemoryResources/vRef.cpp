@@ -7,9 +7,9 @@
 
 #include "vRef.h"
 
-vRef::vRef(int pID, xEntry* pRef) {
+vRef::vRef(int pID) {
 	_ID = pID;
-	_xReference = pRef;
+//	_xReference = pRef;
 
 }
 
@@ -17,7 +17,5 @@ vRef::~vRef() {}
 
 void vRef::setID(int pID){ _ID = pID; }
 int vRef::getID(){ return _ID;}
-int* vRef::getMemPos(){
-	_xReference->
-}
+int* vRef::getMemPos(){}
 
