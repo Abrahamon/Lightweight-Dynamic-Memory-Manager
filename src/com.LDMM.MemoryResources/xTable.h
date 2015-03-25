@@ -17,12 +17,12 @@ private:
 	static int _CurrOffset;
 
 public:
-	//xTable();
-	//virtual ~xTable();
+	xTable();
+	~xTable();
 	static xTable* getInstance();
 	xEntry* getObjectInfo(int pID);
-	int addEntry(int pSize,int pOffset,string pType);
-
+	int addEntry(int pSize,void* pOffset,string pType);
+	vLinkedList<xEntry*>* getList();
 };
 
 #endif /* SRC_XTABLE_H_ */

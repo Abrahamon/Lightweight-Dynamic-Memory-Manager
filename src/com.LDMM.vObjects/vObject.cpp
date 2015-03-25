@@ -29,7 +29,7 @@ void vObject::getVObjectData() {
 		std::cout <<*(long*)vObjectData<<endl;
 		break;
 	case 'F' :
-		std::cout <<*(float*)vObjectData<<endl;
+		std::cout <<*(float*)vObjectData<<endl;// No lo puedo convertir a float
 		break;
 	case 'B' :
 		std::cout<<*(bool*)vObjectData<<endl;

@@ -10,34 +10,37 @@
 
 #include "../com.LDMM.MemoryResources/xTable.h"
 #include "../com.LDMM.MemoryResources/vRef.h"
+#include "../Constants.h"
+#include "../com.LDMM.DataStructures/vLinkedList.h"
+#include "../com.LDMM.DataStructures/vNode.h"
 #include <stdlib.h>
-
-#include "../com.LDMM.MemoryManager/garbageCollector.h"
+#include <unistd.h>
 
 class vHeap{
 
 private:
+
 	static vHeap* HEAP;
+	int tamanovHeap;
+	xTable* tablaMetadatos;
+	void* ptrInicioMemoria;
+	void* ptrUltimaMemoriaLibre;
+	bool zonaCritica;//todos los metodos al final deben asignarle false
 
-	int size;
-	int overweight;
-	xTable* tabla;
-	void* memoriaFisica;
-	void* ptrNextPosicion;
-	garbageCollector* ColectorDeBasura;
-
-public:
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
-
-	static vHeap* getInstancia();
-
-	vRef* vMalloc(int pSize, std::string pType);
 	void vFree(/*vRef*/);
 	void vFreeAll();
-
-
 	void dumpMemory();
+	void garbageCollector();
+	void desfragmentar();
+	void control(); //hilo que controla fragmentacion, garbage colector y dump de memoria.
+
+public:
+	static vHeap* getInstancia();
+	vRef* vMalloc(int pSize, std::string pType);
+	void vFree(vRef* pRef);
+
 
 };
 
