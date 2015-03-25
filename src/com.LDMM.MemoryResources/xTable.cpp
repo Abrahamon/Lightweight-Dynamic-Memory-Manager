@@ -11,8 +11,8 @@
 #include "../Constants.h"
 
 
-/*xTable::xTable() {}
-xTable::~xTable() {}*/
+xTable::xTable() {}
+xTable::~xTable() {}
 
 xTable* xTable::_xHashTable = 0;
 vLinkedList<xEntry*>* xTable::_ObjectsList;
