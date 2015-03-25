@@ -6,9 +6,10 @@
  */
 
 #include "../com.LDMM.MemoryManager/vHeap.h"
+#include <stdio.h>
 
 vHeap* vHeap::HEAP = 0;
-
+bool vHeap::vDEBUG = true;
 vHeap::vHeap(int pSize, int pOverweight)
 {
 	if(vDEBUG){
@@ -34,7 +35,7 @@ vHeap* vHeap::getInstancia()
 	{
 		return HEAP;
 	}else{
-		HEAP = new vHeap(SIZE,0);
+		//HEAP = new vHeap(SIZE,0);
 
 		return HEAP;
 	}
@@ -42,7 +43,7 @@ vHeap* vHeap::getInstancia()
 
 void vHeap::vFreeAll(){
 	while(zonaCritica){			// en caso de que otro hilo esta tratando el vHeap
-			usleep(medioDeSegundoMili);
+			//usleep(medioDeSegundoMili);
 	}
 	zonaCritica = true;
 	for(Node<xEntry*>* iterador=this->tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
@@ -65,7 +66,7 @@ void vHeap::garbageCollector()
 {
 	while(zonaCritica)
 	{
-		usleep(medioDeSegundoMili);
+		//usleep(medioDeSegundoMili);
 	}
 	zonaCritica = true;
 	for(Node<xEntry*>* iterador=this->tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
@@ -86,7 +87,7 @@ void vHeap::garbageCollector()
 void vHeap::control()			//hilo para metodo de control
 {
 	while(zonaCritica){			// en caso de que otro hilo esta tratando el vHeap
-		usleep(medioDeSegundoMili);
+		//usleep(medioDeSegundoMili);
 	}							//cada metodo siguiente tiene zonas criticas individuales
 	this->garbageCollector();
 	this->desfragmentar();
@@ -99,7 +100,7 @@ void vHeap::control()			//hilo para metodo de control
 vRef* vHeap::vMalloc(int pSize, std::string pType)
 {
 	while(zonaCritica){				//esperar hasta que se libere de zona critica
-		usleep(medioDeSegundoMili);
+		//usleep(medioDeSegundoMili);
 	}
 	this->zonaCritica = true;
 
