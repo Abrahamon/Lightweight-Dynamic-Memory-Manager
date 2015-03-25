@@ -5,23 +5,50 @@
  *      Author: tvlenin
  */
 #include "vObject.h"
+#include <typeinfo>
 
-//void* vObject::vObjectData=0;
+
 vObject::vObject() {
 
-	vObjectData=0;
+
 }
 
 void vObject::getVObjectData() {
-	//return *vObjectData;
+	string sOption = getVObjectType();
+	switch(sOption[0]){
+	case 'I' :
+		std::cout <<*(int*)vObjectData<<endl;
+		break;
+	case 'S' :
+		std::cout <<*(string*)vObjectData<<endl;
+		break;
+	case 'C' :
+		std::cout <<*(char*)vObjectData<<endl;
+		break;
+	case 'L' :
+		std::cout <<*(long*)vObjectData<<endl;
+		break;
+	case 'F' :
+		std::cout <<*(float*)vObjectData<<endl;
+		break;
+	case 'B' :
+		std::cout<<*(bool*)vObjectData<<endl;
+		break;
+
+
+
+	}
 }
 
 void vObject::setVObjectData(void* pData) {
-	std::cout<<"entra al metodo"<<endl;
 	vObjectData = pData;
-	std::cout<<"el dato ingresado es "<< vObjectData<<endl;
+
 }
 
 string vObject::getVObjectType() {
-	return "hola";
+	return vObjectType;
+}
+
+void vObject::setVObjectType(string pType) {
+	vObjectType = pType;
 }
