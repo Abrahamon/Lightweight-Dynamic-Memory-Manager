@@ -7,8 +7,10 @@
 
 #ifndef SRC_CONSTANTS_H_
 #define SRC_CONSTANTS_H_
+#include "../src/com.LDMM.DataAccess/XMLReader.h"
 #include <string>
 
+class Constants{
 const int SIZE = 200; //size for the vHeap
 const int OVERWEIGHT = 0;
 const int DUMP_FRECUENCY= 0;
@@ -31,6 +33,6 @@ const std::string TYPE_BOOL = "Bool";
 const int cuartoDeSegundoMili =250000;
 const int medioDeSegundoMili =500000;
 const int SegundoMili =1000000;
-
+};
 
 #endif /* SRC_CONSTANTS_H_ */

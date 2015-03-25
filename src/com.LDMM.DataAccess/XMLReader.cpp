@@ -35,7 +35,8 @@ void XMLReader::loadFile(){
  * el parámetro ingresado no existe, indica esto mostrando en
  * consola el error asociado.
  */
-string XMLReader::getParameter(string pParameter){
+static string XMLReader::getParameter(string pParameter){
+
 	TiXmlHandle hDoc(&documento);
 	TiXmlElement* pElem;
 	TiXmlHandle hRoot(0);
