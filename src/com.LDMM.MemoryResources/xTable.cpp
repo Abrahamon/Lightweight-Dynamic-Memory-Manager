@@ -11,8 +11,8 @@
 #include "../Constants.h"
 
 
-/*xTable::xTable() {}
-xTable::~xTable() {}*/
+xTable::xTable() {}
+xTable::~xTable() {}
 
 xTable* xTable::_xHashTable = 0;
 vLinkedList<xEntry*>* xTable::_ObjectsList;
@@ -20,6 +20,7 @@ vLinkedList<xEntry*>* xTable::_ObjectsList;
 xTable* xTable::getInstance(){
 	if(_xHashTable == 0){
 		static xTable self;
+
 		_xHashTable = &self;
 		_ObjectsList = new vLinkedList<xEntry*>;
 	}

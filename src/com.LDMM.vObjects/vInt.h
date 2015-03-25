@@ -8,6 +8,7 @@
 #ifndef VINT_H_
 #define VINT_H_
 
+#include "../Constants.h"
 #include "vObject.h"
 #include <iostream>
 using namespace std;
@@ -15,8 +16,7 @@ class vInt: public vObject {
 public:
 	vInt();
 	void operator = (const int& s);
-	int *vIntData;
-	int getData();
+	int vIntData;
 };
 
 #endif /* VINT_H_ */

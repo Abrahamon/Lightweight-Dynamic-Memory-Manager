@@ -6,21 +6,15 @@
  */
 
 #include "vInt.h"
-//vInt::
-
-int vInt::getData() {
-	std::cout<<"Hola soy un dato"<<endl;
-
-//	int *num = int(*(vObjectData));
-	return 5;
-}
 
 void vInt::operator= (const int& s){
-	//vIntData = &s;//
-	setVObjectData((void*)vIntData);
-	std::cout<<*vIntData<<endl;
+	vIntData = s;
+	setVObjectData((void*)&vIntData);
+	setVObjectType(TYPE_INT);
 	return ;
 }
  vInt::vInt(){
 
 }
+
+
