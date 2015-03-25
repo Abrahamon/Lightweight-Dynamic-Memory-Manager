@@ -17,11 +17,12 @@ public:
 	void getVObjectData();
 	void setVObjectData(void * pData);
 	string getVObjectType();
+	void setVObjectType(string pType);
 private:
 
 	string vObjectType ;
-	void* vObjectData;// = NULL;
-	//void *pData;
+	void * vObjectData;
+
 
 
 

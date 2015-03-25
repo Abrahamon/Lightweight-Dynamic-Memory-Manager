@@ -20,6 +20,7 @@ vLinkedList<xEntry*>* xTable::_ObjectsList;
 xTable* xTable::getInstance(){
 	if(_xHashTable == 0){
 		static xTable self;
+
 		_xHashTable = &self;
 		_ObjectsList = new vLinkedList<xEntry*>;
 	}
