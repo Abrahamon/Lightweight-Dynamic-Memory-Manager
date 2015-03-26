@@ -22,7 +22,6 @@ vHeap::vHeap(int pSize, int pOverweight)
 	this->zonaCritica = 0;
 };
 
-
 vHeap::~vHeap(){
 	this->ptrUltimaMemoriaLibre = 0;
 	free(this->ptrInicioMemoria);
@@ -54,11 +53,20 @@ void vHeap::vFreeAll(){
 	if (vDEBUG)
 	{
 		cout<<"vHeap.vFreeAll 	vacie el vHeap por completo \n";
-	}
-ori
+	};
+
 	zonaCritica = false;
 };
-void vHeap::dumpMemory(){};
+
+void vHeap::dumpMemory()
+{
+	void* posiciones=ptrInicioMemoria;
+	for(int i=0;i< tamanovHeap;i++){
+		char* tmp=(char*)(posiciones+i);
+
+	}
+	};
+
 void vHeap::desfragmentar(){};
 
 void vHeap::garbageCollector()
@@ -103,29 +111,38 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 	}
 	this->zonaCritica = true;
 
-	long b = reinterpret_cast<long>(ptrInicioMemoria);
-	long a = reinterpret_cast<long>(ptrUltimaMemoriaLibre);
-	int memLibre = tamanovHeap-b+a;
+	int b = reinterpret_cast<intptr_t>(ptrInicioMemoria);
+	int a = reinterpret_cast<intptr_t>(ptrUltimaMemoriaLibre);
+	int memLibre = tamanovHeap-(a-b);
 
 	if(vDEBUG){
-		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
+		cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
 		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<b<<"\n";
 		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<a<<"\n";
 		cout<<"vHeap.vMalloc	"<< memLibre	<<" bytes de memoria libre  \n";
+		cout<<"vHeap.vMalloc	"<<this->tamanovHeap<<" bytes de memoria real\n";
 	}
 
 	if(memLibre >= pSize)
 	{
 		if(vDEBUG){
 			cout <<"vHeap.vMalloc	Si hay espacio suficiente para un "<<pType<<"\n";
+
 		}
 
 		int id =tablaMetadatos->addEntry(pSize,ptrUltimaMemoriaLibre,pType);
-
-		cout<<"No hay flujo hasta este pt \n";// <|-----------------------------*
-
 		vRef* referencia = new vRef(id);
-		this->ptrUltimaMemoriaLibre = ptrUltimaMemoriaLibre+pSize;
+		ptrUltimaMemoriaLibre = reinterpret_cast<void*>(reinterpret_cast<intptr_t>(ptrUltimaMemoriaLibre)+pSize);
+
+		if(vDEBUG)
+		{
+			cout<<"Despues de todo en vMalloc \n";
+			cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<reinterpret_cast<intptr_t>(ptrInicioMemoria)<<"\n";
+			cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<reinterpret_cast<intptr_t>(ptrUltimaMemoriaLibre)<<"\n";
+			cout<<"vHeap.vMalloc	"<<-tamanovHeap+reinterpret_cast<intptr_t>(ptrUltimaMemoriaLibre)-reinterpret_cast<intptr_t>(ptrInicioMemoria)	<<" bytes de memoria libre  \n";
+			cout<<"vHeap.vMalloc	"<<this->tamanovHeap<<" bytes de tamaño real \n";
+			cout<<"\n";
+		}
 
 		this->zonaCritica = false;
 		return referencia;
@@ -134,6 +151,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 		if(vDEBUG)
 		{
 			cout<< "Los "<<pSize<<" bytes solicitados no caben en: "<<tamanovHeap<< "\n";
+
 		}
 		this->zonaCritica = false;
 		return 0;
