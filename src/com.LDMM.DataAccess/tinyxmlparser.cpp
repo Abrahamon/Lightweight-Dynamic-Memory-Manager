@@ -1,3 +1,4 @@
+#include <iostream>
 /*
 www.sourceforge.net/projects/tinyxml
 Original code by Lee Thomason (www.grinninglizard.com)
@@ -1379,7 +1380,8 @@ const char* TiXmlComment::Parse( const char* p, TiXmlParsingData* data, TiXmlEnc
 	// Keep all the white space.
 	while (	p && *p && !StringEqual( p, endTag, false, encoding ) )
 	{
-		value.append( p, 1 );
+		//value.append(p,1);
+		std::cout << "revisar tinyxml  linea 1383"<<"\n";
 		++p;
 	}
 	if ( p && *p ) 
@@ -1631,8 +1633,11 @@ const char* TiXmlDeclaration::Parse( const char* p, TiXmlParsingData* data, TiXm
 bool TiXmlText::Blank() const
 {
 	for ( unsigned i=0; i<value.length(); i++ )
-		if ( !IsWhiteSpace( value[i] ) )
+		//if (!this->IsWhiteSpaceCondensed(value[i]))
+		if (!this->IsWhiteSpaceCondensed())
+		{
 			return false;
+		}
 	return true;
 }
 

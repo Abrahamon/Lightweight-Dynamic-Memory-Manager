@@ -7,9 +7,14 @@
 
 #include "vInt.h"
 
-vInt::vInt(void* pData)  {
-
-	// TODO Auto-generated constructor stub
+void vInt::operator= (const int& s){
+	vIntData = s;
+	setVObjectData((void*)&vIntData);
+	setVObjectType(TYPE_INT);
+	return ;
+}
+ vInt::vInt(){
 
 }
+
 

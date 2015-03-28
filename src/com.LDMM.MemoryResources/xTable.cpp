@@ -11,8 +11,8 @@
 #include "../Constants.h"
 
 
-/*xTable::xTable() {}
-xTable::~xTable() {}*/
+xTable::xTable() {}
+xTable::~xTable() {}
 
 xTable* xTable::_xHashTable = 0;
 vLinkedList<xEntry*>* xTable::_ObjectsList;
@@ -20,6 +20,7 @@ vLinkedList<xEntry*>* xTable::_ObjectsList;
 xTable* xTable::getInstance(){
 	if(_xHashTable == 0){
 		static xTable self;
+
 		_xHashTable = &self;
 		_ObjectsList = new vLinkedList<xEntry*>;
 	}
@@ -34,7 +35,7 @@ xEntry* xTable::getObjectInfo(int pID){
 	return tmpEntry->getData();
 }
 
-int xTable::addEntry(int pSize,int pOffset,string pType){
+int xTable::addEntry(int pSize,void* pOffset,string pType){
 	int pID = _ObjectsList->getLength();
 	/*int* pointer = (int*)malloc(1 * sizeof(xEntry));
 	xEntry temp = new xEntry(pID,pSize,pOffset,pType);
@@ -43,4 +44,9 @@ int xTable::addEntry(int pSize,int pOffset,string pType){
 	xEntry* temp = new xEntry(pID,pSize,pOffset,pType);
 	_ObjectsList->insertTail(temp);
 	return pID;
+}
+
+vLinkedList<xEntry*>* xTable::getList()
+{
+	return this->_ObjectsList;
 }

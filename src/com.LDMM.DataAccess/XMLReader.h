@@ -7,6 +7,7 @@
 
 #ifndef SRC_COM_LDMM_DATAACCESS_XMLREADER_H_
 #define SRC_COM_LDMM_DATAACCESS_XMLREADER_H_
+//#include <src/tinyxml.h>
 #include <tinyxml.h>
 #include <string>
 
@@ -29,7 +30,7 @@ public:
 	XMLReader();
 	virtual ~XMLReader();
 	void loadFile();
-	std::string getParameter(std::string pParameter);
+	static std::string getParameter(std::string pParameter);
 };
 
 #endif /* SRC_COM_LDMM_DATAACCESS_XMLREADER_H_ */

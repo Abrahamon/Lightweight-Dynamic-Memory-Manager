@@ -8,11 +8,15 @@
 #ifndef VINT_H_
 #define VINT_H_
 
+#include "../Constants.h"
 #include "vObject.h"
-
+#include <iostream>
+using namespace std;
 class vInt: public vObject {
 public:
-	vInt(void * pData);
+	vInt();
+	void operator = (const int& s);
+	int vIntData;
 };
 
 #endif /* VINT_H_ */

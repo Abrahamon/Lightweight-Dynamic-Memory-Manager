@@ -13,9 +13,9 @@
 class vRef {
 private:
 	int _ID;
-	xEntry* _xReference;
+//	xEntry* _xReference;
 public:
-	vRef(int pID, xEntry* pRef);
+	vRef(int pID);
 	virtual ~vRef();
 
 	void setID(int pID);
