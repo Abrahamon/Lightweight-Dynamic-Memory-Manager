@@ -10,7 +10,7 @@
 
 using namespace std;
 
-XMLReader::XMLReader() { root = 0; }
+XMLReader::XMLReader() { root = 0;}
 
 XMLReader::~XMLReader() {}
 
@@ -35,8 +35,8 @@ void XMLReader::loadFile(){
  * el parámetro ingresado no existe, indica esto mostrando en
  * consola el error asociado.
  */
-static string XMLReader::getParameter(string pParameter){
-
+ string XMLReader::getParameter(string pParameter){
+	//loadFile();
 	TiXmlHandle hDoc(&documento);
 	TiXmlElement* pElem;
 	TiXmlHandle hRoot(0);

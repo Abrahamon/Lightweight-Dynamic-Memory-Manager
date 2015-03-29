@@ -30,7 +30,7 @@ public:
 	XMLReader();
 	virtual ~XMLReader();
 	void loadFile();
-	static std::string getParameter(std::string pParameter);
+	std::string getParameter(std::string pParameter);
 };
 
 #endif /* SRC_COM_LDMM_DATAACCESS_XMLREADER_H_ */

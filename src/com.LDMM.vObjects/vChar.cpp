@@ -7,11 +7,12 @@
 
 #include "vChar.h"
 
-void vChar::operator= (const char& s){
+vRef*  vChar::operator= (const char& s){
 	vCharData = s;
 	setVObjectData((void*)&vCharData);
 	setVObjectType(TYPE_CHAR);
-	return ;
+	return vHeap::getInstancia()->vMalloc(1,TYPE_CHAR);
+	//return ;
 }
  vChar::vChar(){
 

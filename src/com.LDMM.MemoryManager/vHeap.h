@@ -27,7 +27,7 @@ private:
 	int tamanovHeap;
 	xTable* tablaMetadatos;
 	void* ptrInicioMemoria;
-	void* ptrUltimaMemoriaLibre;
+
 	bool zonaCritica;//todos los metodos al final deben asignarle false
 	static bool vDEBUG;
 
@@ -41,8 +41,9 @@ private:
 	void control(); //hilo que controla fragmentacion, garbage colector y dump de memoria.
 
 public:
+	void* ptrUltimaMemoriaLibre;
 	static vHeap* getInstancia();
-	vRef* vMalloc(int pSize, std::string pType);
+	vRef * vMalloc(int pSize, std::string pType);
 	void vFree(vRef* pRef);
 
 

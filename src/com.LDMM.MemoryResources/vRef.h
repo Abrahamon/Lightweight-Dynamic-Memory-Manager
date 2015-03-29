@@ -8,13 +8,15 @@
 #ifndef SRC_VREF_H_
 #define SRC_VREF_H_
 #include "xEntry.h"
+#include "../com.LDMM.vObjects/vObject.h"
 //#include "src/xEntry.h"
 
-class vRef {
-private:
+class vRef: public vObject {
+protected:
 	int _ID;
 //	xEntry* _xReference;
 public:
+	vRef();
 	vRef(int pID);
 	virtual ~vRef();
 

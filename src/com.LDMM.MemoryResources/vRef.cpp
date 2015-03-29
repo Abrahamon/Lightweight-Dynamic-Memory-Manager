@@ -12,6 +12,9 @@ vRef::vRef(int pID) {
 //	_xReference = pRef;
 
 }
+vRef::vRef(){
+
+}
 
 vRef::~vRef() {}
 
