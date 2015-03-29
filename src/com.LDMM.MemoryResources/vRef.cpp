@@ -7,6 +7,9 @@
 
 #include "vRef.h"
 
+vRef::vRef(){
+
+};
 vRef::vRef(int pID) {
 	_ID = pID;
 //	_xReference = pRef;

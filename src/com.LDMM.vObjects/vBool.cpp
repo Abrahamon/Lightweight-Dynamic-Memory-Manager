@@ -14,7 +14,6 @@ void vBool::operator= (const bool& s){
 	return ;
 }
  vBool::vBool(){
-
 }
 
 

@@ -35,7 +35,7 @@ void XMLReader::loadFile(){
  * el parámetro ingresado no existe, indica esto mostrando en
  * consola el error asociado.
  */
-string XMLReader::getParameter(string pParameter){
+const char* XMLReader::getParameter(string pParameter){
 	TiXmlHandle hDoc(&documento);
 	TiXmlElement* pElem;
 	TiXmlHandle hRoot(0);
@@ -44,7 +44,9 @@ string XMLReader::getParameter(string pParameter){
 		cout <<"Failed to load file: No root element"<< endl;
 		documento.Clear();
 	}
-	if(pElem = root->FirstChildElement(pParameter)){
+	if(root->FirstChildElement(pParameter) != NULL){
+		pElem = root->FirstChildElement(pParameter);
+		cout<< pElem->GetText()<<" xml 49 \n";
 		return pElem->GetText();
 	}
 	else{

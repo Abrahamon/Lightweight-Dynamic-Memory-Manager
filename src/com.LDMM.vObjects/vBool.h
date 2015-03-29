@@ -10,10 +10,12 @@
 
 
 #include "../Constants.h"
-#include "vObject.h"
+#include "../com.LDMM.MemoryResources/vRef.h"
 #include <iostream>
+
 using namespace std;
-class vBool: public vObject {
+
+class vBool: public vRef {
 public:
 	vBool();
 	void operator = (const bool& s);
