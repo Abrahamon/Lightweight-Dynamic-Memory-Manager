@@ -35,23 +35,4 @@ void XMLReader::loadFile(){
  * el parámetro ingresado no existe, indica esto mostrando en
  * consola el error asociado.
  */
-const char* XMLReader::getParameter(string pParameter){
-	TiXmlHandle hDoc(&documento);
-	TiXmlElement* pElem;
-	TiXmlHandle hRoot(0);
-	root = documento.FirstChildElement();
-	if(root == NULL){
-		cout <<"Failed to load file: No root element"<< endl;
-		documento.Clear();
-	}
-	if(root->FirstChildElement(pParameter) != NULL){
-		pElem = root->FirstChildElement(pParameter);
-		cout<< pElem->GetText()<<" xml 49 \n";
-		return pElem->GetText();
-	}
-	else{
-		return "Error: Not such parameter. Please check your entry";
-	}
 
-
-}

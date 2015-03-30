@@ -6,9 +6,9 @@
  */
 
 #include "../com.LDMM.MemoryManager/vHeap.h"
+#include <stdio.h>
 
 vHeap* vHeap::HEAP = 0;
-
 vHeap::vHeap(int pSize, int pOverweight)
 {
 	if(vDEBUG){
@@ -33,7 +33,7 @@ vHeap* vHeap::getInstancia()
 	{
 		return HEAP;
 	}else{
-		HEAP = new vHeap(SIZE,0);
+		//HEAP = new vHeap(SIZE,0);
 
 		return HEAP;
 	}
@@ -53,8 +53,8 @@ void vHeap::vFreeAll(){
 	if (vDEBUG)
 	{
 		cout<<"vHeap.vFreeAll 	vacie el vHeap por completo \n";
-	};
 
+	}
 	zonaCritica = false;
 };
 
@@ -73,7 +73,7 @@ void vHeap::garbageCollector()
 {
 	while(zonaCritica)
 	{
-		usleep(medioDeSegundoMili);
+		//usleep(medioDeSegundoMili);
 	}
 	zonaCritica = true;
 	for(Node<xEntry*>* iterador=this->tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
@@ -94,7 +94,7 @@ void vHeap::garbageCollector()
 void vHeap::control()			//hilo para metodo de control
 {
 	while(zonaCritica){			// en caso de que otro hilo esta tratando el vHeap
-		usleep(medioDeSegundoMili);
+		//usleep(medioDeSegundoMili);
 	}							//cada metodo siguiente tiene zonas criticas individuales
 	this->garbageCollector();
 	this->desfragmentar();
@@ -158,6 +158,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 	}
 
 	this->zonaCritica = false;
+	return 0;
 };
 
 void vHeap::vFree(vRef* pRef)

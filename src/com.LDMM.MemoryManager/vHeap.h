@@ -15,6 +15,9 @@
 #include "../com.LDMM.DataStructures/vNode.h"
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <iostream>
+
 
 class vHeap{
 
@@ -26,6 +29,7 @@ private:
 	void* ptrInicioMemoria;
 	void* ptrUltimaMemoriaLibre;
 	bool zonaCritica;//todos los metodos al final deben asignarle false
+	static bool vDEBUG;
 
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
