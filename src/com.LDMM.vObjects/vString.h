@@ -11,8 +11,9 @@
 #include "../Constants.h"
 #include "vObject.h"
 #include <iostream>
+#include "../com.LDMM.MemoryResources/vRef.h"
 using namespace std;
-class vString: public vObject {
+class vString: public vRef {
 public:
 	vString();
 	void operator = (const string& s);

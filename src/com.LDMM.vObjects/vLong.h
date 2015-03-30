@@ -11,8 +11,9 @@
 #include "../Constants.h"
 #include "vObject.h"
 #include <iostream>
+#include "../com.LDMM.MemoryResources/vRef.h"
 using namespace std;
-class vLong: public vObject {
+class vLong: public vRef {
 public:
 	vLong();
 	void operator = (const long& s);
