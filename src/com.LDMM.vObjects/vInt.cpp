@@ -14,11 +14,11 @@ vRef* vInt::operator= (const int& s){
 	setVObjectData((void*)&vIntData);
 	setVObjectType(TYPE_INT);
 
-	return vHeap::getInstancia()->vMalloc(8,TYPE_INT);
-	//return this;
+//	cout<<"me invocaron dijo lenin "<< s <<"\n";
+	vRef* ref = vHeap::getInstancia()->vMalloc(4,TYPE_INT);
+//	vHeap
+	return ref;
 }
-
-
 
 
  vInt::vInt(){

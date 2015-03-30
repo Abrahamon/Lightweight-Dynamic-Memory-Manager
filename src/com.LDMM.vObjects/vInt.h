@@ -13,7 +13,9 @@
 #include <iostream>
 #include "../com.LDMM.MemoryResources/vRef.h"
 #include "../com.LDMM.MemoryManager/vHeap.h"
+
 using namespace std;
+
 class vInt: public vRef {
 public:
 	vInt();
@@ -22,10 +24,8 @@ public:
 	int vIntData;
 	void* operator new(size_t sz, void *v){
 		//sz = size_t(vHeap::getInstancia()->ptrUltimaMemoriaLibre);
-		cout<<"Me invocaron"<<endl;
+		//cout<<"Me invocaron"<<endl;
 		return v;
-
-
 	}
 };
 

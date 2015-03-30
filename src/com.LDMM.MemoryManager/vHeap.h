@@ -29,10 +29,10 @@ private:
 	void* ptrInicioMemoria;
 
 	bool zonaCritica;//todos los metodos al final deben asignarle false
-	static bool vDEBUG;
 
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
+	void vWrite(vRef* pRef, void* pData);
 	void vFree(/*vRef*/);
 	void vFreeAll();
 	void dumpMemory();
