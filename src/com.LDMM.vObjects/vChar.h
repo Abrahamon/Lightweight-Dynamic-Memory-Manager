@@ -12,12 +12,22 @@
 #include "../Constants.h"
 #include "vObject.h"
 #include <iostream>
+#include "../com.LDMM.MemoryResources/vRef.h"
+#include "../com.LDMM.MemoryManager/vHeap.h"
 using namespace std;
-class vChar: public vObject {
+class vChar: public vRef {
 public:
 	vChar();
-	void operator = (const char& s);
+	vRef* operator = (const char& s);
 	char vCharData;
+
+	void* operator new(size_t sz, void *v){
+			//sz = size_t(vHeap::getInstancia()->ptrUltimaMemoriaLibre);
+			cout<<"Me invocaron char+++++++++"<<endl;
+			return v;
+
+
+		}
 };
 
 
