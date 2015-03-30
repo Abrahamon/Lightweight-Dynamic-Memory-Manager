@@ -7,29 +7,37 @@
 
 #include "../com.LDMM.DataAccess/XMLReader.h"
 #include <string>
-using namespace std;
+#include <iostream>
 
+/**
+ * El constructor inicializa root a 0
+ */
 XMLReader::XMLReader() { root = 0; }
 XMLReader::~XMLReader() {}
 
+/**
+ * Carga el archivo config.xml, para poder leer sus datos
+ */
 void XMLReader::loadXMLFile(){
-	if(!documento.LoadFile("src/config.xml")){
-		cout << "404 File not found" << endl;
+	bool loadOkay = documento.LoadFile("src/config.xml");
+	if (!loadOkay){
+		std::cout << "*XML* Failed to load file. File not found" << std::endl;
 	}
 }
 
-string XMLReader::getParameter(std::string pParameter){
-	TiXmlHandle hDoc(&documento);
+/**
+ * Retorna el valor del parámetro que se busca en el archivo XML
+ * El tipo de entrada y retorno es únicamente un const char*
+ */
+const char* XMLReader::getParameter(const char* pParameter){
 	TiXmlElement* pElem;
-	TiXmlHandle hRoot(0);
-	root = documento.FirstChildElement();
-	if(root == NULL){
-		cout<<"Failed to load file: No root element" <<endl;
-		documento.Clear();
+	root = documento.FirstChildElement("root"); //Se mueve hacia el Nodo raíz del .xml
+	if(root == 0){
+		std::cout<<"*XML* Failed to search param: No root element" <<std::endl;
+		documento.Clear(); //Si ese nodo no exite con ese nombre, limpia el documento.
 	}
-	cout << "pParameter " << pParameter << endl;
-	pElem = root->FirstChildElement(pParameter);
-	const char* tell = pElem->GetText();
-	cout << "Ob " << tell << endl;
-	return "Hey";
+	pElem = root->FirstChildElement(pParameter); //Ingresa al nodo del Dato que se busca (pParameter)
+	const char* output = pElem->Attribute("value");//Obtiene el valor del Dato que se busca
+	std::cout << "*XML* "<<"<<<Param: " << pParameter << " * Value: " << output << " >>>" << std::endl;
+	return output; //Retorna el valor encontrado
 }

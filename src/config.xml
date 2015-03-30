@@ -1,9 +1,15 @@
-<?xml version="1.0" ?>
+<? xml version="1.0" ?>  
 <root>
-    <Size> 100 </Size>
-    <Overweight> 50 </Overweight>
-    <dump_frecuency> 10 </dump_frecuency>
-    <vdebug> true </vdebug>
-    <vdebug-file-path> src/ </vdebug-file-path>
-    <gc_frecuency> 25 </gc_frecuency>
-</root>
+    < Config>  
+        <SIZE value="200" />
+        <OVERWEIGHT value="50" />
+        <DUMP_FRECUENCY value="150" /> 
+        <DUMP_PATH value="src/" />
+        <vDEBUG value="true/" />
+        <vDEBUG_PATH value="src/" />
+        <GC_FRECUENCY value="150" />
+        <cuartoDeSegundoMili value="250000" />
+        <medioDeSegundoMili value="500000" />
+        <SegundoMili value="1000000" />
+    < /Config>
+</root> 
