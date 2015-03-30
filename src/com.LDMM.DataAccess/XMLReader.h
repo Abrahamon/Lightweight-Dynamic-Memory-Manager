@@ -1,0 +1,25 @@
+/*
+ * XMLReader.h
+ *
+ *  Created on: Mar 27, 2015
+ *      Author: fabian
+ */
+
+#ifndef SRC_COM_LDMM_DATAACCESS_XMLREADER_H_
+#define SRC_COM_LDMM_DATAACCESS_XMLREADER_H_
+#include "tinyxml.h"
+#include <string>
+
+class XMLReader {
+private:
+	TiXmlDocument documento;
+	TiXmlElement* root;
+public:
+	XMLReader();
+	virtual ~XMLReader();
+	void loadXMLFile();
+	std::string getParameter(std::string pParameter);
+
+};
+
+#endif /* SRC_COM_LDMM_DATAACCESS_XMLREADER_H_ */
