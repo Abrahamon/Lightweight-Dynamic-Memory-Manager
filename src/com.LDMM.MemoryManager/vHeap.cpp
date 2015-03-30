@@ -112,7 +112,7 @@ void vHeap::control()			//hilo para metodo de control
 }
 
 
-vRef * vHeap::vMalloc(int pSize, std::string pType)
+int vHeap::vMalloc(int pSize, std::string pType)
 {
 
 	while(zonaCritica){				//esperar hasta que se libere de zona critica
@@ -150,7 +150,8 @@ vRef * vHeap::vMalloc(int pSize, std::string pType)
 		this->ptrUltimaMemoriaLibre = ptrUltimaMemoriaLibre+pSize;
 
 		this->zonaCritica = false;
-		return referencia;
+		return id
+	//	return referencia;
 
 	}else{
 		if(vDEBUG)
@@ -158,13 +159,13 @@ vRef * vHeap::vMalloc(int pSize, std::string pType)
 			cout<< "Los "<<pSize<<" bytes solicitados no caben en: "<<tamanovHeap<< "\n";
 		}
 		this->zonaCritica = false;
-		return 0;
+		return -1;
 	}
 
 	this->zonaCritica = false;
 };
 
-void vHeap::vWrite(vRef* pRef, void* pData)
+void vHeap::vWrite(int pID, void* pData)
 {
 
 }

@@ -32,7 +32,7 @@ private:
 
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
-	void vWrite(vRef* pRef, void* pData);
+	void vWrite(int pID, void* pData);
 	void vFree(/*vRef*/);
 	void vFreeAll();
 	void dumpMemory();
@@ -43,7 +43,7 @@ private:
 public:
 	void* ptrUltimaMemoriaLibre;
 	static vHeap* getInstancia();
-	vRef * vMalloc(int pSize, std::string pType);
+	int vMalloc(int pSize, std::string pType);
 	void vFree(vRef* pRef);
 
 

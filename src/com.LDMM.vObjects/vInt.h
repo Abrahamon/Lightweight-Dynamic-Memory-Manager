@@ -19,12 +19,15 @@ using namespace std;
 class vInt: public vRef {
 public:
 	vInt();
-	vRef* operator = (const int& s);
-	//void* operator new(size_t sz, void *v);
+	void operator = (const int& s); //era vRef*
+
 	int vIntData;
+
 	void* operator new(size_t sz, void *v){
 		//sz = size_t(vHeap::getInstancia()->ptrUltimaMemoriaLibre);
-		//cout<<"Me invocaron"<<endl;
+
+		this->_ID = vHeap::getInstancia()->vMalloc(4,TYPE_INT);
+		cout<<"Me invocaron al metodo del .h, con id: "<<_ID<<endl;
 		return v;
 	}
 };
