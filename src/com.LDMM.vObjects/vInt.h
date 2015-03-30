@@ -11,12 +11,23 @@
 #include "../Constants.h"
 #include "vObject.h"
 #include <iostream>
+#include "../com.LDMM.MemoryResources/vRef.h"
+#include "../com.LDMM.MemoryManager/vHeap.h"
 using namespace std;
-class vInt: public vObject {
+class vInt: public vRef {
 public:
 	vInt();
-	void operator = (const int& s);
+	vRef* operator = (const int& s);
+	//void* operator new(size_t sz, void *v);
 	int vIntData;
+	void* operator new(size_t sz, void *v){
+		//sz = size_t(vHeap::getInstancia()->ptrUltimaMemoriaLibre);
+		cout<<"Me invocaron"<<endl;
+		return v;
+
+
+	}
 };
+
 
 #endif /* VINT_H_ */

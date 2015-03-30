@@ -11,8 +11,9 @@
 #include "../Constants.h"
 #include "vObject.h"
 #include <iostream>
+#include "../com.LDMM.MemoryResources/vRef.h"
 using namespace std;
-class vFloat: public vObject {
+class vFloat: public vRef {
 public:
 	vFloat();
 	void operator = (const float& s);
