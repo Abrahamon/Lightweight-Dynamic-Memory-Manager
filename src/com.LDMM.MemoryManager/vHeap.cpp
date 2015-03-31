@@ -12,7 +12,7 @@ vHeap* vHeap::HEAP = 0;
 
 vHeap::vHeap(int pSize, int pOverweight)
 {
-	if(vDEBUG){
+	if(Constants::vDEBUG == "TRUE"){
 		std::cout << "vHeap.vHeap	creo un vHeap de : "<<pSize<<" bytes"<<"\n";
 		std:: cout <<"\n";
 	}
@@ -55,9 +55,9 @@ void vHeap::vFreeAll(){
 		else if(type=="vBool"){ bool* erase = (bool*)tmpPtr; }
 		else if(type=="vLong"){ long* erase = (long*)tmpPtr; }
 		else if(type=="vFloat"){ float* erase = (float*)tmpPtr; }
-		else if(type=="vString"){ if(vDEBUG){cout<<"vHeap::vFreeAll		Eliminado de memoria para string no implementado aun";} }
+		else if(type=="vString"){ if(Constants::vDEBUG == "TRUE"){cout<<"vHeap::vFreeAll		Eliminado de memoria para string no implementado aun";} }
 		else{
-			if(vDEBUG)
+			if(Constants::vDEBUG == "TRUE")
 			{
 				cout<<"vHeap::vFreeAll 	Error en el tipo de dato a eliminar";
 				return;
@@ -66,7 +66,7 @@ void vHeap::vFreeAll(){
 		free(erase);
 		tablaMetadatos->getList()->deleteData(iterador->getData());
 	}
-	if (vDEBUG)
+	if (Constants::vDEBUG == "TRUE")
 	{
 		cout<<"vHeap.vFreeAll 	vacie el vHeap por completo \n";
 	}
@@ -89,7 +89,7 @@ void vHeap::garbageCollector()
 		{
 			free(ptrInicioMemoria+(iterador->getData()->getOffset()));
 			tablaMetadatos->getList()->deleteData(iterador->getData());
-			if(vDEBUG)
+			if(Constants::vDEBUG == "TRUE")
 			{
 				cout<<"Borre un elemento de la xTable \n";
 			}
@@ -111,7 +111,7 @@ void vHeap::control()			//hilo para metodo de control
 }
 
 
-int vHeap::vMalloc(int pSize, std::string pType)
+vRef* vHeap::vMalloc(int pSize, std::string pType)
 {
 
 	while(zonaCritica){				//esperar hasta que se libere de zona critica
@@ -126,7 +126,7 @@ int vHeap::vMalloc(int pSize, std::string pType)
 	long a = reinterpret_cast<long>(ptrUltimaMemoriaLibre);
 	int memLibre = tamanovHeap-(a-b);
 
-	if(vDEBUG){
+	if(Constants::vDEBUG == "TRUE"){
 		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
 		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<b<<"\n";
 		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<a<<"\n";
@@ -137,7 +137,7 @@ int vHeap::vMalloc(int pSize, std::string pType)
 
 	if(memLibre >= pSize)
 	{
-		if(vDEBUG){
+		if(Constants::vDEBUG == "TRUE"){
 			cout <<"vHeap.vMalloc	Si hay espacio suficiente para un "<<pType<<"\n";
 			cout<< "\n";
 		}
@@ -149,17 +149,16 @@ int vHeap::vMalloc(int pSize, std::string pType)
 		this->ptrUltimaMemoriaLibre = ptrUltimaMemoriaLibre+pSize;
 
 		this->zonaCritica = false;
-		return id
-	//	return referencia;
+
+		return referencia;
 
 	}else{
-		if(vDEBUG)
+		if(Constants::vDEBUG == "TRUE")
 		{
 			cout<< "Los "<<pSize<<" bytes solicitados no caben en: "<<tamanovHeap<< "\n";
 		}
 		this->zonaCritica = false;
-		return -1;
-	}
+	};
 
 	this->zonaCritica = false;
 };
@@ -171,7 +170,7 @@ void vHeap::vWrite(int pID, void* pData)
 
 void vHeap::vFree(vRef* pRef)
 {
-	if(vDEBUG){
+	if(Constants::vDEBUG == "TRUE"){
 		cout << "vfree en vHeap no implementado aun --------- \n";
 	}
 };

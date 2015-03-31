@@ -5,6 +5,7 @@
  *      Author: fabian
  */
 
+#include "XMLReader.h"
 #include "../com.LDMM.DataAccess/XMLReader.h"
 #include <string>
 #include <iostream>
@@ -29,29 +30,15 @@ void XMLReader::loadXMLFile(){
  * Retorna el valor del parámetro que se busca en el archivo XML
  * El tipo de entrada y retorno es únicamente un const char*
  */
-<<<<<<< HEAD
- string XMLReader::getParameter(string pParameter){
-	//loadFile();
-	/*TiXmlHandle hDoc(&documento);
-=======
 const char* XMLReader::getParameter(const char* pParameter){
->>>>>>> afb3e631944bdaab3e814f023e11781d6956b503
 	TiXmlElement* pElem;
 	root = documento.FirstChildElement("root"); //Se mueve hacia el Nodo raíz del .xml
 	if(root == 0){
 		std::cout<<"*XML* Failed to search param: No root element" <<std::endl;
 		documento.Clear(); //Si ese nodo no exite con ese nombre, limpia el documento.
 	}
-<<<<<<< HEAD
-	else{
-		return "Error: Not such parameter. Please check your entry";
-	}
-*/
-
-=======
 	pElem = root->FirstChildElement(pParameter); //Ingresa al nodo del Dato que se busca (pParameter)
 	const char* output = pElem->Attribute("value");//Obtiene el valor del Dato que se busca
 	std::cout << "*XML* "<<"<<<Param: " << pParameter << " * Value: " << output << " >>>" << std::endl;
 	return output; //Retorna el valor encontrado
->>>>>>> afb3e631944bdaab3e814f023e11781d6956b503
 }

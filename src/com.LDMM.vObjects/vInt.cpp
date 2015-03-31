@@ -9,25 +9,12 @@
 #include "../com.LDMM.MemoryManager/vHeap.h"
 #include <typeinfo>
 
-void vInt::operator= (const int& s){
+vRef* vInt::operator= (const int& s){
 	vIntData = s;
 	setVObjectData((void*)&vIntData);
-<<<<<<< HEAD
-	setVObjectType(TYPE_INT);
-
-	cout<<"me invocaron dijo lenin "<< s <<"\n";
-=======
 	setVObjectType(Constants::TYPE_INT);
 	return vHeap::getInstancia()->vMalloc(8,Constants::TYPE_INT);
-	//return this;
 }
->>>>>>> afb3e631944bdaab3e814f023e11781d6956b503
-
-	vHeap::HEAP->vWrite(this->_ID,void* s);
-
-	//return ref;
-}
-
 
  vInt::vInt(){
 	vIntData = 0;

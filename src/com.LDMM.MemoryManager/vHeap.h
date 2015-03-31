@@ -43,7 +43,7 @@ private:
 public:
 	void* ptrUltimaMemoriaLibre;
 	static vHeap* getInstancia();
-	int vMalloc(int pSize, std::string pType);
+	vRef* vMalloc(int pSize, std::string pType);
 	void vFree(vRef* pRef);
 
 
