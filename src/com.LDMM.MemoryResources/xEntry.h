@@ -15,20 +15,19 @@ class xEntry {
 private:
 	int _ID;
 	int _Size;
-	void* _Offset;
+	int _Offset;
 	int _RefCounter;
 	bool _UseFlag;
 	string _Type;
 
 
 public:
-	xEntry(int pID, int pSize, void* pOffset, string pType);
+	xEntry(int pID, int pSize, int pOffset, string pType);
 	virtual ~xEntry();
 
-	int getMemPos();
-
+	int getID();
 	int getSize();
-	void* getOffset();
+	int getOffset();
 	int getReferenceCounter();
 	bool isBeingUsed();
 	string getType();
@@ -37,7 +36,7 @@ public:
 	void DecreaseRef();
 
 	void setSize(int pSize);
-	void setOffset(void* pOffset);
+	void setOffset(int pOffset);
 	void setUseFlag(bool pFlag);
 	void setType(string pType);
 };

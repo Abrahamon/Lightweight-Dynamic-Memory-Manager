@@ -7,7 +7,8 @@
 
 #ifndef SRC_COM_LDMM_DATAACCESS_XMLREADER_H_
 #define SRC_COM_LDMM_DATAACCESS_XMLREADER_H_
-#include "tinyxml.h"
+
+#include "../com.LDMM.DataAccess/lib.tinyxml/tinyxml.h"
 #include <string>
 
 class XMLReader {

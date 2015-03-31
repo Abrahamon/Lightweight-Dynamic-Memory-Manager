@@ -13,20 +13,22 @@
 #include <iostream>
 #include "../com.LDMM.MemoryResources/vRef.h"
 #include "../com.LDMM.MemoryManager/vHeap.h"
+
 using namespace std;
+
 class vInt: public vRef {
 public:
 	vInt();
-	vRef* operator = (const int& s);
-	//void* operator new(size_t sz, void *v);
+	vRef* operator = (const int& s); //era vRef*
+
 	int vIntData;
+
 	void* operator new(size_t sz, void *v){
 
-	//cout<<"Me invocaron"<<endl;
 	return v;
-
-
 	}
+
+
 };
 
 
