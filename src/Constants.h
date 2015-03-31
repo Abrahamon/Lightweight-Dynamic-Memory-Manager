@@ -39,7 +39,7 @@ const int medioDeSegundoMili =500000;
 const int SegundoMili =1000000;
 //};
 
-
+//hhol
 /*	vHeap *heap = vHeap::getInstancia();
 
 	//vHeap * pila = vHeap::getInstancia();
