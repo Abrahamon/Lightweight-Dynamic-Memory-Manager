@@ -6,9 +6,10 @@
  */
 
 #include "../com.LDMM.MemoryManager/vHeap.h"
+#include <stdio.h>
 
 vHeap* vHeap::HEAP = 0;
-
+bool vHeap::vDEBUG = true;
 vHeap::vHeap(int pSize, int pOverweight)
 {
 	if(vDEBUG){
@@ -42,7 +43,7 @@ vHeap* vHeap::getInstancia()
 
 void vHeap::vFreeAll(){
 	while(zonaCritica){			// en caso de que otro hilo esta tratando el vHeap
-			usleep(medioDeSegundoMili);
+			//usleep(medioDeSegundoMili);
 	}
 	zonaCritica = true;
 	for(Node<xEntry*>* iterador=this->tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
@@ -55,8 +56,10 @@ void vHeap::vFreeAll(){
 	{
 		cout<<"vHeap.vFreeAll 	vacie el vHeap por completo \n";
 	}
+
 	zonaCritica = false;
 };
+
 void vHeap::dumpMemory(){};
 void vHeap::desfragmentar(){};
 
@@ -64,7 +67,7 @@ void vHeap::garbageCollector()
 {
 	while(zonaCritica)
 	{
-		usleep(medioDeSegundoMili);
+		//usleep(medioDeSegundoMili);
 	}
 	zonaCritica = true;
 	for(Node<xEntry*>* iterador=this->tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
@@ -85,7 +88,7 @@ void vHeap::garbageCollector()
 void vHeap::control()			//hilo para metodo de control
 {
 	while(zonaCritica){			// en caso de que otro hilo esta tratando el vHeap
-		usleep(medioDeSegundoMili);
+		//usleep(medioDeSegundoMili);
 	}							//cada metodo siguiente tiene zonas criticas individuales
 	this->garbageCollector();
 	this->desfragmentar();
@@ -95,21 +98,26 @@ void vHeap::control()			//hilo para metodo de control
 }
 
 
-vRef* vHeap::vMalloc(int pSize, std::string pType)
+vRef * vHeap::vMalloc(int pSize, std::string pType)
 {
+
 	while(zonaCritica){				//esperar hasta que se libere de zona critica
-		usleep(medioDeSegundoMili);
+		//usleep(medioDeSegundoMili);
+		//sleep(1);
+
 	}
+
 	this->zonaCritica = true;
 
 	long b = reinterpret_cast<long>(ptrInicioMemoria);
 	long a = reinterpret_cast<long>(ptrUltimaMemoriaLibre);
-	int memLibre = tamanovHeap-b+a;
+	int memLibre = tamanovHeap-(a-b);
 
 	if(vDEBUG){
 		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
 		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<b<<"\n";
 		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<a<<"\n";
+		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<ptrUltimaMemoriaLibre<<"\n";
 		cout<<"vHeap.vMalloc	"<< memLibre	<<" bytes de memoria libre  \n";
 	}
 
@@ -117,11 +125,10 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 	{
 		if(vDEBUG){
 			cout <<"vHeap.vMalloc	Si hay espacio suficiente para un "<<pType<<"\n";
+			cout<< "\n";
 		}
 
 		int id =tablaMetadatos->addEntry(pSize,ptrUltimaMemoriaLibre,pType);
-
-		cout<<"No hay flujo hasta este pt \n";// <|-----------------------------*
 
 		vRef* referencia = new vRef(id);
 		this->ptrUltimaMemoriaLibre = ptrUltimaMemoriaLibre+pSize;

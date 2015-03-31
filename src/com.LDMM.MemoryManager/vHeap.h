@@ -15,6 +15,9 @@
 #include "../com.LDMM.DataStructures/vNode.h"
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <iostream>
+
 
 class vHeap{
 
@@ -26,6 +29,7 @@ private:
 	void* ptrInicioMemoria;
 
 	bool zonaCritica;//todos los metodos al final deben asignarle false
+	static bool vDEBUG;
 
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
@@ -37,10 +41,10 @@ private:
 	void control(); //hilo que controla fragmentacion, garbage colector y dump de memoria.
 
 public:
-	static vHeap* getInstancia();
-	vRef* vMalloc(int pSize, std::string pType);
-	void vFree(vRef* pRef);
 	void* ptrUltimaMemoriaLibre;
+	static vHeap* getInstancia();
+	vRef * vMalloc(int pSize, std::string pType);
+	void vFree(vRef* pRef);
 
 
 };
