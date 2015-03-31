@@ -1,56 +1,43 @@
 /*
  * XMLReader.cpp
  *
- *  Created on: Mar 20, 2015
+ *  Created on: Mar 27, 2015
  *      Author: fabian
  */
 
-#include "XMLReader.h"
+#include "../com.LDMM.DataAccess/XMLReader.h"
 #include <string>
+#include <iostream>
 
-using namespace std;
-
-XMLReader::XMLReader() { root = 0;}
-
+/**
+ * El constructor inicializa root a 0
+ */
+XMLReader::XMLReader() { root = 0; }
 XMLReader::~XMLReader() {}
 
-/*
- * loadFile()
- * Carga el archivo config.xml que se encuentra en
- * la carpeta raíz del programa
+/**
+ * Carga el archivo config.xml, para poder leer sus datos
  */
-void XMLReader::loadFile(){
-	if(!documento.LoadFile("src/config.xml")){
-		std::cout << "404 XML Not Found" << std::endl;
+void XMLReader::loadXMLFile(){
+	bool loadOkay = documento.LoadFile("src/config.xml");
+	if (!loadOkay){
+		std::cout << "*XML* Failed to load file. File not found" << std::endl;
 	}
-
 }
-/*
- * getParameter()
- * TiXmlHandle hDoc(&documento), permite manejar el documento XML
- * por medio de los elementos (nodos XML), moviendose con un
- * puntero "pElem".
- *
- * Retorna un string con el valor del parámetro especificado. Si
- * el parámetro ingresado no existe, indica esto mostrando en
- * consola el error asociado.
+
+/**
+ * Retorna el valor del parámetro que se busca en el archivo XML
+ * El tipo de entrada y retorno es únicamente un const char*
  */
- string XMLReader::getParameter(string pParameter){
-	//loadFile();
-	TiXmlHandle hDoc(&documento);
+const char* XMLReader::getParameter(const char* pParameter){
 	TiXmlElement* pElem;
-	TiXmlHandle hRoot(0);
-	root = documento.FirstChildElement();
-	if(root == NULL){
-		cout <<"Failed to load file: No root element"<< endl;
-		documento.Clear();
+	root = documento.FirstChildElement("root"); //Se mueve hacia el Nodo raíz del .xml
+	if(root == 0){
+		std::cout<<"*XML* Failed to search param: No root element" <<std::endl;
+		documento.Clear(); //Si ese nodo no exite con ese nombre, limpia el documento.
 	}
-	if(pElem = root->FirstChildElement(pParameter)){
-		return pElem->GetText();
-	}
-	else{
-		return "Error: Not such parameter. Please check your entry";
-	}
-
-
+	pElem = root->FirstChildElement(pParameter); //Ingresa al nodo del Dato que se busca (pParameter)
+	const char* output = pElem->Attribute("value");//Obtiene el valor del Dato que se busca
+	std::cout << "*XML* "<<"<<<Param: " << pParameter << " * Value: " << output << " >>>" << std::endl;
+	return output; //Retorna el valor encontrado
 }
