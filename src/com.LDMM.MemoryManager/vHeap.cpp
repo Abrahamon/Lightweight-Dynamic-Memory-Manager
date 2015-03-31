@@ -126,7 +126,6 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 	long a = reinterpret_cast<long>(ptrUltimaMemoriaLibre);
 	int memLibre = tamanovHeap-(a-b);
 
-
 	if(Constants::vDEBUG == "TRUE"){
 		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
 		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<b<<"\n";
@@ -143,9 +142,8 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 			cout<< "\n";
 		}
 
-//		int id =tablaMetadatos->addEntry(pSize,ptrUltimaMemoriaLibre,pType);
 		int id =tablaMetadatos->addEntry(pSize, a-b,pType);
-
+		cout<<"SI \n";
 		vRef* referencia = new vRef(id);
 		this->ptrUltimaMemoriaLibre = ptrUltimaMemoriaLibre+pSize;
 

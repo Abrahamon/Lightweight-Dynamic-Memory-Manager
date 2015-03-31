@@ -26,9 +26,6 @@ public:
 	void* operator new(size_t sz, void *v){
 		//sz = size_t(vHeap::getInstancia()->ptrUltimaMemoriaLibre);
 		return v;
-
-	//cout<<"Me invocaron"<<endl;
-	return v;
 	}
 };
 
