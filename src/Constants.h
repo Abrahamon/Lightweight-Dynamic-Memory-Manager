@@ -5,13 +5,20 @@
  *      Author: fabian
  */
 
+/*
+ * Constants.h
+ *
+ *  Created on: Mar 17, 2015
+ *      Author: fabian
+ */
+
 #ifndef SRC_CONSTANTS_H_
 #define SRC_CONSTANTS_H_
 #include "../src/com.LDMM.DataAccess/XMLReader.h"
 #include <string>
 using namespace std;
 
-const int SIZE = 11000;
+const int SIZE=0 ;
 const int OVERWEIGHT = 0;
 static const int DUMP_FRECUENCY= 0;
 const int DUMP_PATH= 0;
@@ -33,12 +40,10 @@ const std::string TYPE_BOOL = "Bool";
 
 //};
 
-//hhol
-/*	vHeap *heap = vHeap::getInstancia();
 
+/*	vHeap *heap = vHeap::getInstancia();
 	//vHeap * pila = vHeap::getInstancia();
 	//cout<< "Valor de Entero dsdsdsd: "<< (vInt *)(heap->ptrUltimaMemoriaLibre) <<endl;
-
 	vInt * entero = new (heap->ptrUltimaMemoriaLibre) vInt();
 	*entero = 90;
 	vInt * entero2 = new (heap->ptrUltimaMemoriaLibre) vInt();
@@ -49,8 +54,6 @@ const std::string TYPE_BOOL = "Bool";
 		*char1 = 'd';
 	char comun = 'd';
 	//
-
-
 	cout<<sizeof(char1)<<endl;
 	//4251472
 	//cout<< "Direccion de Memoria de Entero: "<< entero <<endl;
