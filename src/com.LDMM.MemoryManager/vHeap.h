@@ -17,6 +17,9 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <iostream>
+#include <algorithm>
+#include <string>
+#include <fstream>
 
 
 class vHeap{
