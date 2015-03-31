@@ -17,6 +17,9 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <iostream>
+#include <algorithm>
+#include <string>
+#include <fstream>
 
 
 class vHeap{
@@ -37,7 +40,7 @@ private:
 	void dumpMemory();
 	void garbageCollector();
 	void desfragmentar();
-	void control(); //hilo que controla fragmentacion, garbage colector y dump de memoria.
+	void control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.
 
 public:
 	void* ptrUltimaMemoriaLibre;

@@ -73,7 +73,36 @@ void vHeap::vFreeAll(){
 	zonaCritica = false;
 };
 
-void vHeap::dumpMemory(){};
+void vHeap::dumpMemory(){
+	//-
+		void* posiciones=ptrInicioMemoria;
+		//hola si pude
+		for(int i=0;i< tamanovHeap;i++){
+			char* tmp=(char*)(posiciones+i);
+			string s;
+			int decimal=(char)(*tmp+0);
+			ofstream fs("dump.txt");
+			if (decimal!=0){
+				while(decimal>1)
+				{
+					int resto=decimal%2;
+					if(resto==1)s+="1";
+					else s+="0";
+					decimal/=2;
+				}
+				s+="1";
+				reverse(s.begin(),s.end());
+				for(int i=0;i< 8-s.length();i++){
+					fs << 0;
+				}
+				fs << s;
+		}
+			else{
+				fs << 0;
+			}
+		}
+
+};
 void vHeap::desfragmentar(){};
 
 void vHeap::garbageCollector()
