@@ -35,8 +35,7 @@ vHeap* vHeap::getInstancia()
 	{
 		return HEAP;
 	}else{
-		HEAP = new vHeap(SIZE,0);
-
+		HEAP = new vHeap(Constants::SIZE,0);
 		return HEAP;
 	}
 };
@@ -71,7 +70,6 @@ void vHeap::vFreeAll(){
 	{
 		cout<<"vHeap.vFreeAll 	vacie el vHeap por completo \n";
 	}
-
 	zonaCritica = false;
 };
 

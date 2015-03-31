@@ -10,7 +10,7 @@
 void vBool::operator= (const bool& s){
 	vBoolData = s;
 	setVObjectData((void*)&vBoolData);
-	setVObjectType(TYPE_BOOL);
+	setVObjectType(Constants::TYPE_BOOL);
 	return ;
 }
  vBool::vBool(){
