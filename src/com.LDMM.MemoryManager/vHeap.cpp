@@ -76,7 +76,7 @@ void vHeap::vFreeAll(){
 void vHeap::dumpMemory(){
 	//-
 		void* posiciones=ptrInicioMemoria;
-		//Donde esta todo
+		//hola si pude
 		for(int i=0;i< tamanovHeap;i++){
 			char* tmp=(char*)(posiciones+i);
 			string s;

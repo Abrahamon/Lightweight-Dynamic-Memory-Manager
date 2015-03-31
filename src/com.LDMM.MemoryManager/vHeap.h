@@ -40,7 +40,7 @@ private:
 	void dumpMemory();
 	void garbageCollector();
 	void desfragmentar();
-	void control(); //hilo que controla fragmentacion, garbage colector y dump de memoria.
+	void control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.
 
 public:
 	void* ptrUltimaMemoriaLibre;
