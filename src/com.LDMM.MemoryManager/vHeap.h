@@ -22,7 +22,6 @@
 class vHeap{
 
 private:
-
 	static vHeap* HEAP;
 	int tamanovHeap;
 	xTable* tablaMetadatos;
