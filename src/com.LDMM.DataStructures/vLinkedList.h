@@ -32,6 +32,7 @@ public:
 	Node<k>* getHead();
 	Node<k>* getTail();
 	int getLength();
+	bool isEmpty();
 };
 
 template<class k>
@@ -42,6 +43,13 @@ Node<k>* vLinkedList<k>::getTail(){ return _tail; }
 
 template<class k>
 int vLinkedList<k>::getLength(){ return _length; }
+
+template<class k>
+bool vLinkedList<k>::isEmpty()
+{
+	if(_head != 0){return false;}
+	return true;
+}
 
 /**
  * Constructor de la clase en el que se

@@ -142,9 +142,8 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 			cout<< "\n";
 		}
 
-//		int id =tablaMetadatos->addEntry(pSize,ptrUltimaMemoriaLibre,pType);
 		int id =tablaMetadatos->addEntry(pSize, a-b,pType);
-
+		cout<<"SI \n";
 		vRef* referencia = new vRef(id);
 		this->ptrUltimaMemoriaLibre = ptrUltimaMemoriaLibre+pSize;
 

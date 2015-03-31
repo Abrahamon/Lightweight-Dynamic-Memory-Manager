@@ -8,7 +8,7 @@
 #include "../src/com.LDMM.DataAccess/XMLReader.h"
 
 Constants* Constants::_Constants = 0;
-int Constants::SIZE = 0;
+int Constants::SIZE = 214748364 ;
 int Constants::OVERWEIGHT = 0;
 int Constants::DUMP_FRECUENCY = 0;
 std::string Constants::DUMP_PATH;
