@@ -24,7 +24,7 @@ private:
 	int tamanovHeap;
 	xTable* tablaMetadatos;
 	void* ptrInicioMemoria;
-	void* ptrUltimaMemoriaLibre;
+
 	bool zonaCritica;//todos los metodos al final deben asignarle false
 
 	vHeap(int pSize, int pOverweight);
@@ -40,6 +40,7 @@ public:
 	static vHeap* getInstancia();
 	vRef* vMalloc(int pSize, std::string pType);
 	void vFree(vRef* pRef);
+	void* ptrUltimaMemoriaLibre;
 
 
 };

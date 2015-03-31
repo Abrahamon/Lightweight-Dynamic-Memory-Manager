@@ -55,7 +55,6 @@ void vHeap::vFreeAll(){
 	{
 		cout<<"vHeap.vFreeAll 	vacie el vHeap por completo \n";
 	}
-ori
 	zonaCritica = false;
 };
 void vHeap::dumpMemory(){};
