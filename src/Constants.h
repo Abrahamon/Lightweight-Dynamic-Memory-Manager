@@ -7,7 +7,7 @@
 
 #ifndef SRC_CONSTANTS_H_
 #define SRC_CONSTANTS_H_
-#include "../src/com.LDMM.DataAccess/XMLReader.h"
+//#include "../src/com.LDMM.DataAccess/XMLReader.h"
 #include <string>
 #include <stdlib.h>
 
@@ -39,4 +39,5 @@ public:
 private:
 	Constants();
 };
+
 #endif /* SRC_CONSTANTS_H_ */

@@ -5,6 +5,7 @@
  *      Author: fabian
  */
 
+#include "XMLReader.h"
 #include "../com.LDMM.DataAccess/XMLReader.h"
 #include <string>
 #include <iostream>
