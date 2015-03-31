@@ -35,8 +35,7 @@ vHeap* vHeap::getInstancia()
 	{
 		return HEAP;
 	}else{
-		HEAP = new vHeap(SIZE,0);
-
+		HEAP = new vHeap(Constants::SIZE,0);
 		return HEAP;
 	}
 };
@@ -112,18 +111,18 @@ vRef * vHeap::vMalloc(int pSize, std::string pType)
 	int memLibre = tamanovHeap-(a-b);
 
 	if(vDEBUG){
-		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
-		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<b<<"\n";
-		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<a<<"\n";
-		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<ptrUltimaMemoriaLibre<<"\n";
-		cout<<"vHeap.vMalloc	"<< memLibre	<<" bytes de memoria libre  \n";
+//		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
+//		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<b<<"\n";
+//		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<a<<"\n";
+//		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<ptrUltimaMemoriaLibre<<"\n";
+//		cout<<"vHeap.vMalloc	"<< memLibre	<<" bytes de memoria libre  \n";
 	}
 
 	if(memLibre >= pSize)
 	{
 		if(vDEBUG){
-			cout <<"vHeap.vMalloc	Si hay espacio suficiente para un "<<pType<<"\n";
-			cout<< "\n";
+			//cout <<"vHeap.vMalloc	Si hay espacio suficiente para un "<<pType<<"\n";
+			//cout<< "\n";
 		}
 
 		int id =tablaMetadatos->addEntry(pSize,ptrUltimaMemoriaLibre,pType);
