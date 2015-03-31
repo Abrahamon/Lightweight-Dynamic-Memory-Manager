@@ -21,7 +21,8 @@ public:
 	~xTable();
 	static xTable* getInstance();
 	xEntry* getObjectInfo(int pID);
-	int addEntry(int pSize,void* pOffset,string pType);
+	int getOffSetDelXEntry(int pID);
+	int addEntry(int pSize,int pOffset,string pType);
 	vLinkedList<xEntry*>* getList();
 };
 

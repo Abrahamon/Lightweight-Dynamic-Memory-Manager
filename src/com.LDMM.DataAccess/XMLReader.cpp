@@ -37,7 +37,7 @@ void XMLReader::loadFile(){
  */
  string XMLReader::getParameter(string pParameter){
 	//loadFile();
-	TiXmlHandle hDoc(&documento);
+	/*TiXmlHandle hDoc(&documento);
 	TiXmlElement* pElem;
 	TiXmlHandle hRoot(0);
 	root = documento.FirstChildElement();
@@ -51,6 +51,6 @@ void XMLReader::loadFile(){
 	else{
 		return "Error: Not such parameter. Please check your entry";
 	}
-
+*/
 
 }
