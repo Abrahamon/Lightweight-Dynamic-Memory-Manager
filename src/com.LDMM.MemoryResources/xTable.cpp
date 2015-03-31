@@ -35,8 +35,20 @@ xEntry* xTable::getObjectInfo(int pID){
 	return tmpEntry->getData();
 }
 
-int xTable::addEntry(int pSize,void* pOffset,string pType){
-	int pID = _ObjectsList->getLength();
+int xTable::getOffSetDelXEntry(int pID)
+{
+	for(Node<xEntry*>* tmpEntry = _ObjectsList->getHead(); tmpEntry != 0 ; tmpEntry = tmpEntry->getNext()){
+		if(tmpEntry->getData()->getID() == pID)
+		{
+			return tmpEntry->getData()->getOffset();
+		}
+	}
+	return -1;
+}
+
+int xTable::addEntry(int pSize,int pOffset,string pType){
+	//int pID = _ObjectsList->getLength();
+	int pID = _ObjectsList->getTail()->getData()->getID()+1;
 	/*int* pointer = (int*)malloc(1 * sizeof(xEntry));
 	xEntry temp = new xEntry(pID,pSize,pOffset,pType);
 	xEntry temp = *pointer;*/
