@@ -10,7 +10,7 @@
 void vLong::operator= (const long& s){
 	vLongData = s;
 	setVObjectData((void*)&vLongData);
-	setVObjectType(TYPE_LONG);
+	setVObjectType(Constants::TYPE_LONG);
 	return ;
 }
  vLong::vLong(){

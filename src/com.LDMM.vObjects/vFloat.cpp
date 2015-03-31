@@ -10,7 +10,7 @@
 void vFloat::operator= (const float& s){
 	vFloatData = s;
 	setVObjectData((void*)&vFloatData);
-	setVObjectType(TYPE_FLOAT);
+	setVObjectType(Constants::TYPE_FLOAT);
 	return ;
 }
  vFloat::vFloat(){

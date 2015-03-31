@@ -8,7 +8,7 @@
 void vString::operator= (const string& s){
 	vStringData = s;
 	setVObjectData((void*)&vStringData);
-	setVObjectType(TYPE_STRING);
+	setVObjectType(Constants::TYPE_STRING);
 	return ;
 }
  vString::vString(){
