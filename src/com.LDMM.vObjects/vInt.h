@@ -24,10 +24,8 @@ public:
 	int vIntData;
 
 	void* operator new(size_t sz, void *v){
-
 	return v;
 	}
-
 
 };
 
