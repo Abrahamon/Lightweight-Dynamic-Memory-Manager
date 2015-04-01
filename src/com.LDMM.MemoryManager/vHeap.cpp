@@ -128,7 +128,6 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 	long a = reinterpret_cast<long>(ptrUltimaMemoriaLibre);
 	int memLibre = tamanovHeap-(a-b);
 
-
 	if(Constants::vDEBUG == "TRUE"){
 		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
 		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<b<<"\n";
