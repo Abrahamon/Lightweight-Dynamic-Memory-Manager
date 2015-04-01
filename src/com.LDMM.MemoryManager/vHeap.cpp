@@ -17,18 +17,23 @@ vHeap::vHeap(int pSize, int pOverweight)
 		std:: cout <<"\n";
 	}
 	this->_overweight= pOverweight;
-	this->tamanoMemoriaPaginadaUsada = 0;
-	this->tamanovHeap = pSize;
-	this->ptrInicioMemoria = calloc(1,pSize);
-	this->ptrUltimaMemoriaLibre = ptrInicioMemoria;
-	this->tablaMetadatos = xTable::getInstance();
-	this->estaEnZonaCritica = 0;
+	this->_tamanoMemoriaPaginadaUsada = 0;
+	this->_tamanovHeap = pSize;
+	this->_ptrInicioMemoria = calloc(1,pSize);
+	this->_ptrUltimaMemoriaLibre = _ptrInicioMemoria;
+	this->_tablaMetadatos = xTable::getInstance();
+	this->_estaEnZonaCritica = 0;
 };
 
 
 vHeap::~vHeap(){
-	this->ptrUltimaMemoriaLibre = 0;
-	free(this->ptrInicioMemoria);
+	_ptrUltimaMemoriaLibre = 0;
+	_ptrInicioMemoria=0;
+	_tablaMetadatos->getList()->vaciar();
+	_estaEnZonaCritica = false;
+	_tamanoMemoriaPaginadaUsada =0;
+	_overweight = 0;
+	_tamanovHeap =0;
 };
 
 vHeap* vHeap::getInstancia()
@@ -43,13 +48,13 @@ vHeap* vHeap::getInstancia()
 };
 
 void vHeap::vFreeAll(){
-	while(estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
+	while(_estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
 			//usleep(medioDeSegundoMili);
 	}
-	estaEnZonaCritica = true;
-	for(vNode<xEntry*>* iterador=this->tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
+	_estaEnZonaCritica = true;
+	for(vNode<xEntry*>* iterador=this->_tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
 	{
-		void* tmpPtr = ptrInicioMemoria + iterador->getData()->getOffset();
+		void* tmpPtr = _ptrInicioMemoria + iterador->getData()->getOffset();
 		string type = iterador->getData()->getType();
 		void* erase;
 		if(type=="vInt"){ int* erase = (int*)tmpPtr; }
@@ -66,23 +71,23 @@ void vHeap::vFreeAll(){
 			}
 		}
 		free(erase);
-		tablaMetadatos->getList()->deleteData(iterador->getData());
+		_tablaMetadatos->getList()->deleteData(iterador->getData());
 	}
 	if (Constants::vDEBUG == "TRUE")
 	{
 		cout<<"vHeap.vFreeAll 	vacie el vHeap por completo \n";
 	}
-	estaEnZonaCritica = false;
+	_estaEnZonaCritica = false;
 };
 
 void vHeap::dumpMemory(){
-	while(estaEnZonaCritica)
+	while(_estaEnZonaCritica)
 	{
 		//usleep(medioDeSegundoMili);
 	}
-	estaEnZonaCritica = true;
-	void* posiciones=ptrInicioMemoria;
-	for(int i=0;i< tamanovHeap;i++){
+	_estaEnZonaCritica = true;
+	void* posiciones=_ptrInicioMemoria;
+	for(int i=0;i< _tamanovHeap;i++){
 		char* tmp=(char*)(posiciones+i);
 		string s;
 		int decimal=(char)(*tmp+0);
@@ -106,44 +111,44 @@ void vHeap::dumpMemory(){
 			fs << 0;
 		}
 	}
-	estaEnZonaCritica = false;
+	_estaEnZonaCritica = false;
 };
 
 void vHeap::desfragmentar()
 {
-	while(estaEnZonaCritica)
+	while(_estaEnZonaCritica)
 	{
 		//usleep(medioDeSegundoMili);
 	}
-	estaEnZonaCritica = true;
-	estaEnZonaCritica = false;
+	_estaEnZonaCritica = true;
+	_estaEnZonaCritica = false;
 };
 
 void vHeap::garbageCollector()
 {
-	while(estaEnZonaCritica)
+	while(_estaEnZonaCritica)
 	{
 		//usleep(medioDeSegundoMili);
 	}
-	estaEnZonaCritica = true;
-	for(vNode<xEntry*>* iterador=this->tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
+	_estaEnZonaCritica = true;
+	for(vNode<xEntry*>* iterador=this->_tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
 	{
 		if(iterador->getData()->getReferenceCounter() == 0)
 		{
-			free(ptrInicioMemoria+(iterador->getData()->getOffset()));
-			tablaMetadatos->getList()->deleteData(iterador->getData());
+			free(_ptrInicioMemoria+(iterador->getData()->getOffset()));
+			_tablaMetadatos->getList()->deleteData(iterador->getData());
 			if(Constants::vDEBUG == "TRUE")
 			{
 				cout<<"Borre un elemento de la xTable \n";
 			}
 		}
 	}
-	estaEnZonaCritica = false;
+	_estaEnZonaCritica = false;
 };
 
 void vHeap::control()			//hilo para metodo de control
 {
-	while(estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
+	while(_estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
 		//usleep(medioDeSegundoMili);
 	}							//cada metodo siguiente tiene zonas criticas individuales
 	this->garbageCollector();
@@ -157,15 +162,15 @@ void vHeap::control()			//hilo para metodo de control
 vRef* vHeap::vMalloc(int pSize, std::string pType)
 {
 
-	while(estaEnZonaCritica){				//esperar hasta que se libere de zona critica
+	while(_estaEnZonaCritica){				//esperar hasta que se libere de zona critica
 		//usleep(medioDeSegundoMili);
 		//sleep(1);
 	}
-	this->estaEnZonaCritica = true;
+	this->_estaEnZonaCritica = true;
 
-	long b = reinterpret_cast<long>(ptrInicioMemoria);
-	long a = reinterpret_cast<long>(ptrUltimaMemoriaLibre);
-	int memLibre = tamanovHeap-(a-b);
+	long b = reinterpret_cast<long>(_ptrInicioMemoria);
+	long a = reinterpret_cast<long>(_ptrUltimaMemoriaLibre);
+	int memLibre = _tamanovHeap-(a-b);
 
 	if(0 == "TRUE"){
 		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
@@ -173,7 +178,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<a<<"\n";
 		cout<<"vHeap.vMalloc	"<< memLibre	<<" bytes de memoria libre  \n";
 
-		cout<<"ingreso: "<<""<<"dato ingresado, leido de memoria: "<<*(int*)(ptrUltimaMemoriaLibre-4)<<"\n";
+		cout<<"ingreso: "<<""<<"dato ingresado, leido de memoria: "<<*(int*)(_ptrUltimaMemoriaLibre-4)<<"\n";
 	}
 
 	if(memLibre >= pSize)
@@ -183,20 +188,20 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 			cout<< "\n";
 		}
 
-		int id =tablaMetadatos->addEntry(pSize, a-b,pType);
+		int id =_tablaMetadatos->addEntry(pSize, a-b,pType);
 		vRef* referencia = new vRef(id);
-		this->ptrUltimaMemoriaLibre = ptrUltimaMemoriaLibre+pSize;
+		this->_ptrUltimaMemoriaLibre = _ptrUltimaMemoriaLibre+pSize;
 
-		this->estaEnZonaCritica = false;
+		this->_estaEnZonaCritica = false;
 
 		return referencia;
 
 	}else{	//no cabe el dato, ahora tratemos de paginar.
 		if(0 == "TRUE")
 		{
-			cout<< "Los "<<pSize<<" bytes solicitados no caben en: "<<tamanovHeap<< ". Hay que paginar\n";
+			cout<< "Los "<<pSize<<" bytes solicitados no caben en: "<<_tamanovHeap<< ". Hay que paginar\n";
 		}
-		this->estaEnZonaCritica = false;
+		this->_estaEnZonaCritica = false;
 		if(paginar(pSize))				//tratamos de paginar un tamaño mayor al pedido en vMalloc
 		{
 			this->desfragmentar();		//para asegurarnos que quepa
@@ -211,7 +216,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 
 bool vHeap::paginar(int pSize)
 {
-	if((tamanovHeap*_overweight)-tamanoMemoriaPaginadaUsada < pSize)//el tamaño que se requiere escribir en memoria no cabe. No hay paginacion disponible
+	if((_tamanovHeap*_overweight)-_tamanoMemoriaPaginadaUsada < pSize)//el tamaño que se requiere escribir en memoria no cabe. No hay paginacion disponible
 	{
 		return false;
 	}else			//si hay espacio suficiente solo hay que hacer paginacion

@@ -29,7 +29,7 @@ public:
 	void insertTail(k);
 	void deleteData(k);
 	void showData();
-
+	void vaciar();
 	vNode<k>* getHead();
 	vNode<k>* getTail();
 	int getLength();
@@ -143,6 +143,15 @@ void vLinkedList<k>::showData(){
 	}
 }
 
+/**
+ * Limpiar la lista por completo
+ */
+template<class k>
+void vLinkedList<k>::vaciar(){
+	this->_head = 0;
+	this->_tail = 0;
+	this->_length = 0;
+}
 
 
 #endif /* SRC_VLINKEDLIST_H_ */

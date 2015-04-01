@@ -27,12 +27,12 @@ class vHeap{
 private:
 	static vHeap* HEAP;
 	int _overweight;
-	int tamanovHeap;
-	int tamanoMemoriaPaginadaUsada;
-	xTable* tablaMetadatos;
-	void* ptrInicioMemoria;
+	int _tamanovHeap;
+	int _tamanoMemoriaPaginadaUsada;
+	xTable* _tablaMetadatos;
+	void* _ptrInicioMemoria;
 
-	bool estaEnZonaCritica;//todos los metodos al final deben asignarle false
+	bool _estaEnZonaCritica;//todos los metodos al final deben asignarle false
 
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
@@ -50,7 +50,7 @@ public:
 	bool paginar(int pSize);
 
 
-	void* ptrUltimaMemoriaLibre;
+	void* _ptrUltimaMemoriaLibre;
 	static vHeap* getInstancia();
 	vRef* vMalloc(int pSize, std::string pType);
 	void vFree(vRef* pRef);
