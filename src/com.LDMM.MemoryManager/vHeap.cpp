@@ -251,7 +251,7 @@ void vHeap::vFree(vRef* pRef)
 	if(Constants::vDEBUG == "TRUE"){
 		cout << "vfree en vHeap no implementado aun --------- \n";
 	}
-};
+}
 
 
 

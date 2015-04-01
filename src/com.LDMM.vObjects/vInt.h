@@ -27,7 +27,6 @@ public:
 		cout<<"ssss";
 		//sz = size_t(vHeap::getInstancia()->ptrUltimaMemoriaLibre);
 		return v;
-
 	}
 };
 

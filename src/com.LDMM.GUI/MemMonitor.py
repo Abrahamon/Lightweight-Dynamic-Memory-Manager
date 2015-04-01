@@ -3,6 +3,69 @@ from tkinter import *
 from threading import Thread
 import threading
 import time
+import json
+
+
+def createVisualMemory(Size,MemDivision):
+    global MemoryBlockList,memoryCanvas
+    
+    def getMemBlocks(Size,MemDivision):
+        result=Size/MemDivision
+        if(isinstance(result,int)):
+            return int(result)
+        else:
+            return int(result)+1
+
+
+    numMemoryBlocks = getMemBlocks(Size,MemDivision) #Cantidad Total de Bloques
+    MemoryChunckSize = (numMemoryBlocks*30)  #Cantidad Total de Pixeles para todos los bloques
+    HalfMemoryChunckSize = MemoryChunckSize/2#Mita de la Cantidad total de Pixeles
+    scrRegion=(0,0,400,MemoryChunckSize+(MemoryChunckSize*.005))#Region de Scroll
+                                                                #Total de Pixeles + un 0.005
+
+    print("NUMERO DE BLOQUE DE MEMORIA " + str(numMemoryBlocks))
+    print("TAMAÑO DEL CANVAS DE MEMORIA " + str(MemoryChunckSize))
+    
+    memoryCanvas = Canvas(window, width=300, height=600,borderwidth=0,
+                          highlightthickness=0,bg="#0155FF")
+
+    memoryCanvas.config(scrollregion=scrRegion)
+    memoryCanvas.pack(padx=1,pady=0)
+    
+    ls = [5,5,180,30,numMemoryBlocks]   #Lista con Valores de Coordenadas(Cambian en cada iteracion)
+    MemoryBlockList=[]                  #Lista de Bloques de Memoria (objetos Canvas)
+
+    i = 1;
+    while ls[4] != 0:                   #Mientras que la cantidad de bloque sea != 0
+        
+        block = memoryCanvas.create_rectangle(ls[0],ls[1],ls[2],ls[3],width=0, fill="white")
+        MemoryBlockList.append(block)   #Añade el bloque creado a la lista
+        ls[1] += 30                     #Aumenta las coordenadas en 30
+        ls[3] += 30
+        ls[4] -= 1                      #Reduce el numero de elementos crear
+        
+        porcentajeCompletado = (i*100)/numMemoryBlocks
+        fillLoadingBars(porcentajeCompletado,MemDivision)
+        i+=1
+    #memoryCanvas.itemconfig(MemoryBlockList[24],fill="blue")
+    memoryCanvas.place(x=15,y=3)
+    hbar=Scrollbar(window,orient=VERTICAL)
+    hbar.pack(side=LEFT,fill=Y)
+    hbar.config(command=memoryCanvas.yview)
+    memoryCanvas.config(yscrollcommand=hbar.set)
+
+def setMemoryBlock(pUsageFlag,MemoryPosition):
+    global MemoryBlockList,memoryCanvas,entry
+    MemoryPosition=int(entry.get())
+    if(pUsageFlag == True):
+        memoryCanvas.itemconfig(MemoryBlockList[MemoryPosition],fill="red")
+    else:
+        memoryCanvas.itemconfig(MemoryBlockList[MemoryPosition],fill="white")
+
+def createGUI(Size,MemDivision):
+    x= Thread(target=createVisualMemory, args=(Size,MemDivision))
+    x.daemon = True
+    x.start()
 
 def start_HOST():
     global server
@@ -25,16 +88,10 @@ def listen():
             data = conn.recv(4096)
             #data = data.split("#")
             data = data.decode("utf-8")
-            data = data.split("#")
-            print("READ: "+data[0]+" "+data[1]+" "+data[2])
-            print(data[0] + " " + data[1] + " " + data[2])
-            if(data[0] == "rectangle"):
-                figura = contenedor.create_rectangle(1,1 ,50 ,50, width=0, fill="#FF0000")
-                contenedor.move(figura,data[1],data[2])
-            elif(data[0] == "circle"):
-                figura = contenedor.create_oval(1, 1, 50,50, fill="blue")
-                contenedor.move(figura,data[1],data[2])
-            contenedor.update()
+            if(data != ""):
+                #print(data)
+                if(data == "xStart"):
+                    go()
             #time.sleep()
     server.close()
 
@@ -44,60 +101,55 @@ def start_loop():
     a.daemon = True
     a.start()
 
-def createVisualMemory(Size,MemDivision):
-    global MemoryBlockList,memoryCanvas
-    
-    def getMemBlocks(Size,MemDivision):
-        result=Size/MemDivision
-        if(isinstance(result,int)):
-            return int(result)
-        else:
-            return int(result)+1
+
+#############################################################################
+####################### Graphical User Interface ############################
+#############################################################################
 
 
-    numMemoryBlocks = getMemBlocks(Size,MemDivision) #Cantidad Total de Bloques
-    MemoryChunckSize = (numMemoryBlocks*30)  #Cantidad Total de Pixeles para todos los bloques
-    HalfMemoryChunckSize = MemoryChunckSize/2#Mita de la Cantidad total de Pixeles
-    scrRegion=(0,0,400,MemoryChunckSize+(MemoryChunckSize*.005))#Region de Scroll
-                                                                #Total de Pixeles + un 0.005
+######################## Loading Screen ##############################
+def fillLoadingBars(ptr,numMemBlocks):
+    #print("PORCENTAJE " + str(ptr))
+    bloque = int(ptr*20/100)
+    #print("Bloque: " + str(bloque))
+    for i in range(0,bloque):
+        loadCanvas.itemconfig(loadBar[i],fill="green")
+        splashCanvas.itemconfig(txtPercentaje,text=str(int(ptr))+"%")
+        if(ptr==100):
+            window.deiconify()
+def start_LoadBar():
+    global loadScreen,splashCanvas
+    loadScreen = Toplevel()
+    loadScreen.title("Memory Monitor LDMM")
+    loadScreen.geometry("500x200+450+250")
+    loadScreen.resizable(width=FALSE, height=FALSE)
 
-    print("num " + str(numMemoryBlocks))
-    print("chuck size " + str(MemoryChunckSize))
-    
-    memoryCanvas = Canvas(window, width=300, height=600,borderwidth=0,
-                          highlightthickness=0,bg="#0155FF")
+    splashCanvas = Canvas(loadScreen, width=500, height=200, bg="#FFFFFF")
+    splashCanvas.place(x=0,y=0)
 
-    memoryCanvas.config(scrollregion=scrRegion)
-    memoryCanvas.pack(padx=1,pady=0)
-    
-    ls = [5,5,180,30,numMemoryBlocks]   #Lista con Valores de Coordenadas(Cambian en cada iteracion)
-    MemoryBlockList=[]                  #Lista de Bloques de Memoria (objetos Canvas)
-    
-    while ls[4] != 0:                   #Mientras que la cantidad de bloque sea != 0
-        block = memoryCanvas.create_rectangle(ls[0],ls[1],ls[2],ls[3],width=0, fill="white")
-        MemoryBlockList.append(block)   #Añade el bloque creado a la lista
-        ls[1] += 30                     #Aumenta las coordenadas en 30
-        ls[3] += 30
-        ls[4] -= 1                      #Reduce el numero de elementos crear
-    
-    #memoryCanvas.itemconfig(MemoryBlockList[24],fill="blue")
-    memoryCanvas.place(x=15,y=3)
-    hbar=Scrollbar(window,orient=VERTICAL)
-    hbar.pack(side=LEFT,fill=Y)
-    hbar.config(command=memoryCanvas.yview)
-    memoryCanvas.config(yscrollcommand=hbar.set)
+    global loadCanvas,loadBar,txtPercentaje
 
-def setMemoryBlock(pUsageFlag,MemoryPosition):
-    global MemoryBlockList,memoryCanvas,entry
-    MemoryPosition=int(entry.get())
-    if(pUsageFlag == True):
-        memoryCanvas.itemconfig(MemoryBlockList[MemoryPosition],fill="red")
-    else:
-        memoryCanvas.itemconfig(MemoryBlockList[MemoryPosition],fill="white")
+    splashCanvas.create_text(20, 70, anchor=W, font="Arial",text="Percentage:")
+    txtPercentaje = splashCanvas.create_text(115, 70, anchor=W, font="Arial",text="0")
     
+    loadBar=[]
+    loadCanvas = Canvas(splashCanvas, width=400, height=50, bg="#000000")
+    loadCanvas.place(x=50,y=90)
+    c=[1,1,20,50] #Coordenas de Creacion de Barras de Carga
+    for i in range(0,20):
+        ob = loadCanvas.create_rectangle(c[0],c[1],c[2],c[3],width=0, fill="white")
+        c[0]+=20
+        c[2]+=20
+        loadBar.append(ob)
+    loadScreen.withdraw()
+def go():
+    loadScreen.deiconify()
+    window.withdraw()
+    createGUI(100000,32)
+global window
 window = Tk()
 window.title("Memory Monitor LDMM")
-window.geometry("800x600+250+150")
+window.geometry("800x600+250+100")
 window.resizable(width=FALSE, height=FALSE)
 
 
@@ -107,13 +159,14 @@ contenedor.place(x=0,y=0)
 
 botonA = Button(window,width=7,height=2,command=lambda: setMemoryBlock(True,10),text="Change",bg="#000000",fg="#FFFFFF")
 botonA.place(x=335,y=350)
+
 global entry
 entry = Entry(window)
 entry.place(x=335,y=200)
 
 
-    
-createVisualMemory(200,32)
-#start_HOST()
-#start_loop()
+
+start_LoadBar()
+start_HOST()
+start_loop()
 window.mainloop()
