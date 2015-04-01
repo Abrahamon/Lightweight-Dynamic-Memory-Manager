@@ -174,6 +174,8 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 	long a = reinterpret_cast<long>(_ptrUltimaMemoriaLibre);
 	int memLibre = _tamanovHeap-(a-b);
 
+
+	if(Constants::vDEBUG == "TRUE"){
 		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
 		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<b<<"\n";
 		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<a<<"\n";
@@ -181,7 +183,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 
 
 		cout<<"ingreso: "<<""<<"dato ingresado, leido de memoria: "<<*(int*)(_ptrUltimaMemoriaLibre-4)<<"\n";
-
+	}
 	if(memLibre >= pSize)
 	{
 		if(Constants::vDEBUG == "TRUE"){
@@ -210,9 +212,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 		}else							// el objeto no cabe en ningun lugar
 			if(0=="TRUE")
 				cout<<"No hay espacio para la paginacion, ni espacio en la memoria \n";
-	};
-
-
+	}
 };
 
 bool vHeap::paginar(int pSize)

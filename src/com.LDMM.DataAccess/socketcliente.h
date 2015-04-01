@@ -22,8 +22,8 @@ using namespace std;
 class SocketCliente{
 public:
     SocketCliente();
-    bool connectar();
-    void setMensaje(const char *msn);
+    bool connect(const char* targetIP,int targetPORT);
+    void sendMessage(const char *msn);
 private:
     int descriptor;
     sockaddr_in info;

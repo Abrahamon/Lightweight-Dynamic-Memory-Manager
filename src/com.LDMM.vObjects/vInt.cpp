@@ -15,8 +15,6 @@ vRef* vInt::operator= (const int& s){
 	setVObjectType(Constants::TYPE_INT);
 
 	return vHeap::getInstancia()->vMalloc(32,Constants::TYPE_INT);
-	//return this;
-
 
 }
 
