@@ -12,12 +12,16 @@
 #include "vObject.h"
 #include <iostream>
 #include "../com.LDMM.MemoryResources/vRef.h"
+#include "../com.LDMM.MemoryManager/vHeap.h"
 using namespace std;
 class vLong: public vRef {
 public:
 	vLong();
-	void operator = (const long& s);
+	vRef* operator = (const long& s);
 	long vLongData;
+	void* operator new(size_t sz, void *pvObject){
+		return pvObject;
+	}
 };
 
 

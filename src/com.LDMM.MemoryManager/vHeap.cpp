@@ -135,7 +135,8 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<a<<"\n";
 		cout<<"vHeap.vMalloc	"<< memLibre	<<" bytes de memoria libre  \n";
 
-		//cout<<"ingreso: "<<""<<"dato ingresado, leido de memoria: "<<*(int*)(ptrUltimaMemoriaLibre-4)<<"\n";
+		cout<<"ingreso: "<<""<<"dato ingresado, leido de memoria: "<<*(int*)(ptrUltimaMemoriaLibre-4)<<"\n";
+
 	}
 
 	if(memLibre >= pSize)
@@ -146,9 +147,8 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 			cout<< "\n";
 		}
 
-//		int id =tablaMetadatos->addEntry(pSize,ptrUltimaMemoriaLibre,pType);
 		int id =tablaMetadatos->addEntry(pSize, a-b,pType);
-
+		cout<<"SI \n";
 		vRef* referencia = new vRef(id);
 		this->ptrUltimaMemoriaLibre = ptrUltimaMemoriaLibre+pSize;
 
