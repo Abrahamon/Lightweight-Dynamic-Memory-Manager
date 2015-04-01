@@ -12,6 +12,8 @@ vHeap* vHeap::HEAP = 0;
 
 vHeap::vHeap(int pSize, int pOverweight)
 {
+
+
 	if(Constants::vDEBUG == "TRUE"){
 		std::cout << "vHeap.vHeap	creo un vHeap de : "<<pSize<<" bytes"<<"\n";
 		std:: cout <<"\n";
@@ -172,18 +174,19 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 	long a = reinterpret_cast<long>(_ptrUltimaMemoriaLibre);
 	int memLibre = _tamanovHeap-(a-b);
 
-	if(0 == "TRUE"){
 		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
 		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<b<<"\n";
 		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<a<<"\n";
 		cout<<"vHeap.vMalloc	"<< memLibre	<<" bytes de memoria libre  \n";
 
+
 		cout<<"ingreso: "<<""<<"dato ingresado, leido de memoria: "<<*(int*)(_ptrUltimaMemoriaLibre-4)<<"\n";
-	}
+
+	//}
 
 	if(memLibre >= pSize)
 	{
-		if(0 == "TRUE"){
+		if(Constants::vDEBUG == "TRUE"){
 			cout <<"vHeap.vMalloc	Si hay espacio suficiente para un "<<pType<<"\n";
 			cout<< "\n";
 		}

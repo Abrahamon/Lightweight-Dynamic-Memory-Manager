@@ -7,11 +7,11 @@
 
 #include "vBool.h"
 
-void vBool::operator= (const bool& s){
+vRef* vBool::operator= (const bool& s){
 	vBoolData = s;
 	setVObjectData((void*)&vBoolData);
 	setVObjectType(Constants::TYPE_BOOL);
-	return ;
+	return vHeap::getInstancia()->vMalloc(32,Constants::TYPE_BOOL);;
 }
  vBool::vBool(){
 

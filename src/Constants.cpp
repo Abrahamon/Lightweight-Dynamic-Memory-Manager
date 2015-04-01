@@ -43,7 +43,8 @@ Constants::Constants(){
 	OVERWEIGHT = atoi(reader->getParameter("OVERWEIGHT"));
 	DUMP_FRECUENCY = atoi(reader->getParameter("DUMP_FRECUENCY"));
 	DUMP_PATH = reader->getParameter("DUMP_PATH");
-	vDEBUG = reader->getParameter("vDEBUG");
+//	vDEBUG = reader->getParameter("vDEBUG");
+	vDEBUG = "TRUE";
 	vDEBUG_PATH = reader->getParameter("vDEBUG_PATH");
 	GC_FRECUENCY = atoi(reader->getParameter("GC_FRECUENCY"));
 	cuartoDeSegundoMili = atoi(reader->getParameter("cuartoDeSegundoMili"));

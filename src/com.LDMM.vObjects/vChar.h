@@ -21,9 +21,8 @@ public:
 	vRef* operator = (const char& s);
 	char vCharData;
 
-	void* operator new(size_t sz, void *v){
-		cout<<"Me invocaron char+++++++++"<<endl;
-		return v;
+	void* operator new(size_t sz, void *pvObject){
+		return pvObject;
 	}
 };
 

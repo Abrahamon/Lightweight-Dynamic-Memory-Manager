@@ -12,12 +12,16 @@
 #include "vObject.h"
 #include <iostream>
 #include "../com.LDMM.MemoryResources/vRef.h"
+#include "../com.LDMM.MemoryManager/vHeap.h"
 using namespace std;
 class vFloat: public vRef {
 public:
 	vFloat();
-	void operator = (const float& s);
+	vRef * operator = (const float& s);
 	float vFloatData;
+	void* operator new(size_t sz, void *pvObject){
+		return pvObject;
+	}
 };
 
 

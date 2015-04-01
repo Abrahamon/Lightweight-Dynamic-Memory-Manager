@@ -7,11 +7,11 @@
 
 #include "vLong.h"
 
-void vLong::operator= (const long& s){
+vRef* vLong::operator= (const long& s){
 	vLongData = s;
 	setVObjectData((void*)&vLongData);
 	setVObjectType(Constants::TYPE_LONG);
-	return ;
+	return vHeap::getInstancia()->vMalloc(1,Constants::TYPE_LONG);
 }
  vLong::vLong(){
 

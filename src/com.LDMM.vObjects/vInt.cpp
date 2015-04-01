@@ -13,7 +13,10 @@ vRef* vInt::operator= (const int& s){
 	vIntData = s;
 	setVObjectData((void*)&vIntData);
 	setVObjectType(Constants::TYPE_INT);
+
 	return vHeap::getInstancia()->vMalloc(32,Constants::TYPE_INT);
+	//return this;
+
 
 }
 

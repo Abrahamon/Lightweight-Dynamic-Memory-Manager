@@ -1,11 +1,16 @@
 <? xml version="1.0" ?>  
 <root>
     < Config>  
+<<<<<<< HEAD
         <SIZE value="200" />
         <OVERWEIGHT value="1" />
+=======
+        <SIZE value="2000" />
+        <OVERWEIGHT value="50" />
+>>>>>>> 547908896f324ef73e4ff4f72e76c18d4b8b6e0c
         <DUMP_FRECUENCY value="150" /> 
         <DUMP_PATH value="src/" />
-        <vDEBUG value="false/" />
+        <vDEBUG value="true/" />
         <vDEBUG_PATH value="src/" />
         <GC_FRECUENCY value="150" />
         <cuartoDeSegundoMili value="250000" />
