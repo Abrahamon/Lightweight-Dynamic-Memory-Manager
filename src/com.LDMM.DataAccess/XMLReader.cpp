@@ -39,6 +39,8 @@ const char* XMLReader::getParameter(const char* pParameter){
 	}
 	pElem = root->FirstChildElement(pParameter); //Ingresa al nodo del Dato que se busca (pParameter)
 	const char* output = pElem->Attribute("value");//Obtiene el valor del Dato que se busca
-	std::cout << "*XML* "<<"<<<Param: " << pParameter << " * Value: " << output << " >>>" << std::endl;
+
+	//std::cout << "*XML* "<<"<<<Param: " << pParameter << " * Value: " << output << " >>>" << std::endl;
+
 	return output; //Retorna el valor encontrado
 }

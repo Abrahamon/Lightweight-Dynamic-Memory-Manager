@@ -21,13 +21,9 @@ public:
 	vRef* operator = (const char& s);
 	char vCharData;
 
-	void* operator new(size_t sz, void *v){
-			//sz = size_t(vHeap::getInstancia()->ptrUltimaMemoriaLibre);
-			cout<<"Me invocaron char+++++++++"<<endl;
-			return v;
-
-
-		}
+	void* operator new(size_t sz, void *pvObject){
+		return pvObject;
+	}
 };
 
 

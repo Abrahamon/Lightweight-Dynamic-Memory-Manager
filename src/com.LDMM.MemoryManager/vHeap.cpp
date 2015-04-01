@@ -12,6 +12,8 @@ vHeap* vHeap::HEAP = 0;
 
 vHeap::vHeap(int pSize, int pOverweight)
 {
+
+
 	if(Constants::vDEBUG == "TRUE"){
 		std::cout << "vHeap.vHeap	creo un vHeap de : "<<pSize<<" bytes"<<"\n";
 		std:: cout <<"\n";
@@ -133,18 +135,19 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 		cout<<"vHeap.vMalloc	"<< memLibre	<<" bytes de memoria libre  \n";
 
 		cout<<"ingreso: "<<""<<"dato ingresado, leido de memoria: "<<*(int*)(ptrUltimaMemoriaLibre-4)<<"\n";
+
 	}
 
 	if(memLibre >= pSize)
 	{
+
 		if(Constants::vDEBUG == "TRUE"){
 			cout <<"vHeap.vMalloc	Si hay espacio suficiente para un "<<pType<<"\n";
 			cout<< "\n";
 		}
 
-//		int id =tablaMetadatos->addEntry(pSize,ptrUltimaMemoriaLibre,pType);
 		int id =tablaMetadatos->addEntry(pSize, a-b,pType);
-
+		cout<<"SI \n";
 		vRef* referencia = new vRef(id);
 		this->ptrUltimaMemoriaLibre = ptrUltimaMemoriaLibre+pSize;
 
@@ -173,7 +176,7 @@ void vHeap::vFree(vRef* pRef)
 	if(Constants::vDEBUG == "TRUE"){
 		cout << "vfree en vHeap no implementado aun --------- \n";
 	}
-};
+}
 
 
 

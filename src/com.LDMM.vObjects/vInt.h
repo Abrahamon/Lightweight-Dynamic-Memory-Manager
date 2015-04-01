@@ -23,10 +23,12 @@ public:
 
 	int vIntData;
 
-	void* operator new(size_t sz, void *v){
-		//sz = size_t(vHeap::getInstancia()->ptrUltimaMemoriaLibre);
-		return v;
+	void* operator new(size_t sz, void *pvObject){
+
+	return pvObject;
+
 	}
+
 };
 
 

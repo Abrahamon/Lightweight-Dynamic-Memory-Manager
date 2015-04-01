@@ -13,13 +13,16 @@
 #include "vObject.h"
 #include <iostream>
 #include "../com.LDMM.MemoryResources/vRef.h"
+#include "../com.LDMM.MemoryManager/vHeap.h"
 using namespace std;
 class vBool: public vRef {
 public:
-
 	vBool();
-	void operator = (const bool& s);
+	vRef* operator = (const bool& s);
 	bool vBoolData;
+	void * operator new (size_t sz, void* pvObject){
+		return pvObject;
+	}
 };
 
 
