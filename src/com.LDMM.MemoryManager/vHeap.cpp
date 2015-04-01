@@ -182,8 +182,6 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 
 		cout<<"ingreso: "<<""<<"dato ingresado, leido de memoria: "<<*(int*)(_ptrUltimaMemoriaLibre-4)<<"\n";
 
-	//}
-
 	if(memLibre >= pSize)
 	{
 		if(Constants::vDEBUG == "TRUE"){
