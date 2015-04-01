@@ -25,6 +25,8 @@ std::string Constants::TYPE_LONG;
 std::string Constants::TYPE_FLOAT;
 std::string Constants::TYPE_ARRAY;
 std::string Constants::TYPE_BOOL;
+std::string Constants::TARGET_IP;
+int Constants::TARGET_PORT;
 
 Constants* Constants::getInstance(){
 	if(_Constants == 0){
@@ -58,4 +60,7 @@ Constants::Constants(){
 	TYPE_FLOAT = "Float";
 	TYPE_ARRAY = "Array";
 	TYPE_BOOL = "Bool";
+
+	TARGET_IP = reader->getParameter("TARGET_IP");
+	TARGET_PORT = atoi(reader->getParameter("TARGET_PORT"));
 }

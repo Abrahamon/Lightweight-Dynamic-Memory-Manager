@@ -42,6 +42,9 @@ public:
 	static std::string TYPE_ARRAY;
 	static std::string TYPE_BOOL;
 
+	static std::string TARGET_IP;
+	static int TARGET_PORT;
+
 	Constants* getInstance();
 
 private:
