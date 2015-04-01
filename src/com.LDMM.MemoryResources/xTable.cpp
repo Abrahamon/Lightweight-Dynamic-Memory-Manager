@@ -28,7 +28,7 @@ xTable* xTable::getInstance(){
 }
 
 xEntry* xTable::getObjectInfo(int pID){
-	Node<xEntry*>* tmpEntry = _ObjectsList->getHead();
+	vNode<xEntry*>* tmpEntry = _ObjectsList->getHead();
 	for(int i = 0; i < pID; i++){
 		tmpEntry = tmpEntry->getNext();
 	}
@@ -37,7 +37,7 @@ xEntry* xTable::getObjectInfo(int pID){
 
 int xTable::getOffSetDelXEntry(int pID)
 {
-	for(Node<xEntry*>* tmpEntry = _ObjectsList->getHead(); tmpEntry != 0 ; tmpEntry = tmpEntry->getNext()){
+	for(vNode<xEntry*>* tmpEntry = _ObjectsList->getHead(); tmpEntry != 0 ; tmpEntry = tmpEntry->getNext()){
 		if(tmpEntry->getData()->getID() == pID)
 		{
 			return tmpEntry->getData()->getOffset();

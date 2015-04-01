@@ -20,17 +20,19 @@
 #include <algorithm>
 #include <string>
 #include <fstream>
-
+#include <cstring>
 
 class vHeap{
 
 private:
 	static vHeap* HEAP;
+	int _overweight;
 	int tamanovHeap;
+	int tamanoMemoriaPaginadaUsada;
 	xTable* tablaMetadatos;
 	void* ptrInicioMemoria;
 
-	bool zonaCritica;//todos los metodos al final deben asignarle false
+	bool estaEnZonaCritica;//todos los metodos al final deben asignarle false
 
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
@@ -42,7 +44,12 @@ private:
 	void desfragmentar();
 	void control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.
 
+
 public:
+
+	bool paginar(int pSize);
+
+
 	void* ptrUltimaMemoriaLibre;
 	static vHeap* getInstancia();
 	vRef* vMalloc(int pSize, std::string pType);

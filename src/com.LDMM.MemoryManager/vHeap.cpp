@@ -16,11 +16,13 @@ vHeap::vHeap(int pSize, int pOverweight)
 		std::cout << "vHeap.vHeap	creo un vHeap de : "<<pSize<<" bytes"<<"\n";
 		std:: cout <<"\n";
 	}
+	this->_overweight= pOverweight;
+	this->tamanoMemoriaPaginadaUsada = 0;
 	this->tamanovHeap = pSize;
 	this->ptrInicioMemoria = calloc(1,pSize);
 	this->ptrUltimaMemoriaLibre = ptrInicioMemoria;
 	this->tablaMetadatos = xTable::getInstance();
-	this->zonaCritica = 0;
+	this->estaEnZonaCritica = 0;
 };
 
 
@@ -35,17 +37,17 @@ vHeap* vHeap::getInstancia()
 	{
 		return HEAP;
 	}else{
-		HEAP = new vHeap(Constants::SIZE,0);
+		HEAP = new vHeap(Constants::SIZE,Constants::OVERWEIGHT);
 		return HEAP;
 	}
 };
 
 void vHeap::vFreeAll(){
-	while(zonaCritica){			// en caso de que otro hilo esta tratando el vHeap
+	while(estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
 			//usleep(medioDeSegundoMili);
 	}
-	zonaCritica = true;
-	for(Node<xEntry*>* iterador=this->tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
+	estaEnZonaCritica = true;
+	for(vNode<xEntry*>* iterador=this->tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
 	{
 		void* tmpPtr = ptrInicioMemoria + iterador->getData()->getOffset();
 		string type = iterador->getData()->getType();
@@ -70,49 +72,61 @@ void vHeap::vFreeAll(){
 	{
 		cout<<"vHeap.vFreeAll 	vacie el vHeap por completo \n";
 	}
-	zonaCritica = false;
+	estaEnZonaCritica = false;
 };
 
 void vHeap::dumpMemory(){
-	//-
-		void* posiciones=ptrInicioMemoria;
-		//hola si pude
-		for(int i=0;i< tamanovHeap;i++){
-			char* tmp=(char*)(posiciones+i);
-			string s;
-			int decimal=(char)(*tmp+0);
-			ofstream fs("dump.txt");
-			if (decimal!=0){
-				while(decimal>1)
-				{
-					int resto=decimal%2;
-					if(resto==1)s+="1";
-					else s+="0";
-					decimal/=2;
-				}
-				s+="1";
-				reverse(s.begin(),s.end());
-				for(int i=0;i< 8-s.length();i++){
-					fs << 0;
-				}
-				fs << s;
-		}
-			else{
-				fs << 0;
-			}
-		}
-
-};
-void vHeap::desfragmentar(){};
-
-void vHeap::garbageCollector()
-{
-	while(zonaCritica)
+	while(estaEnZonaCritica)
 	{
 		//usleep(medioDeSegundoMili);
 	}
-	zonaCritica = true;
-	for(Node<xEntry*>* iterador=this->tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
+	estaEnZonaCritica = true;
+	void* posiciones=ptrInicioMemoria;
+	for(int i=0;i< tamanovHeap;i++){
+		char* tmp=(char*)(posiciones+i);
+		string s;
+		int decimal=(char)(*tmp+0);
+		ofstream fs("dump.txt");
+		if (decimal!=0){
+			while(decimal>1)
+			{
+				int resto=decimal%2;
+				if(resto==1)s+="1";
+				else s+="0";
+				decimal/=2;
+			}
+			s+="1";
+			reverse(s.begin(),s.end());
+			for(int i=0;i< 8-s.length();i++){
+				fs << 0;
+			}
+			fs << s;
+		}
+		else{
+			fs << 0;
+		}
+	}
+	estaEnZonaCritica = false;
+};
+
+void vHeap::desfragmentar()
+{
+	while(estaEnZonaCritica)
+	{
+		//usleep(medioDeSegundoMili);
+	}
+	estaEnZonaCritica = true;
+	estaEnZonaCritica = false;
+};
+
+void vHeap::garbageCollector()
+{
+	while(estaEnZonaCritica)
+	{
+		//usleep(medioDeSegundoMili);
+	}
+	estaEnZonaCritica = true;
+	for(vNode<xEntry*>* iterador=this->tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
 	{
 		if(iterador->getData()->getReferenceCounter() == 0)
 		{
@@ -124,12 +138,12 @@ void vHeap::garbageCollector()
 			}
 		}
 	}
-	zonaCritica = false;
+	estaEnZonaCritica = false;
 };
 
 void vHeap::control()			//hilo para metodo de control
 {
-	while(zonaCritica){			// en caso de que otro hilo esta tratando el vHeap
+	while(estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
 		//usleep(medioDeSegundoMili);
 	}							//cada metodo siguiente tiene zonas criticas individuales
 	this->garbageCollector();
@@ -143,19 +157,17 @@ void vHeap::control()			//hilo para metodo de control
 vRef* vHeap::vMalloc(int pSize, std::string pType)
 {
 
-	while(zonaCritica){				//esperar hasta que se libere de zona critica
+	while(estaEnZonaCritica){				//esperar hasta que se libere de zona critica
 		//usleep(medioDeSegundoMili);
 		//sleep(1);
-
 	}
-
-	this->zonaCritica = true;
+	this->estaEnZonaCritica = true;
 
 	long b = reinterpret_cast<long>(ptrInicioMemoria);
 	long a = reinterpret_cast<long>(ptrUltimaMemoriaLibre);
 	int memLibre = tamanovHeap-(a-b);
 
-	if(Constants::vDEBUG == "TRUE"){
+	if(0 == "TRUE"){
 		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
 		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<b<<"\n";
 		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<a<<"\n";
@@ -166,30 +178,68 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 
 	if(memLibre >= pSize)
 	{
-		if(Constants::vDEBUG == "TRUE"){
+		if(0 == "TRUE"){
 			cout <<"vHeap.vMalloc	Si hay espacio suficiente para un "<<pType<<"\n";
 			cout<< "\n";
 		}
 
 		int id =tablaMetadatos->addEntry(pSize, a-b,pType);
-		cout<<"SI \n";
 		vRef* referencia = new vRef(id);
 		this->ptrUltimaMemoriaLibre = ptrUltimaMemoriaLibre+pSize;
 
-		this->zonaCritica = false;
+		this->estaEnZonaCritica = false;
 
 		return referencia;
 
-	}else{
-		if(Constants::vDEBUG == "TRUE")
+	}else{	//no cabe el dato, ahora tratemos de paginar.
+		if(0 == "TRUE")
 		{
-			cout<< "Los "<<pSize<<" bytes solicitados no caben en: "<<tamanovHeap<< "\n";
+			cout<< "Los "<<pSize<<" bytes solicitados no caben en: "<<tamanovHeap<< ". Hay que paginar\n";
 		}
-		this->zonaCritica = false;
+		this->estaEnZonaCritica = false;
+		if(paginar(pSize))				//tratamos de paginar un tamaño mayor al pedido en vMalloc
+		{
+			this->desfragmentar();		//para asegurarnos que quepa
+
+		}else							// el objeto no cabe en ningun lugar
+			if(0=="TRUE")
+				cout<<"No hay espacio para la paginacion, ni espacio en la memoria \n";
 	};
 
-	this->zonaCritica = false;
+
 };
+
+bool vHeap::paginar(int pSize)
+{
+	if((tamanovHeap*_overweight)-tamanoMemoriaPaginadaUsada < pSize)//el tamaño que se requiere escribir en memoria no cabe. No hay paginacion disponible
+	{
+		return false;
+	}else			//si hay espacio suficiente solo hay que hacer paginacion
+	{
+
+		//seleccionar un grupo de objetos que juntos sean igual o mas grandes que el tamaño requerido
+		//pero que no sobre pasen el tamaño de la paginacion posible
+
+		vLinkedList<xEntry*>* seleccionados = new vLinkedList<xEntry*>();
+		vNode<xEntry*>* node = xTable::getInstance()->getList()->getHead();
+
+		for(int it = 0; it < pSize; it = it+0)
+		{
+			seleccionados->insertTail(node->getData());
+			node=node->getNext();
+			it = it+node->getData()->getSize();
+			if(node == 0)
+				return false; 					//no hay datos suficientes para paginar y guardar la memoria deseada;
+		};
+		// en este punto tenemos la lista de seleccionados para paginar.
+
+
+		fstream file("vHeap.bin", ios::binary | ios::in | ios::out | ios::trunc);
+		file.write("a",1);
+		file.close();
+	}
+}
+
 
 void vHeap::vWrite(int pID, void* pData)
 {

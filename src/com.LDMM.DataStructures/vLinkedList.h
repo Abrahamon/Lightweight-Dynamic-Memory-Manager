@@ -8,6 +8,7 @@
 #ifndef SRC_VLINKEDLIST_H_
 #define SRC_VLINKEDLIST_H_
 #include <iostream>
+
 #include "vNode.h"
 
 using namespace std;
@@ -20,8 +21,8 @@ class vLinkedList{
 
 private:
 	int _length;
-	Node<k>* _head;
-	Node<k>* _tail;
+	vNode<k>* _head;
+	vNode<k>* _tail;
 
 public:
 	vLinkedList();
@@ -29,17 +30,17 @@ public:
 	void deleteData(k);
 	void showData();
 
-	Node<k>* getHead();
-	Node<k>* getTail();
+	vNode<k>* getHead();
+	vNode<k>* getTail();
 	int getLength();
 	bool isEmpty();
 };
 
 template<class k>
-Node<k>* vLinkedList<k>::getHead(){ return _head; }
+vNode<k>* vLinkedList<k>::getHead(){ return _head; }
 
 template<class k>
-Node<k>* vLinkedList<k>::getTail(){ return _tail; }
+vNode<k>* vLinkedList<k>::getTail(){ return _tail; }
 
 template<class k>
 int vLinkedList<k>::getLength(){ return _length; }
@@ -70,7 +71,7 @@ vLinkedList<k>::vLinkedList(){
  */
 template<class k>
 void vLinkedList<k>::insertTail(k pData){
-	Node<k>* tmp = new Node<k>(pData);
+	vNode<k>* tmp = new vNode<k>(pData);
 
 	if(_head == 0){
 		_length++;
@@ -104,7 +105,7 @@ void vLinkedList<k>::deleteData(k pData){
 		return;
 	}
 
-	Node<k>* tmpNode = _head;
+	vNode<k>* tmpNode = _head;
 	while(tmpNode->getNext()!= _head && tmpNode->getNext()->getData() != pData){
 		tmpNode = tmpNode->getNext();
 	}
@@ -135,7 +136,7 @@ void vLinkedList<k>::deleteData(k pData){
  */
 template<class k>
 void vLinkedList<k>::showData(){
-	Node<k>* tmpNode = _head;
+	vNode<k>* tmpNode = _head;
 	for(int i=0; i < _length; i++){
 		cout << "Dato: " << tmpNode->getData() << endl;
 		tmpNode = tmpNode->getNext();
