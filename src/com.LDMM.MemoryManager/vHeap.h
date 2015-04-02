@@ -9,6 +9,7 @@
 #define SRC_VHEAP_H_
 
 #include "../com.LDMM.MemoryResources/xTable.h"
+#include "../com.LDMM.vObjects/vInt.h"
 #include "../com.LDMM.MemoryResources/vRef.h"
 #include "../Constants.h"
 #include "../com.LDMM.DataStructures/vLinkedList.h"
@@ -34,11 +35,10 @@ private:
 
 	bool _estaEnZonaCritica;//todos los metodos al final deben asignarle false
 
+	void vFreeAll();
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
-	void vWrite(int pID, void* pData);
-	void vFree(/*vRef*/);
-	void vFreeAll();
+	void vFree(xEntry* pEntry);
 	void dumpMemory();
 	void garbageCollector();
 	void desfragmentar();
@@ -46,14 +46,12 @@ private:
 
 
 public:
-
 	bool paginar(int pSize);
-
-
 	void* _ptrUltimaMemoriaLibre;
 	static vHeap* getInstancia();
 	vRef* vMalloc(int pSize, std::string pType);
 	void vFree(vRef* pRef);
+
 
 
 };

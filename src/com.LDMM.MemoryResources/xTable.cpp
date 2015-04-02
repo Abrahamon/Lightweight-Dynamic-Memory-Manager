@@ -53,9 +53,8 @@ int xTable::addEntry(int pSize,int pOffset,string pType){
 		pID=0;
 	}
 	else{
-		int pID = _ObjectsList->getTail()->getData()->getID()+1;
+		int pID = (_ObjectsList->getTail()->getData()->getID())+1;
 	}
-
 	/*int* pointer = (int*)malloc(1 * sizeof(xEntry));
 	xEntry temp = new xEntry(pID,pSize,pOffset,pType);
 	xEntry temp = *pointer;*/
