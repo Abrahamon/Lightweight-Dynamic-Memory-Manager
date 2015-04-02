@@ -13,15 +13,15 @@ using namespace std;
 
 class vObject{
 public:
-	vObject();
-	void getVObjectData();
-	void setVObjectData(void * pData);
-	string getVObjectType();
-	void setVObjectType(string pType);
+	vObject(); //Constructor de vObject
+	void getVObjectData(); //metodo para obtener el dato almacenado
+	void setVObjectData(void * pData); //metodo para asignar el dato amacenado
+	string getVObjectType(); //Metodo para obtener el tipo de dato almacenado
+	void setVObjectType(string pType); //metodo para asignar
 private:
 
-	string vObjectType ;
-	void * vObjectData;
+	string vObjectType ; // Variable de texto que almacena el tipo de dato
+	void * vObjectData;	//Variable void * que almacena el valor asigando
 
 
 

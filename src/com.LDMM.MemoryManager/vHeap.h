@@ -9,6 +9,7 @@
 #define SRC_VHEAP_H_
 
 #include "../com.LDMM.MemoryResources/xTable.h"
+#include "../com.LDMM.vObjects/vInt.h"
 #include "../com.LDMM.MemoryResources/vRef.h"
 #include "../Constants.h"
 #include "../com.LDMM.DataStructures/vLinkedList.h"
@@ -17,33 +18,40 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <iostream>
-
+#include <algorithm>
+#include <string>
+#include <fstream>
+#include <cstring>
 
 class vHeap{
 
 private:
 	static vHeap* HEAP;
-	int tamanovHeap;
-	xTable* tablaMetadatos;
-	void* ptrInicioMemoria;
+	int _overweight;
+	int _tamanovHeap;
+	int _tamanoMemoriaPaginadaUsada;
+	xTable* _tablaMetadatos;
+	void* _ptrInicioMemoria;
 
-	bool zonaCritica;//todos los metodos al final deben asignarle false
+	bool _estaEnZonaCritica;//todos los metodos al final deben asignarle false
 
+	void vFreeAll();
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
-	void vWrite(int pID, void* pData);
-	void vFree(/*vRef*/);
-	void vFreeAll();
+	void vFree(xEntry* pEntry);
 	void dumpMemory();
 	void garbageCollector();
 	void desfragmentar();
-	void control(); //hilo que controla fragmentacion, garbage colector y dump de memoria.
+	void control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.
+
 
 public:
-	void* ptrUltimaMemoriaLibre;
+	bool paginar(int pSize);
+	void* _ptrUltimaMemoriaLibre;
 	static vHeap* getInstancia();
 	vRef* vMalloc(int pSize, std::string pType);
 	void vFree(vRef* pRef);
+
 
 
 };

@@ -1,8 +1,8 @@
 <? xml version="1.0" ?>  
 <root>
-    < Config>  
-        <SIZE value="2000" />
-        <OVERWEIGHT value="50" />
+    < Config>
+        <SIZE value="100" />
+        <OVERWEIGHT value="1" />
         <DUMP_FRECUENCY value="150" /> 
         <DUMP_PATH value="src/" />
         <vDEBUG value="false/" />
