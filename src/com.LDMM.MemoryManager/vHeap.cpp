@@ -129,12 +129,12 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 	int memLibre = tamanovHeap-(a-b);
 
 	if(Constants::vDEBUG == "TRUE"){
-		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
-		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<b<<"\n";
-		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<a<<"\n";
-		cout<<"vHeap.vMalloc	"<< memLibre	<<" bytes de memoria libre  \n";
-
-		cout<<"ingreso: "<<""<<"dato ingresado, leido de memoria: "<<*(int*)(ptrUltimaMemoriaLibre-4)<<"\n";
+//		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
+//		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<b<<"\n";
+//		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<a<<"\n";
+//		cout<<"vHeap.vMalloc	"<< memLibre	<<" bytes de memoria libre  \n";
+//
+//		cout<<"ingreso: "<<""<<"dato ingresado, leido de memoria: "<<*(int*)(ptrUltimaMemoriaLibre-4)<<"\n";
 
 	}
 
@@ -142,8 +142,8 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 	{
 
 		if(Constants::vDEBUG == "TRUE"){
-			cout <<"vHeap.vMalloc	Si hay espacio suficiente para un "<<pType<<"\n";
-			cout<< "\n";
+			//cout <<"vHeap.vMalloc	Si hay espacio suficiente para un "<<pType<<"\n";
+			//cout<< "\n";
 		}
 
 		int id =tablaMetadatos->addEntry(pSize, a-b,pType);

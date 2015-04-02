@@ -24,7 +24,7 @@ public:
 	int vIntData;
 
 	void* operator new(size_t sz, void *pvObject){
-
+		//sz = *(int*)vHeap::getInstancia()->ptrUltimaMemoriaLibre;
 	return pvObject;
 
 	}
