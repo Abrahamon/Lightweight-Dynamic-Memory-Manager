@@ -1,7 +1,7 @@
 <? xml version="1.0" ?>  
 <root>
     < Config>
-        <SIZE value="100" />
+        <SIZE value="64" />
         <OVERWEIGHT value="1" />
         <DUMP_FRECUENCY value="150" /> 
         <DUMP_PATH value="src/" />
