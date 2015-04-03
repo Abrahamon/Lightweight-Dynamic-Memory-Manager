@@ -21,9 +21,41 @@ y de la divison.
 @Param Size tamaño del vHeap
 @Param MemDivision tamaño de cada bloque de memoria
 """
+
+def loadXMLParameters():
+    global vPORT,vDEBUG,vHARDWARE,vGUI
+    xmlDoc = minidom.parse("config.xml")
+
+    pPort = xmlDoc.getElementsByTagName('TARGET_PORT')
+    pDebug= xmlDoc.getElementsByTagName('vDEBUG')
+    pHard = xmlDoc.getElementsByTagName('vHARDWARE')
+    pVisual=xmlDoc.getElementsByTagName('vGUI')
+
+    load_DEBUG=pDebug[0].attributes['value'].value
+    load_HARD=pHard[0].attributes['value'].value
+    load_PORT=pPort[0].attributes['value'].value
+    load_GUI =pVisual[0].attributes['value'].value
+    if(load_DEBUG == "true"):   #Se define vDEBUG
+        vDEBUG = True
+    else:
+        vDEBUG = False
+    if(load_HARD == "true"):    #Se define vHARDWARE
+        vHARDWARE = True
+    else:
+        vHARDWARE = False
+    if(load_GUI == "true"):     #Se define vGUI
+        vGUI = True
+    else:
+        vGUI = False
+    vPORT = int(load_PORT)      #Se define vPORT
+
+    print("___PORT = " +str(vPORT))
+    print("___vDEBUG= "+str(vDEBUG))
+    print("___vHARD= "+str(vHARDWARE))
+    
 def createVisualMemory(Size,MemDivision):
     global MemoryBlockList,memoryCanvas,numMemoryBlocks
-    
+        
     def getMemBlocks(Size,MemDivision):
         result=Size/MemDivision
         if(isinstance(result,int)):
@@ -36,19 +68,19 @@ def createVisualMemory(Size,MemDivision):
     MemoryChunckSize = (numMemoryBlocks*30)          #Cantidad Total de Pixeles para todos los bloques
     HalfMemoryChunckSize = MemoryChunckSize/2        #Mita de la Cantidad total de Pixeles
     scrRegion=(0,0,400,MemoryChunckSize+(MemoryChunckSize*.005))#Region de Scroll
-                                                                #Total de Pixeles + un 0.005
-
-    print("NUMERO DE BLOQUE DE MEMORIA " + str(numMemoryBlocks))
-    print("TAMAÑO DEL CANVAS DE MEMORIA " + str(MemoryChunckSize))
-    
-    memoryCanvas = Canvas(window, width=300, height=600,borderwidth=0,
-                          highlightthickness=0,bg="#06072B")
-
-    memoryCanvas.config(scrollregion=scrRegion)
-    memoryCanvas.pack(padx=1,pady=0)
-    
+                                                                    #Total de Pixeles + un 0.005
     coordsInfo = [5,5,180,30,numMemoryBlocks]   #Lista con Valores de Coordenadas(Cambian en cada iteracion)
     MemoryBlockList = []                        #Lista de Bloques de Memoria (objetos Canvas)
+    print("NUMERO DE BLOQUE DE MEMORIA " + str(numMemoryBlocks))
+    print("TAMAÑO DEL CANVAS DE MEMORIA " + str(MemoryChunckSize))
+    if(vGUI):   
+        memoryCanvas = Canvas(window, width=300, height=600,borderwidth=0,
+                              highlightthickness=0,bg="#06072B")
+
+        memoryCanvas.config(scrollregion=scrRegion)
+        memoryCanvas.pack(padx=1,pady=0)
+        
+    
 
 
     ##### Ciclo Dibujo de Bloques de Memoria ###################################################
@@ -57,10 +89,13 @@ def createVisualMemory(Size,MemDivision):
     while coordsInfo[4] != 0:                   #Mientras que la cantidad de bloque sea != 0
 
         #Crea el bloque en las coordenadas correspondientes
-        blockGUI = memoryCanvas.create_rectangle(coordsInfo[0],
-                                              coordsInfo[1],
-                                              coordsInfo[2],
-                                              coordsInfo[3],width=0, fill="white")
+        if(vGUI):
+            blockGUI = memoryCanvas.create_rectangle(coordsInfo[0],
+                                                     coordsInfo[1],
+                                                     coordsInfo[2],
+                                                     coordsInfo[3],width=0, fill="white")
+        else:
+            blockGUI = "null"
         block = [blockGUI,False]
         MemoryBlockList.append(block)   #Añade el bloque creado a la lista
         coordsInfo[1] += 30             #Aumenta las coordenadas en 30
@@ -68,36 +103,42 @@ def createVisualMemory(Size,MemDivision):
         coordsInfo[4] -= 1              #Reduce el numero de elementos crear
         
         porcentajeCompletado = (iterator*100)/numMemoryBlocks
-        fillLoadingBars(porcentajeCompletado,MemDivision)
+        if(vGUI):
+            fillLoadingBars(porcentajeCompletado,MemDivision)
         iterator+=1
     
     ############################################################################################
     ################################# UI Elements ##############################################
     ############################################################################################
-    memoryCanvas.place(x=15,y=3)            #Coloca el canvas en posicion correcta
-    hbar=Scrollbar(window,orient=VERTICAL)  #Crea el scrollbar para el canvas
-    hbar.pack(side=LEFT,fill=Y)             #Coloca el scrollbar a la izquierda
-    hbar.config(command=memoryCanvas.yview) #Añade el canvas al scrollbar
-    memoryCanvas.config(yscrollcommand=hbar.set)#Añade el scrollbar al canvas
-    loadScreen.destroy()                    #Destruye la ventana de carga
+    if(vGUI):
+        memoryCanvas.place(x=15,y=3)            #Coloca el canvas en posicion correcta
+        hbar=Scrollbar(window,orient=VERTICAL)  #Crea el scrollbar para el canvas
+        hbar.pack(side=LEFT,fill=Y)             #Coloca el scrollbar a la izquierda
+        hbar.config(command=memoryCanvas.yview) #Añade el canvas al scrollbar
+        memoryCanvas.config(yscrollcommand=hbar.set)#Añade el scrollbar al canvas
+        loadScreen.destroy()                    #Destruye la ventana de carga
 
-    global entry,TotalBar
-    contenedor.create_text(505, 40, anchor=W, font="Arial",text="Memory Usage")
-    contenedor2 = Canvas(window,width=250, height=400, bg="#06072B")
-    contenedor2.place(x=500,y=50)
-    
-    TotalBar = Canvas(window,width=240, height=390, bg="#FFFFFF")
-    TotalBar.place(x=505,y=55)
+        global entry,TotalBar
+        contenedor.create_text(505, 40, anchor=W, font="Arial",text="Memory Usage")
+        contenedor2 = Canvas(window,width=250, height=400, bg="#06072B")
+        contenedor2.place(x=500,y=50)
+        
+        TotalBar = Canvas(window,width=240, height=390, bg="#FFFFFF")
+        TotalBar.place(x=505,y=55)
 
-    for i in range(0,11):
-        TotalBar.create_text(5, 370-(i*35), anchor=W, font="Arial",text=str(i*10)+"%")
+        for i in range(0,11):
+            TotalBar.create_text(5, 370-(i*35), anchor=W, font="Arial",text=str(i*10)+"%")
 
-    botonA = Button(window,width=7,height=2,command=debugSetMemoryBlock,text="Change",bg="#000000",fg="#FFFFFF")
-    botonA.place(x=335,y=550)
+        botonA = Button(window,width=7,height=2,command=lambda: debugMemory(0,"","",""),text="Change",bg="#000000",fg="#FFFFFF")
+        botonA.place(x=335,y=550)
 
-    entry = Entry(window)
-    entry.place(x=420,y=560)
+        entry = Entry(window)
+        entry.place(x=420,y=560)
     ############################################################################################
+    
+
+
+    
 """
 setMemoryBlock
 Funcion encargada de actualizar el
@@ -110,45 +151,7 @@ o que el bloque se encuentra libre
 @Param pStart posicion inicial de bloque a actualizar
 @Param pEnd posicion final de bloque a actualizar
 """
-
-    
-def setMemoryBlock(pUsageFlag,pStart,pEnd):
-    global MemoryBlockList,memoryCanvas,entry
-    if(pUsageFlag == True):
-        for i in range(pStart,pEnd):
-            memoryCanvas.itemconfig(MemoryBlockList[i][0],fill="red")
-            MemoryBlockList[i][1] = True
-    else:
-        for i in range(pStart,pEnd):
-            memoryCanvas.itemconfig(MemoryBlockList[i][0],fill="white")
-            MemoryBlockList[i][1] = False
-
-    porcentajeCompletado = setMemoryGraphicBar()
-    setArduinoGraphicBar(porcentajeCompletado)
-
-def debugSetMemoryBlock():
-    global MemoryBlockList,memoryCanvas,entry
-    data = entry.get()
-    data= data.split("#")
-    pStart = int(data[1])
-    pEnd = int(data[2])
-    
-    if(data[0] == "True"):
-        for i in range(pStart,pEnd):
-            memoryCanvas.itemconfig(MemoryBlockList[i][0],fill="red")
-            MemoryBlockList[i][1] = True
-    else:
-        for i in range(pStart,pEnd):
-            memoryCanvas.itemconfig(MemoryBlockList[i][0],fill="white")
-            MemoryBlockList[i][1] = False
-    entry.delete(0, 'end')
-
-    porcentajeCompletado = setMemoryGraphicBar()
-    setArduinoGraphicBar(porcentajeCompletado)
-
- 
 def setMemoryGraphicBar():
-    
     global MemoryBlockList,numMemoryBlocks,TotalBar
     blocksUsed = 0
     for i in range(0,len(MemoryBlockList)):
@@ -158,15 +161,76 @@ def setMemoryGraphicBar():
     porcentajeCompletado = (blocksUsed*100)/numMemoryBlocks #Porcentaje de Memoria
     #print("Porcentaje: " + str(porcentajeCompletado))
 
-    Pos = 370-((porcentajeCompletado*350)/100) #Posicion de la Barra De Memoria
-    TotalBar.delete("Bar")
-    TotalBar.create_rectangle(75,380,150,Pos,width=0, fill="green",tags="Bar")
+    if(vGUI):
+        Pos = 370-((porcentajeCompletado*350)/100) #Posicion de la Barra De Memoria
+        TotalBar.delete("Bar")
+        TotalBar.create_rectangle(75,380,150,Pos,width=0, fill="green",tags="Bar")
+    else:
+        if(vDEBUG):
+            print("Status bar was not painted. Check XML file")
     return porcentajeCompletado
+
+def setMemoryBlock(pUsageFlag,pStart,pEnd):
+    global MemoryBlockList,memoryCanvas,entry
+    porcentajeCompletado = setMemoryGraphicBar()
+
+    if(pUsageFlag == True):
+        for i in range(pStart,pEnd):
+            if(vGUI):
+                memoryCanvas.itemconfig(MemoryBlockList[i][0],fill="red")
+            MemoryBlockList[i][1] = True
+    else:
+        for i in range(pStart,pEnd):
+            if(vGUI):
+                memoryCanvas.itemconfig(MemoryBlockList[i][0],fill="white")
+            MemoryBlockList[i][1] = False
+
+    if(vHARDWARE):
+        setArduinoGraphicBar(porcentajeCompletado)
+    else:
+        if(vDEBUG):
+            print("Did not sent information to Arduino. Check XML file")
+
+def debugMemory(Mode,pSet,pStart,pEnd):
+    global MemoryBlockList,memoryCanvas,entry
+    if(Mode==0):
+        data = entry.get()
+        data= data.split("#")
+        pStart = int(data[1])
+        pEnd = int(data[2])
+    else:
+        data=pSet+"#"+"Null"
+        
+        data=data.split("#")
+
+    
+    if(data[0] == "True"):
+        print("DATAAAAAAAAAAAA: " +"TRUE")
+        for i in range(pStart,pEnd):
+            if(vGUI):
+                memoryCanvas.itemconfig(MemoryBlockList[i][0],fill="red")
+            MemoryBlockList[i][1] = True
+    else:
+        for i in range(pStart,pEnd):
+            if(vGUI):
+                memoryCanvas.itemconfig(MemoryBlockList[i][0],fill="white")
+            MemoryBlockList[i][1] = False
+    if(vGUI):
+        entry.delete(0, 'end')
+
+    porcentajeCompletado = setMemoryGraphicBar()
+    
+    if(vHARDWARE):
+        setArduinoGraphicBar(porcentajeCompletado)
+    else:
+        if(vDEBUG):
+            print("Did not sent information to Arduino. Check XML file")
 
 def setArduinoGraphicBar(porcentaje):
     redondeo = int(round(porcentaje,-1)//10)
     final = (redondeo)-1
-    print("Arduino " + str(redondeo))
+    if(vDEBUG):
+        print("Sent to arduino " + str(redondeo)+"%")
     if(final < 0): xEncoder.write(b'Z')
     elif(final == 0): xEncoder.write(b'0')
     elif(final == 1): xEncoder.write(b'1')
@@ -201,6 +265,7 @@ def retry_HOST():
     print("Retrying in...")
     for i in range(0,6):
         print(str(6-i))
+        time.sleep(1)
     start_HOST()    
 def start_HOST():
     global server
@@ -276,28 +341,46 @@ def start_LoadBar():
         loadBar.append(ob)
     loadScreen.withdraw()
 def startViewer(vHeapSize,MemDivision):
-    loadScreen.deiconify()
-    createGUI(vHeapSize,MemDivision)
-    window.withdraw()
+    if(vGUI):
+        loadScreen.deiconify()
+        createGUI(vHeapSize,MemDivision)
+        window.withdraw()
+    else:
+        createGUI(vHeapSize,MemDivision)
+        if(vDEBUG):
+            print("Loading bar was not loaded. Check XML file")
 
 #################################################################################
 ############################## Initial Setup ####################################
 #################################################################################
 
+loadXMLParameters()
 global window,contenedor,xStart,xEncoder
-window = Tk()
-window.title("Memory Monitor LDMM")
-window.geometry("800x600+250+100")
-window.resizable(width=TRUE, height=FALSE)
+if(vGUI):
+    window = Tk()
+    window.title("Memory Monitor LDMM")
+    window.geometry("800x600+250+100")
+    window.resizable(width=TRUE, height=FALSE)
+    xStart = False
+    xEncoder = serial.Serial('/dev/ttyACM1', 9600)
+    contenedor = Canvas(window, width=800, height=600, bg="#A8A79E")
+    contenedor.place(x=0,y=0)
+    start_LoadBar()
+    start_HOST()
+    start_loop()
+    window.mainloop()
+else:
+    xStart = False
+    xEncoder = serial.Serial('/dev/ttyACM1', 9600)
+    start_HOST()
+    start_loop()
+    if(vDEBUG):
+        print("Graphical User Interface was not loaded. Check XML file")
 
-xStart = False
-#xEncoder = serial.Serial('/dev/ttyACM1', 9600)
-xmlDoc = minidom.parse("config.xml")
 
-contenedor = Canvas(window, width=800, height=600, bg="#A8A79E")
-contenedor.place(x=0,y=0)
 
-start_LoadBar()
-start_HOST()
-start_loop()
-window.mainloop()
+
+
+
+
+

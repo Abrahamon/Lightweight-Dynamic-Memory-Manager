@@ -1,17 +1,16 @@
-<? xml version="1.0" ?>  
 <root>
-    < Config>  
-        <SIZE value="200" />
-        <OVERWEIGHT value="50" />
-        <DUMP_FRECUENCY value="150" /> 
-        <DUMP_PATH value="src/" />
-        <vDEBUG value="false/" />
-        <vDEBUG_PATH value="src/" />
-        <GC_FRECUENCY value="150" />
-        <cuartoDeSegundoMili value="250000" />
-        <medioDeSegundoMili value="500000" />
-        <SegundoMili value="1000000" />
-        <TARGET_IP value="192.168.1.108" />
-        <TARGET_PORT value="7070" />
-    < /Config>
+	<SIZE value="200" />
+	<OVERWEIGHT value="50" />
+	<DUMP_FRECUENCY value="150" />
+	<DUMP_PATH value="src/" />
+	<vDEBUG value="true" />
+	<vDEBUG_PATH value="src/" />
+	<GC_FRECUENCY value="150" />
+	<cuartoDeSegundoMili value="250000" />
+	<medioDeSegundoMili value="500000" />
+	<SegundoMili value="1000000" />
+	<TARGET_IP value="192.168.1.108" />
+	<TARGET_PORT value="7070" />
+	<vHARDWARE value="true" />
+	<vGUI value="false" />
 </root> 
