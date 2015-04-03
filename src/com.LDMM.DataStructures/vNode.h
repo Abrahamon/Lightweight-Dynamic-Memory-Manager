@@ -12,25 +12,25 @@
  * Clase Node para la lista doblemente enlazada
  */
 template<class k>
-class Node{
+class vNode{
 
 private:
 	k _data;
-	Node* _next;
-	Node* _previous;
+	vNode* _next;
+	vNode* _previous;
 public:
-	Node(k pData);
+	vNode(k pData);
 	void setData(k);
-	void setNext(Node<k>*);
-	void setPrevious(Node<k>*);
+	void setNext(vNode<k>*);
+	void setPrevious(vNode<k>*);
 
 	k getData();
-	Node<k>* getNext();
-	Node<k>* getPrevious();
+	vNode<k>* getNext();
+	vNode<k>* getPrevious();
 };
 
 template<class k>
-Node<k>::Node(k pData){
+vNode<k>::vNode(k pData){
 	_data = pData;
 	_next = 0;
 	_previous = 0;
@@ -50,42 +50,42 @@ Node<k>::Node(k pData){
  * Método para definir el dato del nodo.
  */
 template<class k>
-void Node<k>::setData(k pData){
+void vNode<k>::setData(k pData){
 	_data = pData;
 }
 /**
  * Método para definir el nodo siguiente del nodo actual
  */
 template<class k>
-void Node<k>::setNext(Node<k>* pNext){
+void vNode<k>::setNext(vNode<k>* pNext){
 	_next = pNext;
 }
 /**
  * Método para definir el nodo previo del nodo actual
  */
 template<class k>
-void Node<k>::setPrevious(Node<k>* pPrevious){
+void vNode<k>::setPrevious(vNode<k>* pPrevious){
 	_previous = pPrevious;
 }
 /**
  * Método para obtener el dato del Nodo
  */
 template<class k>
-k Node<k>::getData(){
+k vNode<k>::getData(){
 	return _data;
 }
 /**
  * Método para obtener el nodo siguiente del nodo actual
  */
 template<class k>
-Node<k>* Node<k>::getNext(){
+vNode<k>* vNode<k>::getNext(){
 	return _next;
 }
 /**
  * Método para obtener el nodo previo del nodo actual
  */
 template<class k>
-Node<k>* Node<k>::getPrevious(){
+vNode<k>* vNode<k>::getPrevious(){
 	return _previous;
 }
 

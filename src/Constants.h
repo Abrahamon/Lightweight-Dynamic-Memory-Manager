@@ -34,6 +34,7 @@ public:
 	static int SegundoMili;
 
 	//Constants VObjects
+	static int MAX_SIZE_OF_ANY_OBJECT;
 	static std::string TYPE_INT;
 	static std::string TYPE_STRING;
 	static std::string TYPE_CHAR;

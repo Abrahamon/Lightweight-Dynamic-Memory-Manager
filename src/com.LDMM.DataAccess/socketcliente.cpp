@@ -61,5 +61,5 @@ void * SocketCliente::controlador(void *obj)
 
 void SocketCliente::sendMessage(const char *msn){
 	send(descriptor,msn,strlen(msn),0);
-    //cout << "bytes enviados "<< send(descriptor,msn,strlen(msn),0) << endl;
+	//cout << "bytes enviados "<< send(descriptor,msn,strlen(msn),0) << endl;
 }
