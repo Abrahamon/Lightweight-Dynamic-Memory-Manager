@@ -103,7 +103,9 @@ void vHeap::dumpMemory(){
 		}
 
 };
-void vHeap::desfragmentar(){};
+void vHeap::desfragmentar(){
+
+};
 
 void vHeap::garbageCollector()
 {
