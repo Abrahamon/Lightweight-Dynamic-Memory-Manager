@@ -22,11 +22,18 @@ public:
 	vRef* operator = (const int& s); //era vRef*
 
 	int vIntData;
-
-	void* operator new(size_t sz, void *v){
-		//sz = size_t(vHeap::getInstancia()->ptrUltimaMemoriaLibre);
-		return v;
+	/*
+	 *
+	 * placement new
+	 * Se sobreescribe el new, ahora en lugar de esperar solo la llamada al
+	 * constructor de la clase, recibe un primer parametro que es la direccion
+	 * del espacio de memoria donde se desea almacenar el objeto a crear
+	 *
+	 */
+	void* operator new(size_t sz, void *pvObject){
+		return pvObject;
 	}
+
 };
 
 

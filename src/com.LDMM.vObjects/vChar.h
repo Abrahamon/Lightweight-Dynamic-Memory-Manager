@@ -20,10 +20,16 @@ public:
 	vChar();
 	vRef* operator = (const char& s);
 	char vCharData;
-
-	void* operator new(size_t sz, void *v){
-		cout<<"Me invocaron char+++++++++"<<endl;
-		return v;
+	/*
+	 *
+	 * placement new
+	 * Se sobreescribe el new, ahora en lugar de esperar solo la llamada al
+	 * constructor de la clase, recibe un primer parametro que es la direccion
+	 * del espacio de memoria donde se desea almacenar el objeto a crear
+	 *
+	 */
+	void* operator new(size_t sz, void *pvObject){
+		return pvObject;
 	}
 };
 

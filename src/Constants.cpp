@@ -8,16 +8,17 @@
 #include "../src/com.LDMM.DataAccess/XMLReader.h"
 
 Constants* Constants::_Constants = 0;
-int Constants::SIZE = 214748364 ;
-int Constants::OVERWEIGHT = 0;
+int Constants::SIZE;
+int Constants::OVERWEIGHT = 1;
 int Constants::DUMP_FRECUENCY = 0;
 std::string Constants::DUMP_PATH;
-std::string Constants::vDEBUG;
+std::string Constants::vDEBUG="TRUE";
 std::string Constants::vDEBUG_PATH;
 int Constants::GC_FRECUENCY = 0;
 int Constants::cuartoDeSegundoMili = 0;
 int Constants::medioDeSegundoMili = 0;
 int Constants::SegundoMili = 0;
+int Constants::MAX_SIZE_OF_ANY_OBJECT;
 std::string Constants::TYPE_INT;
 std::string Constants::TYPE_STRING;
 std::string Constants::TYPE_CHAR;
@@ -45,7 +46,8 @@ Constants::Constants(){
 	OVERWEIGHT = atoi(reader->getParameter("OVERWEIGHT"));
 	DUMP_FRECUENCY = atoi(reader->getParameter("DUMP_FRECUENCY"));
 	DUMP_PATH = reader->getParameter("DUMP_PATH");
-	vDEBUG = reader->getParameter("vDEBUG");
+//	vDEBUG = reader->getParameter("vDEBUG");
+	vDEBUG = "TRUE";
 	vDEBUG_PATH = reader->getParameter("vDEBUG_PATH");
 	GC_FRECUENCY = atoi(reader->getParameter("GC_FRECUENCY"));
 	cuartoDeSegundoMili = atoi(reader->getParameter("cuartoDeSegundoMili"));
@@ -53,6 +55,7 @@ Constants::Constants(){
 	SegundoMili = atoi(reader->getParameter("SegundoMili"));
 
 	//vObjects Constants
+	MAX_SIZE_OF_ANY_OBJECT = 32;
 	TYPE_INT = "Int";
 	TYPE_STRING = "String";
 	TYPE_CHAR = "Char";

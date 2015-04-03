@@ -12,12 +12,24 @@
 #include "vObject.h"
 #include <iostream>
 #include "../com.LDMM.MemoryResources/vRef.h"
+#include "../com.LDMM.MemoryManager/vHeap.h"
 using namespace std;
 class vFloat: public vRef {
 public:
 	vFloat();
-	void operator = (const float& s);
+	vRef * operator = (const float& s);
 	float vFloatData;
+	/*
+	*
+	* placement new
+	* Se sobreescribe el new, ahora en lugar de esperar solo la llamada al
+	* constructor de la clase, recibe un primer parametro que es la direccion
+	* del espacio de memoria donde se desea almacenar el objeto a crear
+	*
+	*/
+	void* operator new(size_t sz, void *pvObject){
+		return pvObject;
+	}
 };
 
 
