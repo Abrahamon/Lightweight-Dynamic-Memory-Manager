@@ -5,7 +5,7 @@
         <OVERWEIGHT value="1" />
         <DUMP_FRECUENCY value="150" /> 
         <DUMP_PATH value="src/" />
-        <vDEBUG value="false/" />
+        <vDEBUG value="true/" />
         <vDEBUG_PATH value="src/" />
         <GC_FRECUENCY value="150" />
         <cuartoDeSegundoMili value="250000" />
