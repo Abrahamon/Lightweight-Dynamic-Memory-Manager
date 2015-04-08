@@ -126,6 +126,12 @@ void vHeap::dumpMemory(){
 	}
 	_estaEnZonaCritica = false;
 };
+<<<<<<< HEAD
+=======
+void vHeap::desfragmentar(){
+
+};
+>>>>>>> 1e9270ced4d28eb72c0247a0c8b84c0eeceef0eb
 
 /**
  * Desfragmentador de memoria
