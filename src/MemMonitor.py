@@ -1,8 +1,9 @@
-
+#! /usr/bin/python
+# -*- coding: UTF8 -*-
 ##### Bibliotecas Utilizadas #####
 ##################################
 import socket
-from tkinter import *
+from Tkinter import *
 from threading import Thread
 import threading
 import time
@@ -23,18 +24,22 @@ y de la divison.
 """
 
 def loadXMLParameters():
-    global vPORT,vDEBUG,vHARDWARE,vGUI
-    xmlDoc = minidom.parse("config.xml")
+    global vPORT,vDEBUG,vHARDWARE,vGUI,vUSB
+    #xmlDoc = minidom.parse("/home/fabian/workspace2/C++/LDMM/Lightweight-Dynamic-Memory-Manager/src/config.xml")
+    #XML DE PRUEBA
+    xmlDoc = minidom.parse("/home/fabian/workspace2/C++/LDMM/Lightweight-Dynamic-Memory-Manager/src/config_pbs.xml")
 
     pPort = xmlDoc.getElementsByTagName('TARGET_PORT')
     pDebug= xmlDoc.getElementsByTagName('vDEBUG')
     pHard = xmlDoc.getElementsByTagName('vHARDWARE')
     pVisual=xmlDoc.getElementsByTagName('vGUI')
+    pUSB   =xmlDoc.getElementsByTagName('vUSB')
 
     load_DEBUG=pDebug[0].attributes['value'].value
     load_HARD=pHard[0].attributes['value'].value
     load_PORT=pPort[0].attributes['value'].value
     load_GUI =pVisual[0].attributes['value'].value
+    load_USB =pUSB[0].attributes['value'].value
     if(load_DEBUG == "true"):   #Se define vDEBUG
         vDEBUG = True
     else:
@@ -48,10 +53,7 @@ def loadXMLParameters():
     else:
         vGUI = False
     vPORT = int(load_PORT)      #Se define vPORT
-
-    print("___PORT = " +str(vPORT))
-    print("___vDEBUG= "+str(vDEBUG))
-    print("___vHARD= "+str(vHARDWARE))
+    vUSB  = load_USB            #Se define el puerto USB del Arduino
     
 def createVisualMemory(Size,MemDivision):
     global MemoryBlockList,memoryCanvas,numMemoryBlocks
@@ -80,7 +82,7 @@ def createVisualMemory(Size,MemDivision):
         memoryCanvas.config(scrollregion=scrRegion)
         memoryCanvas.pack(padx=1,pady=0)
         
-    
+        
 
 
     ##### Ciclo Dibujo de Bloques de Memoria ###################################################
@@ -94,6 +96,8 @@ def createVisualMemory(Size,MemDivision):
                                                      coordsInfo[1],
                                                      coordsInfo[2],
                                                      coordsInfo[3],width=0, fill="white")
+            memoryCanvas.create_text(coordsInfo[0]+10, coordsInfo[1]+10, anchor=W,
+                                     font="Arial",text="ID: "+str(iterator-1))
         else:
             blockGUI = "null"
         block = [blockGUI,False]
@@ -111,53 +115,69 @@ def createVisualMemory(Size,MemDivision):
     ################################# UI Elements ##############################################
     ############################################################################################
     if(vGUI):
+        global entry,TotalBar,graphCanvas,actualTIME
+
+        actualTIME = 0
+        
+        contGraph = Canvas(window, width=530, height=400,borderwidth=0,
+                              highlightthickness=0,bg="#06072B")
+        contGraph.place(x=620,y=50)
+        xGraphCanvas = Canvas(window,width=518, height=388, bg="#FFFFFF")
+        xGraphCanvas.place(x=625,y=55)
+
+        graphCanvas = Canvas(window,width=470, height=388, bg="#FFFFFF")
+        graphCanvas.place(x=673,y=55)
+        
+        graphCanvas.config(scrollregion=(0,0,3000, 1000)) 
+        
         memoryCanvas.place(x=15,y=3)            #Coloca el canvas en posicion correcta
         hbar=Scrollbar(window,orient=VERTICAL)  #Crea el scrollbar para el canvas
         hbar.pack(side=LEFT,fill=Y)             #Coloca el scrollbar a la izquierda
         hbar.config(command=memoryCanvas.yview) #Añade el canvas al scrollbar
         memoryCanvas.config(yscrollcommand=hbar.set)#Añade el scrollbar al canvas
+
+        xbar=Scrollbar(window,orient=HORIZONTAL)    #Crea el scrollbar para el grafico
+        xbar.pack(side=BOTTOM,fill=X)               #Coloca el scrollbar abajo
+        xbar.config(command=graphCanvas.xview)      #Añade el canvas al scrollbar
+        graphCanvas.config(xscrollcommand=xbar.set) #Añade el scrollbar al canvas
+
+        
         loadScreen.destroy()                    #Destruye la ventana de carga
 
-        global entry,TotalBar
-        contenedor.create_text(505, 40, anchor=W, font="Arial",text="Memory Usage")
+        
+        contenedor.create_text(350, 40, anchor=W, font="Arial",text="Current Memory Usage")
+        contenedor.create_text(625, 40, anchor=W, font="Arial",text="Total Memory Usage")
         contenedor2 = Canvas(window,width=250, height=400, bg="#06072B")
-        contenedor2.place(x=500,y=50)
+        contenedor2.place(x=345,y=50)
+
+        
         
         TotalBar = Canvas(window,width=240, height=390, bg="#FFFFFF")
-        TotalBar.place(x=505,y=55)
+        TotalBar.place(x=350,y=55)
 
+        
+        
         for i in range(0,11):
             TotalBar.create_text(5, 370-(i*35), anchor=W, font="Arial",text=str(i*10)+"%")
-
+            xGraphCanvas.create_text(5, 370-(i*35), anchor=W, font="Arial",text=str(i*10)+"%")
+            graphCanvas.create_text(5+(i*45), 382, anchor=W, font="Arial",text=str((i+1)*10))
+        
         botonA = Button(window,width=7,height=2,command=lambda: debugMemory(0,"","",""),text="Change",bg="#000000",fg="#FFFFFF")
         botonA.place(x=335,y=550)
 
         entry = Entry(window)
         entry.place(x=420,y=560)
+
+        startTIMER()
     ############################################################################################
     
-
-
-    
-"""
-setMemoryBlock
-Funcion encargada de actualizar el
-valor de n bloques de memoria. Ya sea
-que se encuentra algun datos almacenado
-o que el bloque se encuentra libre
-
-@author Fabian A. Solano Madriz
-@Param pUsageFlag Indica si hay un dato almacenado
-@Param pStart posicion inicial de bloque a actualizar
-@Param pEnd posicion final de bloque a actualizar
-"""
 def setMemoryGraphicBar():
     global MemoryBlockList,numMemoryBlocks,TotalBar
     blocksUsed = 0
     for i in range(0,len(MemoryBlockList)):
         if(MemoryBlockList[i][1] == True):
             blocksUsed+=1
-            
+
     porcentajeCompletado = (blocksUsed*100)/numMemoryBlocks #Porcentaje de Memoria
     #print("Porcentaje: " + str(porcentajeCompletado))
 
@@ -170,6 +190,18 @@ def setMemoryGraphicBar():
             print("Status bar was not painted. Check XML file")
     return porcentajeCompletado
 
+"""
+setMemoryBlock
+Funcion encargada de actualizar el
+valor de n bloques de memoria. Ya sea
+que se encuentra algun datos almacenado
+o que el bloque se encuentra libre
+
+@author Fabian A. Solano Madriz
+@Param pUsageFlag Indica si hay un dato almacenado
+@Param pStart posicion inicial de bloque a actualizar
+@Param pEnd posicion final de bloque a actualizar
+"""
 def setMemoryBlock(pUsageFlag,pStart,pEnd):
     global MemoryBlockList,memoryCanvas,entry
     porcentajeCompletado = setMemoryGraphicBar()
@@ -205,7 +237,6 @@ def debugMemory(Mode,pSet,pStart,pEnd):
 
     
     if(data[0] == "True"):
-        print("DATAAAAAAAAAAAA: " +"TRUE")
         for i in range(pStart,pEnd):
             if(vGUI):
                 memoryCanvas.itemconfig(MemoryBlockList[i][0],fill="red")
@@ -230,7 +261,7 @@ def setArduinoGraphicBar(porcentaje):
     redondeo = int(round(porcentaje,-1)//10)
     final = (redondeo)-1
     if(vDEBUG):
-        print("Sent to arduino " + str(redondeo)+"%")
+        print("Sent to arduino " + str(redondeo)+ "0"+"%")
     if(final < 0): xEncoder.write(b'Z')
     elif(final == 0): xEncoder.write(b'0')
     elif(final == 1): xEncoder.write(b'1')
@@ -243,11 +274,6 @@ def setArduinoGraphicBar(porcentaje):
     elif(final == 8): xEncoder.write(b'8')
     elif(final == 9): xEncoder.write(b'9')
     
-def createGUI(Size,MemDivision):
-    x= Thread(target=createVisualMemory, args=(Size,MemDivision))
-    x.daemon = True
-    x.start()
-    
 def manageData(pData):
     global xStart
     pData = pData.split("#")
@@ -257,7 +283,51 @@ def manageData(pData):
             startViewer(int(pData[1]),int(pData[2]))
     if(pData[0] == "true"):
         setMemoryBlock(True,int(pData[1]),int(pData[2]))
+def timer():
+    global actualTIME
+    initX1 = 13
+    initX2 = 18
+    LPos = [0,0]
     
+    while True:
+        actualTIME+=1
+        time.sleep(1)
+        if(actualTIME %10 == 0):
+            blocksUsed = 0
+            for i in range(0,len(MemoryBlockList)):
+                if(MemoryBlockList[i][1] == True):
+                    blocksUsed+=1
+            ti = actualTIME //10
+            porcentaje = (blocksUsed*100)/numMemoryBlocks #Porcentaje de Memoria
+            PosY = 379-((porcentaje*350)/100)
+            if(ti > 11):
+                PosX = 5 + ((ti-1)*45)
+                graphCanvas.create_text(PosX, 382, anchor=W, font="Arial",text=str(actualTIME))
+                graphCanvas.create_oval(initX1, PosY,initX2, PosY+5, fill="blue")
+                graphCanvas.create_line(LPos[0]+2,LPos[1]+2,initX1+2,PosY+2,fill="blue")
+            else:
+                if(actualTIME == 10):
+                    graphCanvas.create_oval(initX1, PosY,initX2, PosY+5, fill="blue")
+                else:
+                    graphCanvas.create_oval(initX1, PosY,initX2, PosY+5, fill="blue")
+                    graphCanvas.create_line(LPos[0]+2,LPos[1]+2,initX1+2,PosY+2,fill="blue")
+
+                    
+            LPos[0]=initX1
+            LPos[1]=PosY
+            initX1+=45
+            initX2+=45
+            
+            
+    porcentajeCompletado = (blocksUsed*100)/numMemoryBlocks #Porcentaje de Memoria
+def createGUI(Size,MemDivision):
+    x= Thread(target=createVisualMemory, args=(Size,MemDivision))
+    x.daemon = True
+    x.start()
+def startTIMER():
+    t= Thread(target=timer, args=())
+    t.daemon = True
+    t.start()
 #############################################################################
 ########################### Socket Comm Setup ###############################
 #############################################################################    
@@ -270,7 +340,7 @@ def retry_HOST():
 def start_HOST():
     global server
     HOST = ""
-    PORT = 7070
+    PORT = vPORT
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         server.bind(("", PORT))
@@ -359,28 +429,33 @@ global window,contenedor,xStart,xEncoder
 if(vGUI):
     window = Tk()
     window.title("Memory Monitor LDMM")
-    window.geometry("800x600+250+100")
+    window.geometry("1200x600+100+80")
     window.resizable(width=TRUE, height=FALSE)
     xStart = False
-    xEncoder = serial.Serial('/dev/ttyACM1', 9600)
-    contenedor = Canvas(window, width=800, height=600, bg="#A8A79E")
+    if(vHARDWARE):
+        try:
+            xEncoder = serial.Serial(vUSB, 9600)
+        except:
+            print("USB Monitor is not connected")
+    contenedor = Canvas(window, width=1200, height=600, bg="#A8A79E")
     contenedor.place(x=0,y=0)
     start_LoadBar()
     start_HOST()
     start_loop()
     window.mainloop()
 else:
+    window = Tk()
+    window.title("Memory Monitor LDMM")
+    window.geometry("10x10+100+80")
+    window.resizable(width=TRUE, height=FALSE)
     xStart = False
-    xEncoder = serial.Serial('/dev/ttyACM1', 9600)
+    if(vHARDWARE):
+        try:
+            xEncoder = serial.Serial(vUSB, 9600)
+        except:
+            print("USB Monitor is not connected")
     start_HOST()
     start_loop()
     if(vDEBUG):
         print("Graphical User Interface was not loaded. Check XML file")
-
-
-
-
-
-
-
-
+    window.mainloop()
