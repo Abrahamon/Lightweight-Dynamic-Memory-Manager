@@ -20,7 +20,6 @@ class vInt: public vRef {
 public:
 	vInt();
 	vRef* operator = (const int& s); //era vRef*
-
 	int vIntData;
 	/*
 	 *

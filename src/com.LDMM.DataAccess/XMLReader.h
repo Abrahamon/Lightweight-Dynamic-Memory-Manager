@@ -18,7 +18,7 @@ private:
 public:
 	XMLReader();
 	virtual ~XMLReader();
-	void loadXMLFile();
+	void loadXMLFile(std::string pData);
 	const char* getParameter(const char* pParameter);
 
 };

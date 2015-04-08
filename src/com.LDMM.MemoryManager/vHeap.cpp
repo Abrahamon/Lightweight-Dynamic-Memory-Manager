@@ -177,20 +177,20 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 
 
 	if(Constants::vDEBUG == "TRUE"){
-//		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
-//		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<b<<"\n";
-//		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<a<<"\n";
-//		cout<<"vHeap.vMalloc	"<< memLibre	<<" bytes de memoria libre  \n";
-//
-//		cout<<"ingreso: "<<""<<"dato ingresado, leido de memoria: "<<*(int*)(ptrUltimaMemoriaLibre-4)<<"\n";
+		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
+		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<b<<"\n";
+		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<a<<"\n";
+		cout<<"vHeap.vMalloc	"<< memLibre	<<" bytes de memoria libre  \n";
+
+		cout<<"ingreso: "<<""<<"dato ingresado, leido de memoria: "<<*(int*)(_ptrUltimaMemoriaLibre-4)<<"\n";
 
 	}
 
 	if(memLibre >= pSize)
 	{
 		if(Constants::vDEBUG == "TRUE"){
-			//cout <<"vHeap.vMalloc	Si hay espacio suficiente para un "<<pType<<"\n";
-			//cout<< "\n";
+			cout <<"vHeap.vMalloc	Si hay espacio suficiente para un "<<pType<<"\n";
+			cout<< "\n";
 
 		}
 		int id =_tablaMetadatos->addEntry(pSize, a-b,pType);
@@ -240,6 +240,9 @@ bool vHeap::paginar(int pSize)
 		//el tamaño que se requiere escribir en memoria no cabe. No hay paginacion disponible
 		//menos MAX_SIZE_OF_ANY_OBJECT ya que siempre queremos el tamaño maximo disponible para
 		//guardar el objeto mas grande en memoria en caso de que debamos guardar uno para traer otro
+		if(Constants::vDEBUG=="true"){
+			cout<<"El tamaño de datos que se desea paginar es mayor al disponible para la paginacion\n";
+		}
 		return false;
 	}
 	else			//si hay espacio suficiente solo hay que hacer paginacion
@@ -247,34 +250,32 @@ bool vHeap::paginar(int pSize)
 		//seleccionar un grupo de objetos que juntos sean igual o mas grandes que el tamaño requerido
 		//pero que no sobre pasen el tamaño de la paginacion posible
 
+
+
 		vNode<xEntry*>* nodetmp = xTable::getInstance()->getList()->getHead();
-		fstream myfile;
+
+	/*fstream myfile;
 		myfile.open ("vHeap.bin", ios::out | ios::app | ios::trunc);
+		myfile.write((char*)(&_ptrInicioMemoria+nodetmp->getData()->getOffset()),nodetmp->getData()->getSize());
+		myfile.close();
+		*/
 
-		if(!myfile.is_open() && Constants::vDEBUG=="TRUE")
-		{
-			cout<<"vHeap.paginar() 	error en abrir el arcchivo vHeap.bin \n";
-			return false;
-		}
+		for(int it = 0; it < pSize; it = it+0){
 
-		else{
-			for(int it = 0; it < pSize; it = it+0){
-				myfile.write((char*)(&_ptrInicioMemoria+nodetmp->getData()->getOffset()),nodetmp->getData()->getSize());
-				_tamanoMemoriaPaginadaUsada = _tamanoMemoriaPaginadaUsada+(nodetmp->getData()->getSize());
-				xTable::getInstance()->getList()->deleteData(nodetmp->getData());
-				nodetmp=nodetmp->getNext();
-				it = it+nodetmp->getData()->getSize();
-				if(Constants::vDEBUG=="TRUE")
-			{
-			cout<<"pagino :"<<it<<" objetos\n";
-			}
-				if(nodetmp == 0){
+			_tamanoMemoriaPaginadaUsada = _tamanoMemoriaPaginadaUsada+(nodetmp->getData()->getSize());
+			xTable::getInstance()->getList()->deleteData(nodetmp->getData());
+			nodetmp=nodetmp->getNext();
+			it = it+nodetmp->getData()->getSize();
+			if(Constants::vDEBUG=="TRUE"){cout<<"pagino :"<<it<<" objetos\n";}
+
+			if(nodetmp == 0){
+				if(Constants::vDEBUG == "true"){cout<<"no hay datos libres suficientes para paginar lo solicitado\n";}
 				return false; 					//no hay datos suficientes para paginar y guardar la memoria deseada;
 			}
-			};								// en este punto tenemos la lista de seleccionados para paginar.
-			myfile.close();
-			return true;
-		}
+		};								// en este punto tenemos la lista de seleccionados para paginar.
+
+		return true;
+
 	}
 }
 
