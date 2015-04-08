@@ -126,12 +126,6 @@ void vHeap::dumpMemory(){
 	}
 	_estaEnZonaCritica = false;
 };
-<<<<<<< HEAD
-=======
-void vHeap::desfragmentar(){
-
-};
->>>>>>> 1e9270ced4d28eb72c0247a0c8b84c0eeceef0eb
 
 /**
  * Desfragmentador de memoria
@@ -150,10 +144,10 @@ void vHeap::desfragmentar()
 		int dato=i->getData()->getOffset();
 		if(dato!=contador) {
 			i->getData()->setOffset(contador);
+			vRef* vMalloc(i->getData()->getSize(),i->getData()->getType());
+			void vFree(i->getData());
 		}
 		}
-
-
 };
 
 /**
