@@ -1,8 +1,9 @@
-
+#! /usr/bin/python
+# -*- coding: UTF8 -*-
 ##### Bibliotecas Utilizadas #####
 ##################################
 import socket
-from tkinter import *
+from Tkinter import *
 from threading import Thread
 import threading
 import time
@@ -24,7 +25,9 @@ y de la divison.
 
 def loadXMLParameters():
     global vPORT,vDEBUG,vHARDWARE,vGUI,vUSB
-    xmlDoc = minidom.parse("config.xml")
+    #xmlDoc = minidom.parse("/home/fabian/workspace2/C++/LDMM/Lightweight-Dynamic-Memory-Manager/src/config.xml")
+    #XML DE PRUEBA
+    xmlDoc = minidom.parse("/home/fabian/workspace2/C++/LDMM/Lightweight-Dynamic-Memory-Manager/src/config_pbs.xml")
 
     pPort = xmlDoc.getElementsByTagName('TARGET_PORT')
     pDebug= xmlDoc.getElementsByTagName('vDEBUG')
@@ -441,6 +444,10 @@ if(vGUI):
     start_loop()
     window.mainloop()
 else:
+    window = Tk()
+    window.title("Memory Monitor LDMM")
+    window.geometry("10x10+100+80")
+    window.resizable(width=TRUE, height=FALSE)
     xStart = False
     if(vHARDWARE):
         try:
@@ -451,3 +458,4 @@ else:
     start_loop()
     if(vDEBUG):
         print("Graphical User Interface was not loaded. Check XML file")
+    window.mainloop()

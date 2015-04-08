@@ -20,7 +20,13 @@ XMLReader::~XMLReader() {}
  * Carga el archivo config.xml, para poder leer sus datos
  */
 void XMLReader::loadXMLFile(){
-	bool loadOkay = documento.LoadFile("src/config.xml");
+	/*bool loadOkay = documento.LoadFile("src/config.xml");
+	if (!loadOkay){
+		std::cout << "*XML* Failed to load file. File not found" << std::endl;
+	}*/
+
+	//PRUEBAS
+	bool loadOkay = documento.LoadFile("src/config_pbs.xml");
 	if (!loadOkay){
 		std::cout << "*XML* Failed to load file. File not found" << std::endl;
 	}
@@ -40,7 +46,7 @@ const char* XMLReader::getParameter(const char* pParameter){
 	pElem = root->FirstChildElement(pParameter); //Ingresa al nodo del Dato que se busca (pParameter)
 	const char* output = pElem->Attribute("value");//Obtiene el valor del Dato que se busca
 
-	//std::cout << "*XML* "<<"<<<Param: " << pParameter << " * Value: " << output << " >>>" << std::endl;
+	std::cout << "*XML* "<<"<<<Param: " << pParameter << " * Value: " << output << " >>>" << std::endl;
 
 	return output; //Retorna el valor encontrado
 }
