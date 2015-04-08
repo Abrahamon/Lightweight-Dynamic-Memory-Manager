@@ -39,13 +39,14 @@ private:
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
 	void vFree(xEntry* pEntry);
-	void dumpMemory();
+
 	void garbageCollector();
 	void desfragmentar();
 	void control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.
 
 
 public:
+	void dumpMemory();
 	bool paginar(int pSize);
 	void* _ptrUltimaMemoriaLibre;
 	static vHeap* getInstancia();

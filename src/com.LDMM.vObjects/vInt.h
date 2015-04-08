@@ -12,12 +12,22 @@
 #include "vObject.h"
 #include <iostream>
 #include "../com.LDMM.MemoryResources/vRef.h"
-#include "../com.LDMM.MemoryManager/vHeap.h"
+//#include "../com.LDMM.MemoryManager/vHeap.h"
+
 
 using namespace std;
 
-class vInt: public vRef {
+class vHeap;
+
+class vInt : public vRef {
+
+private:
+
 public:
+	vHeap *heap;
+
+
+
 	vInt();
 	vRef* operator = (const int& s); //era vRef*
 
@@ -30,8 +40,17 @@ public:
 	 * del espacio de memoria donde se desea almacenar el objeto a crear
 	 *
 	 */
-	void* operator new(size_t sz, void *pvObject){
-		return pvObject;
+//	void* operator new(size_t sz, void *pvObject){
+//		return pvObject;
+//	}
+
+
+	void * allocate(size_t);
+	void* operator new(vInt & pvObject){
+
+		vHeap* a = vHeap::getInstancia();
+		long a = reinterpret_cast<long>(heap->getInstancia()->_ptrUltimaMemoriaLibre);
+		return pvObject.allocate(a);
 	}
 
 };

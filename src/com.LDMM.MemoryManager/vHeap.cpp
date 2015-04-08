@@ -10,11 +10,14 @@
 
 vHeap* vHeap::HEAP = 0;
 
-vHeap::vHeap(int pSize, int pOverweight)
+/**
+ * Construtor
+ * @param pSize tamaño que solicita el vHeap para guardar datos
+ * @param pOverweight	sobrecarga, para la paginacion
+ */
+inline vHeap::vHeap(int pSize, int pOverweight)
 {
-
-
-	if(Constants::vDEBUG == "True"){
+	if(Constants::vDEBUG == "true"){
 		std::cout << "vHeap.vHeap	creo un vHeap de : "<<pSize<<" bytes"<<"\n";
 		std:: cout <<"\n";
 	}
@@ -27,8 +30,10 @@ vHeap::vHeap(int pSize, int pOverweight)
 	this->_estaEnZonaCritica = 0;
 };
 
-
-vHeap::~vHeap(){
+/**
+ * Destructor de la clase
+ */
+inline vHeap::~vHeap(){
 	_ptrUltimaMemoriaLibre = 0;
 	_ptrInicioMemoria=0;
 	_tablaMetadatos->getList()->vaciar();
@@ -38,7 +43,11 @@ vHeap::~vHeap(){
 	_tamanovHeap =0;
 };
 
-vHeap* vHeap::getInstancia()
+/**
+ * Metodo para cumplir con singletone
+ * @return retorna la unica instancia de este objeto
+ */
+inline vHeap* vHeap::getInstancia()
 {
 	if( HEAP != 0)
 	{
@@ -49,32 +58,26 @@ vHeap* vHeap::getInstancia()
 	}
 };
 
-void vHeap::vFreeAll(){
+/**
+ * Libera toda la memoria dentro del manejador de memoria
+ */
+inline void vHeap::vFreeAll(){
 	while(_estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
-			//usleep(medioDeSegundoMili);
+		usleep(Constants::medioDeSegundoMili);
 	}
 	_estaEnZonaCritica = true;
-	for(vNode<xEntry*>* iterador=this->_tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
-	{
-		void* tmpPtr = _ptrInicioMemoria + iterador->getData()->getOffset();
-		string type = iterador->getData()->getType();
-		void* erase;
-		if(type=="vInt"){ int* erase = (int*)tmpPtr; }
-		else if(type=="vChar"){ int* erase = (int*)tmpPtr; }
-		else if(type=="vBool"){ bool* erase = (bool*)tmpPtr; }
-		else if(type=="vLong"){ long* erase = (long*)tmpPtr; }
-		else if(type=="vFloat"){ float* erase = (float*)tmpPtr; }
-		else if(type=="vString"){ if(Constants::vDEBUG == "TRUE"){cout<<"vHeap::vFreeAll		Eliminado de memoria para string no implementado aun";} }
-		else{
-			if(Constants::vDEBUG == "TRUE")
-			{
-				cout<<"vHeap::vFreeAll 	Error en el tipo de dato a eliminar";
-				return;
-			}
-		}
-		free(erase);
-		_tablaMetadatos->getList()->deleteData(iterador->getData());
-	}
+
+	char* tmpPtr = (char*)_ptrInicioMemoria;
+	for(int i=0; i<=_tamanovHeap;i++){ *(tmpPtr+i)=0; }
+	_tablaMetadatos->getList()->vaciar();
+
+	fstream myfile;
+	myfile.open ("vHeap.bin", ios::out | ios::app | ios::trunc);
+	myfile.seekg(0);
+	myfile.write("0",_tamanoMemoriaPaginadaUsada);
+    myfile.close();
+    _tamanoMemoriaPaginadaUsada=0;
+
 	if (Constants::vDEBUG == "True")
 	{
 		cout<<"vHeap.vFreeAll 	vacie el vHeap por completo \n";
@@ -82,7 +85,10 @@ void vHeap::vFreeAll(){
 	_estaEnZonaCritica = false;
 };
 
-void vHeap::dumpMemory(){
+/**
+ * Escribe la memoria que tenga en un archivo .txt
+ */
+inline void vHeap::dumpMemory(){
 	while(_estaEnZonaCritica)
 	{
 		//usleep(medioDeSegundoMili);
@@ -112,11 +118,19 @@ void vHeap::dumpMemory(){
 		else{
 			fs << 0;
 		}
+	//	fs.close();
+	};
+
+	if(Constants::vDEBUG=="TRUE"){
+		cout<<"vHeap.dumpMemory() 	DUMP de memoria \n";
 	}
 	_estaEnZonaCritica = false;
 };
 
-void vHeap::desfragmentar()
+/**
+ * Desfragmentador de memoria
+ */
+inline void vHeap::desfragmentar()
 {
 	while(_estaEnZonaCritica)
 	{
@@ -126,7 +140,11 @@ void vHeap::desfragmentar()
 	_estaEnZonaCritica = false;
 };
 
-void vHeap::control()			//hilo para metodo de control
+/**
+ * Metodo control del manejador de memoria
+ * LLama a el colector de basura, desfragmentador y vaciar la memoria
+ */
+inline void vHeap::control()			//hilo para metodo de control
 {
 	while(_estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
 		//usleep(medioDeSegundoMili);
@@ -138,11 +156,16 @@ void vHeap::control()			//hilo para metodo de control
 
 }
 
-
-vRef* vHeap::vMalloc(int pSize, std::string pType)
+/**
+ * Cuando se le solicita memoria al manejador de codigo se hacer por este metodo
+ * @param pSize tamaño deseado
+ * @param pType tipo del objeto a almacenar
+ * @return retorna un vRef objeto que abstrae el puntero
+ */
+inline vRef* vHeap::vMalloc(int pSize, std::string pType)
 {
 	while(_estaEnZonaCritica){				//esperar hasta que se libere de zona critica
-		//usleep(medioDeSegundoMili);
+		usleep(Constants::medioDeSegundoMili);
 		//sleep(1);
 	}
 	this->_estaEnZonaCritica = true;
@@ -162,6 +185,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 		cout<<"ingreso: "<<""<<"dato ingresado, leido de memoria: "<<*(int*)(_ptrUltimaMemoriaLibre-4)<<"\n";
 
 	}
+
 	if(memLibre >= pSize)
 	{
 		if(Constants::vDEBUG == "TRUE"){
@@ -185,51 +209,82 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 		this->_estaEnZonaCritica = false;
 		if(paginar(pSize))				//tratamos de paginar un tamaño mayor al pedido en vMalloc
 		{
+			if(Constants::vDEBUG =="TRUE")
+			{
+				cout<<"vHeap.vMalloc 	paginamos con exito\n";
+			}
 			this->desfragmentar();		//para asegurarnos que quepa
-
-		}else							// el objeto no cabe en ningun lugar
+			long d = reinterpret_cast<long>(_ptrUltimaMemoriaLibre);
+			int id =_tablaMetadatos->addEntry(pSize, d-b,pType);
+			vRef* referencia = new vRef(id);
+			this->_ptrUltimaMemoriaLibre = _ptrUltimaMemoriaLibre+pSize;
+			this->_estaEnZonaCritica = false;
+			return referencia;
+		}
+		else							// el objeto no cabe en ningun lugar
 			if(Constants::vDEBUG=="TRUE")
-				cout<<"No hay espacio para la paginacion, ni espacio en la memoria \n";
+				cout<<"vHeap.vMalloc() 	No hay espacio para la paginacion, ni espacio en la memoria \n";
 	}
 };
 
-bool vHeap::paginar(int pSize)
+/**
+ * Cuando no hay suficiente memoria tratamos de escribir algunos objetos en un archivo .bin en binario
+ * con tal de liberar espacio para otros objetos
+ * @param pSize tamaño necesario para realizar la paginacion
+ * @return
+ */
+inline bool vHeap::paginar(int pSize)
 {
-
 	if((_tamanovHeap*_overweight)-_tamanoMemoriaPaginadaUsada-Constants::MAX_SIZE_OF_ANY_OBJECT < pSize)
+	{
 		//el tamaño que se requiere escribir en memoria no cabe. No hay paginacion disponible
 		//menos MAX_SIZE_OF_ANY_OBJECT ya que siempre queremos el tamaño maximo disponible para
 		//guardar el objeto mas grande en memoria en caso de que debamos guardar uno para traer otro
-	{	return false;
-	}else			//si hay espacio suficiente solo hay que hacer paginacion
+		return false;
+	}
+	else			//si hay espacio suficiente solo hay que hacer paginacion
 	{
 		//seleccionar un grupo de objetos que juntos sean igual o mas grandes que el tamaño requerido
 		//pero que no sobre pasen el tamaño de la paginacion posible
 
 		vNode<xEntry*>* nodetmp = xTable::getInstance()->getList()->getHead();
+		fstream myfile;
+		myfile.open ("vHeap.bin", ios::out | ios::app | ios::trunc);
 
-		//fstream file("vHeap.bin", ios::binary | ios::in | ios::out | ios::trunc);
-		//char a='a';
-		//file.write((char*)&a,1);
+		if(!myfile.is_open() && Constants::vDEBUG=="TRUE")
+		{
+			cout<<"vHeap.paginar() 	error en abrir el arcchivo vHeap.bin \n";
+			return false;
+		}
 
-		ofstream myfile;
-		myfile.open ("vHeap.bin", ios::out | ios::app | ios::binary);
-
-		for(int it = 0; it < pSize; it = it+0){
-			myfile.write((char*)(&_ptrInicioMemoria+nodetmp->getData()->getOffset()),nodetmp->getData()->getSize());
-			nodetmp=nodetmp->getNext();
-			it = it+nodetmp->getData()->getSize();
+		else{
+			for(int it = 0; it < pSize; it = it+0){
+				myfile.write((char*)(&_ptrInicioMemoria+nodetmp->getData()->getOffset()),nodetmp->getData()->getSize());
+				_tamanoMemoriaPaginadaUsada = _tamanoMemoriaPaginadaUsada+(nodetmp->getData()->getSize());
+				xTable::getInstance()->getList()->deleteData(nodetmp->getData());
+				nodetmp=nodetmp->getNext();
+				it = it+nodetmp->getData()->getSize();
+				if(Constants::vDEBUG=="TRUE")
+			{
 			cout<<"pagino :"<<it<<" objetos\n";
-			if(nodetmp == 0)
+			}
+				if(nodetmp == 0){
 				return false; 					//no hay datos suficientes para paginar y guardar la memoria deseada;
-		};								// en este punto tenemos la lista de seleccionados para paginar.
-
-		myfile.close();
-		return false;
+			}
+			};								// en este punto tenemos la lista de seleccionados para paginar.
+			myfile.close();
+			return true;
+		}
 	}
 }
 
-void vHeap::garbageCollector()
+/**
+ * controlador de referencias
+ * si algun objeto no tiene alguna
+ * este es inaccesible
+ * por lo tanto se descarta
+ */
+inline void vHeap::garbageCollector()
 {
 	while(_estaEnZonaCritica)
 	{
@@ -246,7 +301,11 @@ void vHeap::garbageCollector()
 	_estaEnZonaCritica = false;
 };
 
-void vHeap::vFree(xEntry* pEntry)
+/**
+ * Este metodo privado funciona dentro de la clase
+ * @param pEntry recibe este argumento a eliminar
+ */
+inline void vHeap::vFree(xEntry* pEntry)
 {
 	char* temp =(char*)( _ptrInicioMemoria + (pEntry->getOffset()));
 
@@ -261,7 +320,12 @@ void vHeap::vFree(xEntry* pEntry)
 	}
 }
 
-void vHeap::vFree(vRef* pRef)
+/**
+ * Metodo publico que recibe un Puntero vRef
+ * lo asocia con un xEntry y utiliza el metodo privado  vFreef(xEntry*)
+ * @param pRef
+ */
+inline void vHeap::vFree(vRef* pRef)
 {
 	bool borre = false;
 	for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
