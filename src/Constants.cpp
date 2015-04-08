@@ -39,7 +39,7 @@ Constants* Constants::getInstance(){
 Constants::Constants(){
 	//XML Reader
 	XMLReader* reader = new XMLReader();
-	reader->loadXMLFile("src/config.xml");
+	reader->loadXMLFile("src/configs.xml");
 
 	//General Constants
 	SIZE = atoi(reader->getParameter("SIZE"));
