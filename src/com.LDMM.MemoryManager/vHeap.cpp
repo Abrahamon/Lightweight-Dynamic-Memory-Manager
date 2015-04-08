@@ -138,6 +138,16 @@ void vHeap::desfragmentar()
 	}
 	_estaEnZonaCritica = true;
 	_estaEnZonaCritica = false;
+	int contador=0;
+	for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
+		{
+		int dato=i->getData()->getOffset();
+		if(dato!=contador) {
+			i->getData()->setOffset(contador);
+		}
+		}
+
+
 };
 
 /**
