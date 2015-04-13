@@ -141,11 +141,16 @@ void vHeap::desfragmentar()
 	int contador=0;
 	for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
 		{
+		void* posiciones=_ptrInicioMemoria;
 		int dato=i->getData()->getOffset();
 		if(dato!=contador) {
 			i->getData()->setOffset(contador);
-			vRef* vMalloc(i->getData()->getSize(),i->getData()->getType());
-			void vFree(i->getData());
+			memmove(posiciones+contador,posiciones+dato,i->getData()->getSize());
+			contador=contador+i->getData()->getSize();
+		}
+		else
+		{
+			contador=contador+i->getData()->getSize();
 		}
 		}
 };
