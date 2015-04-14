@@ -3,16 +3,15 @@
 	<OVERWEIGHT value="50" />
 	<DUMP_FRECUENCY value="150" />
 	<DUMP_PATH value="src/" />
-	<vDEBUG value="TRUE" />
+	<vDEBUG value="false" />
 	<vDEBUG_PATH value="src/" />
 	<GC_FRECUENCY value="150" />
 	<cuartoDeSegundoMili value="250000" />
 	<medioDeSegundoMili value="500000" />
 	<SegundoMili value="1000000" />
-	<TARGET_IP value="192.168.1.108" />
-	<TARGET_PORT value="7171" />
+	<TARGET_IP value="172.26.88.145" />
+	<TARGET_PORT value="7070" />
 	<vHARDWARE value="true" />
-	<vGUI value="true" />
+	<vGUI value="false" />
 	<vUSB value="/dev/ttyACM0" />
-
-</root> 
+</root>
