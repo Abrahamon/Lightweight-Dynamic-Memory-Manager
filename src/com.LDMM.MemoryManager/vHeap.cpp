@@ -260,7 +260,7 @@ bool vHeap::paginar(int pSize)
 		*/
 
 		fstream archivoBinario;
-		archivoBinario.open ("src/vHeap.bin", ios::out | ios::app | ios::binary);
+		archivoBinario.open ("vHeap.bin", ios::out | ios::app | ios::binary);
 
 		if(archivoBinario.is_open()){
 			for(int it = 0; it < pSize; it = it+0){
