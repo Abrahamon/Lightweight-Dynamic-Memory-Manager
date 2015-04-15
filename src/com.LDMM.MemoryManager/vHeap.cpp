@@ -28,8 +28,6 @@ vHeap::vHeap(int pSize, int pOverweight)
 	this->_ptrUltimaMemoriaLibre = _ptrInicioMemoria;
 	this->_tablaMetadatos = xTable::getInstance();
 	this->_estaEnZonaCritica = 0;
-	this->escritorXML = new XMLWriter();
-
 };
 
 /**
@@ -55,7 +53,7 @@ vHeap* vHeap::getInstancia()
 	{
 		return HEAP;
 	}else{
-		HEAP = new vHeap(200,Constants::OVERWEIGHT);
+		HEAP = new vHeap(Constants::SIZE,Constants::OVERWEIGHT);
 		return HEAP;
 	}
 };
@@ -281,6 +279,7 @@ bool vHeap::paginar(int pSize)
 				}
 			};								// en este punto tenemos la lista de seleccionados para paginar.
 
+			//string a = archivoBinario.read()
 			return true;
 		}
 		else{

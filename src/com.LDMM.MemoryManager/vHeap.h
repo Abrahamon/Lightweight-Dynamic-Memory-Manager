@@ -40,7 +40,6 @@ private:
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
 	void vFree(xEntry* pEntry);
-	XMLWriter* escritorXML;
 	void garbageCollector();
 
 	void control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.
