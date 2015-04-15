@@ -1,10 +1,13 @@
 <root>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7f96ce96b054eb824b839a0bacb33705d562bc63
 	<SIZE value="200" />
 	<OVERWEIGHT value="50" />
 	<DUMP_FRECUENCY value="150" />
 	<DUMP_PATH value="src/" />
-	<vDEBUG value="true" />
+	<vDEBUG value="TRUE" />
 	<vDEBUG_PATH value="src/" />
 	<GC_FRECUENCY value="150" />
 	<cuartoDeSegundoMili value="250000" />
@@ -15,6 +18,7 @@
 	<vHARDWARE value="true" />
 	<vGUI value="true" />
 	<vUSB value="/dev/ttyACM0" />
+<<<<<<< HEAD
 =======
     < Config>
         <SIZE value="100" />
@@ -31,4 +35,7 @@
         <TARGET_PORT value="7070" />
     < /Config>
 >>>>>>> 0b92242d94d9cafc2cf47e27cd6f6da243907779
+=======
+
+>>>>>>> 7f96ce96b054eb824b839a0bacb33705d562bc63
 </root> 

@@ -39,15 +39,14 @@ Constants* Constants::getInstance(){
 Constants::Constants(){
 	//XML Reader
 	XMLReader* reader = new XMLReader();
-	reader->loadXMLFile();
+	reader->loadXMLFile("src/config.xml");
 
 	//General Constants
 	SIZE = atoi(reader->getParameter("SIZE"));
 	OVERWEIGHT = atoi(reader->getParameter("OVERWEIGHT"));
 	DUMP_FRECUENCY = atoi(reader->getParameter("DUMP_FRECUENCY"));
 	DUMP_PATH = reader->getParameter("DUMP_PATH");
-//	vDEBUG = reader->getParameter("vDEBUG");
-	vDEBUG = "TRUE";
+	vDEBUG = reader->getParameter("vDEBUG");
 	vDEBUG_PATH = reader->getParameter("vDEBUG_PATH");
 	GC_FRECUENCY = atoi(reader->getParameter("GC_FRECUENCY"));
 	cuartoDeSegundoMili = atoi(reader->getParameter("cuartoDeSegundoMili"));
