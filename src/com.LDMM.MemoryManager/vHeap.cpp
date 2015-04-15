@@ -155,6 +155,12 @@ void vHeap::desfragmentar()
 			contador=contador+i->getData()->getSize();
 		}
 		}
+	char* temp =(char*)(_ptrInicioMemoria+contador);
+
+	for(int i=contador; i <_tamanovHeap ; i++)				//colocar la memoria en ceros
+	{
+		*(temp+i) = 0;
+	}
 };
 
 /**
