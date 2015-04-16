@@ -152,8 +152,6 @@ void vHeap::control()			//hilo para metodo de control
 	this->garbageCollector();
 	this->desfragmentar();
 	this->dumpMemory();
-
-
 }
 
 /**
