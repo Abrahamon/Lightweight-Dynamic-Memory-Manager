@@ -35,6 +35,9 @@ vHeap::vHeap(int pSize, int pOverweight)
 	}
 
 
+	this->escritorXML = new XMLWriter();
+
+
 };
 
 /**
@@ -60,7 +63,7 @@ vHeap* vHeap::getInstancia()
 	{
 		return HEAP;
 	}else{
-		HEAP = new vHeap(Constants::SIZE,Constants::OVERWEIGHT);
+		HEAP = new vHeap(200,Constants::OVERWEIGHT);
 		return HEAP;
 	}
 };
@@ -148,13 +151,24 @@ void vHeap::desfragmentar()
 	int contador=0;
 	for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
 		{
+		void* posiciones=_ptrInicioMemoria;
 		int dato=i->getData()->getOffset();
-		if(dato!=contador)
+		if(dato!=contador) {
+			i->getData()->setOffset(contador);
+			memmove(posiciones+contador,posiciones+dato,i->getData()->getSize());
+			contador=contador+i->getData()->getSize();
+		}
+		else
 		{
-			//i->getData()->setOffset(contador);
+			contador=contador+i->getData()->getSize();
+		}
+		}
+	char* temp =(char*)(_ptrInicioMemoria+contador);
 
-		}
-		}
+	for(int i=contador; i <_tamanovHeap ; i++)				//colocar la memoria en ceros
+	{
+		*(temp+i) = 0;
+	}
 };
 
 /**
@@ -247,7 +261,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 		}
 		else							// el objeto no cabe en ningun lugar
 			if(Constants::vDEBUG=="TRUE")
-				cout<<"vHeap.vMalloc() 	No hay espacio para la paginacion, ni espacio en la memoria \n";
+				cout<<"vHeap.vMalloc() 	No se logro la paginacion \n";
 	}
 };
 
@@ -274,32 +288,43 @@ bool vHeap::paginar(int pSize)
 		//seleccionar un grupo de objetos que juntos sean igual o mas grandes que el tamaño requerido
 		//pero que no sobre pasen el tamaño de la paginacion posible
 
-
-
 		vNode<xEntry*>* nodetmp = xTable::getInstance()->getList()->getHead();
-
 	/*fstream myfile;
 		myfile.open ("vHeap.bin", ios::out | ios::app | ios::trunc);
 		myfile.write((char*)(&_ptrInicioMemoria+nodetmp->getData()->getOffset()),nodetmp->getData()->getSize());
 		myfile.close();
 		*/
 
-		for(int it = 0; it < pSize; it = it+0){
+		fstream archivoBinario;
+		archivoBinario.open ("vHeap.bin", ios::out | ios::app | ios::binary);
 
-			_tamanoMemoriaPaginadaUsada = _tamanoMemoriaPaginadaUsada+(nodetmp->getData()->getSize());
-			xTable::getInstance()->getList()->deleteData(nodetmp->getData());
-			nodetmp=nodetmp->getNext();
-			it = it+nodetmp->getData()->getSize();
-			if(Constants::vDEBUG=="TRUE"){cout<<"pagino :"<<it<<" objetos\n";}
+		if(archivoBinario.is_open()){
+			for(int it = 0; it < pSize; it = it+0){
 
-			if(nodetmp == 0){
-				if(Constants::vDEBUG == "true"){cout<<"no hay datos libres suficientes para paginar lo solicitado\n";}
-				return false; 					//no hay datos suficientes para paginar y guardar la memoria deseada;
+				_tamanoMemoriaPaginadaUsada = _tamanoMemoriaPaginadaUsada+(nodetmp->getData()->getSize());
+				xTable::getInstance()->getList()->deleteData(nodetmp->getData());
+				nodetmp=nodetmp->getNext();
+
+				it = it+nodetmp->getData()->getSize();
+				archivoBinario.write((char*)(_ptrInicioMemoria+nodetmp->getData()->getOffset()),nodetmp->getData()->getSize());
+
+				if(Constants::vDEBUG=="TRUE"){cout<<"pagino :"<<it<<" objetos\n";}
+
+
+				if(nodetmp == 0){
+					if(Constants::vDEBUG == "true"){cout<<"no hay datos libres suficientes para paginar lo solicitado\n";}
+					return false; 					//no hay datos suficientes para paginar y guardar la memoria deseada;
+				}
+			};								// en este punto tenemos la lista de seleccionados para paginar.
+
+			return true;
+		}
+		else{
+			if(Constants::vDEBUG =="TRUE"){
+				cout<<"Error al abrir el archivo vHeap.bin \n";
 			}
-		};								// en este punto tenemos la lista de seleccionados para paginar.
-
-		return true;
-
+		}
+		return false;
 	}
 }
 
