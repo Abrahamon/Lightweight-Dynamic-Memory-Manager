@@ -20,7 +20,7 @@ vRef* vFloat::operator= (const float& s){
 	vFloatData = s;
 	setVObjectData((void*)&vFloatData);
 	setVObjectType(Constants::TYPE_FLOAT);
-	return vHeap::getInstancia()->vMalloc(32,Constants::TYPE_FLOAT);
+	return vHeap::getInstancia()->vMalloc(32,"Float");
 }
  vFloat::vFloat(){
 
