@@ -6,8 +6,9 @@
  */
 
 #include "vInt.h"
-#include "../com.LDMM.MemoryManager/vHeap.h"
 #include <typeinfo>
+
+class vHeap;
 /*
  *
  * Sobrecarga del operador =
@@ -26,9 +27,13 @@ vRef* vInt::operator= (const int& s){
 
 }
 
- vInt::vInt(){
+vInt::vInt(){
 	vIntData = 0;
 
 }
+
+
+
+
 
 

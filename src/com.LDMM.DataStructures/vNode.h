@@ -19,6 +19,7 @@ private:
 	vNode* _next;
 	vNode* _previous;
 public:
+
 	vNode(k pData);
 	void setData(k);
 	void setNext(vNode<k>*);

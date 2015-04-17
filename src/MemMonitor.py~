@@ -26,9 +26,9 @@ y de la divison.
 
 def loadXMLParameters():
     global vPORT,vDEBUG,vHARDWARE,vGUI,vUSB
-    #xmlDoc = minidom.parse("/home/fabian/workspace2/C++/LDMM/Lightweight-Dynamic-Memory-Manager/src/config.xml")
-    #XML DE PRUEBA
-    xmlDoc = minidom.parse("/home/fabian/workspace2/C++/LDMM/Lightweight-Dynamic-Memory-Manager/src/config_pbs.xml")
+    ruta=os.getcwd()
+    rutaFinal=str(ruta)+"/configs.xml"
+    xmlDoc = minidom.parse(rutaFinal)
 
     pPort = xmlDoc.getElementsByTagName('TARGET_PORT')
     pDebug= xmlDoc.getElementsByTagName('vDEBUG')
@@ -284,6 +284,8 @@ def manageData(pData):
             startViewer(int(pData[1]),int(pData[2]))
     if(pData[0] == "true"):
         setMemoryBlock(True,int(pData[1]),int(pData[2]))
+    if(pData[0] == "false"):
+        setMemoryBlock(False,int(pData[1]),int(pData[2]))
 def timer():
     global actualTIME
     initX1 = 13

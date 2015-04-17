@@ -27,6 +27,7 @@ std::string Constants::TYPE_FLOAT;
 std::string Constants::TYPE_ARRAY;
 std::string Constants::TYPE_BOOL;
 std::string Constants::TARGET_IP;
+std::string Constants::vGUI;
 int Constants::TARGET_PORT;
 
 Constants* Constants::getInstance(){
@@ -65,4 +66,5 @@ Constants::Constants(){
 
 	TARGET_IP = reader->getParameter("TARGET_IP");
 	TARGET_PORT = atoi(reader->getParameter("TARGET_PORT"));
+	vGUI = reader->getParameter("vGUI");
 }

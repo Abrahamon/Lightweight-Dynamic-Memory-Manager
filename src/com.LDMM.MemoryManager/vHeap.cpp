@@ -19,15 +19,20 @@ vHeap::vHeap(int pSize, int pOverweight)
 {
 	if(Constants::vDEBUG == "TRUE"){
 		std::cout << "vHeap.vHeap	creo un vHeap de : "<<pSize<<" bytes"<<"\n";
-		std:: cout <<"\n";
 	}
 	this->_overweight= pOverweight;
 	this->_tamanoMemoriaPaginadaUsada = 0;
 	this->_tamanovHeap = pSize;
+	this->_encoder = new Encoder();
 	this->_ptrInicioMemoria = calloc(1,pSize);
 	this->_ptrUltimaMemoriaLibre = _ptrInicioMemoria;
 	this->_tablaMetadatos = xTable::getInstance();
 	this->_estaEnZonaCritica = 0;
+
+	if(Constants::vGUI == "true"){
+		_encoder->connectToMemoryViewer();
+		_encoder->sendMessage("xStart",pSize,8);
+	}
 };
 
 /**
@@ -183,22 +188,23 @@ void vHeap::control()			//hilo para metodo de control
  */
 vRef* vHeap::vMalloc(int pSize, std::string pType)
 {
+
 	while(_estaEnZonaCritica){				//esperar hasta que se libere de zona critica
 		usleep(Constants::medioDeSegundoMili);
 		//sleep(1);
 	}
 	this->_estaEnZonaCritica = true;
 
-	long b = reinterpret_cast<long>(_ptrInicioMemoria);
-	long a = reinterpret_cast<long>(_ptrUltimaMemoriaLibre);
-	int memLibre = _tamanovHeap-(a-b);
+	long ptrInicioDecimal = reinterpret_cast<long>(_ptrInicioMemoria);
+	long ptrUltimaPosicioLibreDecimal = reinterpret_cast<long>(_ptrUltimaMemoriaLibre);
+	int memLibre = _tamanovHeap-(ptrUltimaPosicioLibreDecimal-ptrInicioDecimal);
 
 
 
 	if(Constants::vDEBUG == "TRUE"){
 		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
-		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<b<<"\n";
-		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<a<<"\n";
+		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<ptrInicioDecimal<<"\n";
+		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<ptrUltimaPosicioLibreDecimal<<"\n";
 		cout<<"vHeap.vMalloc	"<< memLibre	<<" bytes de memoria libre  \n";
 
 		cout<<"ingreso: "<<""<<"dato ingresado, leido de memoria: "<<*(int*)(_ptrUltimaMemoriaLibre-4)<<"\n";
@@ -212,8 +218,14 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 			cout<< "\n";
 
 		}
-		int id =_tablaMetadatos->addEntry(pSize, a-b,pType);
+		int id =_tablaMetadatos->getInstance()->addEntry(pSize, ptrUltimaPosicioLibreDecimal-ptrInicioDecimal,pType);
 		vRef* referencia = new vRef(id);
+
+		int pStart = (ptrUltimaPosicioLibreDecimal-ptrInicioDecimal)/8;
+		int pEnd = (pStart) + pSize/8;
+		cout <<"Valores: "<<pStart<<"  "<<pEnd << endl;
+		_encoder->sendMessage("true",pStart,pEnd);
+
 		this->_ptrUltimaMemoriaLibre = _ptrUltimaMemoriaLibre+pSize;
 
 		this->_estaEnZonaCritica = false;
@@ -234,7 +246,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 			}
 			this->desfragmentar();		//para asegurarnos que quepa
 			long d = reinterpret_cast<long>(_ptrUltimaMemoriaLibre);
-			int id =_tablaMetadatos->addEntry(pSize, d-b,pType);
+			int id =_tablaMetadatos->addEntry(pSize, d-ptrInicioDecimal,pType);
 			vRef* referencia = new vRef(id);
 			this->_ptrUltimaMemoriaLibre = _ptrUltimaMemoriaLibre+pSize;
 			this->_estaEnZonaCritica = false;
@@ -346,10 +358,17 @@ void vHeap::vFree(xEntry* pEntry)
 		*(temp+i) = 0;
 	}
 	_tablaMetadatos->getList()->deleteData(pEntry);
+
+	int pStart = pEntry->getOffset()/8;
+	int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
+	_encoder->sendMessage("false",pStart,pEnd);
+
+
 	if(Constants::vDEBUG == "TRUE")
 	{
-		cout<<"Borre un elemento de la xTable \n";
+		cout<<"Elemento eliminado de la xTable \n";
 	}
+
 }
 
 /**
@@ -375,6 +394,15 @@ void vHeap::vFree(vRef* pRef)
 		else
 			cout<<"vHeap.vFree	no pude borrar un dato con ID: "<<pRef->getID()<<"\n";
 	}
+	vNode<xEntry*>* tempEn = _tablaMetadatos->getList()->getHead();
+	for (int i = 0; i < pRef->getID(); i++){
+		tempEn->getNext();
+	}
+	xEntry* pEntry = tempEn->getData();
+
+	int pStart = pEntry->getOffset()/8;
+	int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
+	_encoder->sendMessage("false",pStart,pEnd);
 }
 
 
