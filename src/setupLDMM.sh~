@@ -1,0 +1,12 @@
+#!/bin/bash
+echo "#########################################"
+echo "Lightweight Dynamic Memory Manager Setup"
+echo "#########################################"
+echo ""
+echo "Please enter your parameters below"
+python /home/fabian/Desktop/run.py
+clear
+echo "All parameters setted. Running program"
+echo "#########################################"
+echo ""
+python /home/fabian/workspace2/C++/LDMM/Lightweight-Dynamic-Memory-Manager/src/MemMonitor.py

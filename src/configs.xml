@@ -9,9 +9,9 @@
 	<cuartoDeSegundoMili value="250000" />
 	<medioDeSegundoMili value="500000" />
 	<SegundoMili value="1000000" />
-	<TARGET_IP value="172.26.97.170" />
-	<TARGET_PORT value="7171" />
-	<vHARDWARE value="false" />
+	<TARGET_IP value="192.168.1.100" />
+	<TARGET_PORT value="2168" />
+	<vHARDWARE value="true" />
 	<vGUI value="true" />
 	<vUSB value="/dev/ttyACM0" />
-</root> 
+</root>

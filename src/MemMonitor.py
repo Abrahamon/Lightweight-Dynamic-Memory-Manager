@@ -8,6 +8,7 @@ from threading import Thread
 import threading
 import time
 import serial
+import os
 from xml.dom import minidom
 ##################################
 
@@ -25,9 +26,10 @@ y de la divison.
 
 def loadXMLParameters():
     global vPORT,vDEBUG,vHARDWARE,vGUI,vUSB
-    #xmlDoc = minidom.parse("/home/fabian/workspace2/C++/LDMM/Lightweight-Dynamic-Memory-Manager/src/config.xml")
-    #XML DE PRUEBA
-    xmlDoc = minidom.parse("/home/tvlenin/Proyectos c++/Lightweight-Dynamic-Memory-Manager/src/config_pbs.xml")
+    ruta=os.getcwd()
+    rutaFinal=str(ruta)+"/configs.xml"
+    xmlDoc = minidom.parse(rutaFinal)
+
 
     pPort = xmlDoc.getElementsByTagName('TARGET_PORT')
     pDebug= xmlDoc.getElementsByTagName('vDEBUG')
