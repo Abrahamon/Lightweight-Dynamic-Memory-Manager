@@ -14,6 +14,7 @@
 #include "../Constants.h"
 #include "../com.LDMM.DataStructures/vLinkedList.h"
 #include "../com.LDMM.DataStructures/vNode.h"
+#include "../com.LDMM.DataAccess/Encoder.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -50,6 +51,7 @@ public:
 	bool paginar(int pSize);
 	void* _ptrUltimaMemoriaLibre;
 	static vHeap* getInstancia();
+	Encoder* _encoder;
 	vRef* vMalloc(int pSize, std::string pType);
 	void vFree(vRef* pRef);
 

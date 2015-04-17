@@ -45,6 +45,7 @@ public:
 
 	static std::string TARGET_IP;
 	static int TARGET_PORT;
+	static std::string vGUI;
 
 	Constants* getInstance();
 
