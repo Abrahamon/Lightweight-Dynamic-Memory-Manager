@@ -22,6 +22,8 @@ public:
 	int createFloat(const float &pData);
 	int createBool(bool pData);
 	int createString(std::string pData);
+	int createChar(const char* pData);
+	int createLong(long pData);
 	void remove(int ref);
 };
 

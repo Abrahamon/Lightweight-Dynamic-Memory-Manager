@@ -16,7 +16,7 @@
  * que le guarda un valor en el vHeap.
  *
  */
-vRef*  vChar::operator= (const char& s){
+vRef*  vChar::operator= (const char* s){
 	vCharData = s;
 	setVObjectData((void*)&vCharData);
 	setVObjectType(Constants::TYPE_CHAR);
