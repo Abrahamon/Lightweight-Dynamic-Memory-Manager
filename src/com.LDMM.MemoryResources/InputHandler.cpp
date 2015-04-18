@@ -129,7 +129,6 @@ void InputHandler::manageData(std::string pCommand, std::string pType, std::stri
 			if(pValue == "true") pBool = true;
 			else if(pValue=="false") pBool = false;
 			int ref = createBool(pBool, number);
-			std::cout<< "Object created with ID: " << ref << std::endl;
 		}
 		else if(pType == "vString"){
 			int ref = createString(pValue);

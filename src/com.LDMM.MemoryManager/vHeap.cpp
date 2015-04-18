@@ -26,17 +26,15 @@ int vHeap::_tamanovHeap = 0;
  */
 void *vHeap::hiloEjecucion(void *obj) {
 	while(true){
-		//cout<<"pi tread"<<endl;
+		sleep(Constants::DUMP_FRECUENCY);
 		control();
-		sleep(1);
+
 	}
 	pthread_exit(NULL);
 };
 vHeap::vHeap(int pSize, int pOverweight)
 {
-	pthread_t hilo;
-	pthread_create(&hilo, 0, vHeap::hiloEjecucion,(void*) this);
-	pthread_detach(hilo);
+
 
 	if(Constants::vDEBUG == "true"){
 		std::cout << "vHeap.vHeap	creo un vHeap de : "<<pSize<<" bytes"<<"\n";
@@ -54,6 +52,10 @@ vHeap::vHeap(int pSize, int pOverweight)
 		_encoder->connectToMemoryViewer();
 		_encoder->sendMessage("xStart",pSize,8);
 	}
+
+	pthread_t hilo;
+	pthread_create(&hilo, 0, vHeap::hiloEjecucion,(void*) this);
+	pthread_detach(hilo);
 };
 
 /**
@@ -129,7 +131,7 @@ void vHeap::dumpMemory(){
 	char valor=(char)numero;
 	char* cantidad = &valor;
 	char palabra[100];
-	 strcpy (palabra,"dump");
+	 strcpy (palabra,"Dumps/dump");
 	 strcat (palabra,cantidad);
 	 strcat (palabra,".bin");
 	fstream dump;
@@ -147,11 +149,6 @@ void vHeap::dumpMemory(){
 	}
 	else{
 		cout<<"Error al abrir el archivo dump.bin \n";
-	}
-
-	if(Constants::vDEBUG=="true"){
-		logWriter::write("vHeap.dumpMemory() 	DUMP de memoria \n");
-		cout<<"vHeap.dumpMemory() 	DUMP de memoria \n";
 	}
 	_estaEnZonaCritica = false;
 };
