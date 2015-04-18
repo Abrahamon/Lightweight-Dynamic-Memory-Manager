@@ -20,6 +20,7 @@ class vInt: public vRef {
 public:
 	vInt();
 	vRef* operator= (const int &s);
+
 	int vIntData;
 	/*
 	 *
