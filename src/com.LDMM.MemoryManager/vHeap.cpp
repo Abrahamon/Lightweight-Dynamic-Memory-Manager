@@ -309,7 +309,7 @@ bool vHeap::paginar(int pSize)
 				it = it+nodetmp->getData()->getSize();
 
 				string b;
-				string dataString = archivoBinario.read(b,sizeof(string));
+			//	string dataString = archivoBinario.read(b,sizeof(string));
 				//cout<<"";
 				cout<<"leyendo : "<<b<<" \n";
 			};
