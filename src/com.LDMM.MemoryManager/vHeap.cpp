@@ -124,20 +124,27 @@ void vHeap::dumpMemory(){
 
 	stringstream stream;
 	int numero = _contador;
-	char palabra = (char)numero;
+	char valor=(char)numero;
+	char* cantidad = &valor;
+	char palabra[100];
+	 strcpy (palabra,"dump");
+	 strcat (palabra,cantidad);
+	 strcat (palabra,".bin");
 	fstream dump;
 
-	dump.open ("dump.bin", ios::out | ios::app | ios::binary);
+	dump.open (palabra, ios::out | ios::app | ios::binary);
 
 	if(dump.is_open()){
-		for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
+		vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead();
+		for(int a =0; a<_tablaMetadatos->getList()->getLength(); a++)
 		{
 			dump.write((char*)(_ptrInicioMemoria+i->getData()->getOffset()),i->getData()->getSize());
+			i=i->getNext();
 		}
 		_contador=_contador+1;
 	}
 	else{
-		cout<<"Error al abrir el archivo vHeap.bin \n";
+		cout<<"Error al abrir el archivo dump.bin \n";
 	}
 
 	if(Constants::vDEBUG=="true"){
