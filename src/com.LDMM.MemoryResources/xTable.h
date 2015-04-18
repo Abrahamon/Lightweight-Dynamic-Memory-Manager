@@ -8,6 +8,7 @@
 #ifndef SRC_XTABLE_H_
 #define SRC_XTABLE_H_
 #include "../com.LDMM.DataStructures/vLinkedList.h"
+#include "../com.LDMM.DataStructures/vNode.h"
 #include "xEntry.h"
 
 class xTable {
@@ -24,6 +25,7 @@ public:
 	int getOffSetDelXEntry(int pID);
 	int addEntry(int pSize,int pOffset,string pType);
 	vLinkedList<xEntry*>* getList();
+	xEntry* getXEntry(int pId);
 };
 
 #endif /* SRC_XTABLE_H_ */

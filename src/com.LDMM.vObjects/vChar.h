@@ -18,8 +18,8 @@ using namespace std;
 class vChar: public vRef {
 public:
 	vChar();
-	vRef* operator = (const char& s);
-	char vCharData;
+	vRef* operator = (const char* s);
+	const char* vCharData;
 	/*
 	 *
 	 * placement new

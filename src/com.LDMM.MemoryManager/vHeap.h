@@ -35,34 +35,39 @@ class vHeap{
 private:
 	static vHeap* HEAP;
 	int _overweight;
-	int _tamanovHeap;
-	int _contador;
+	static int _tamanovHeap;
+	static int _contador;
 	int _tamanoMemoriaPaginadaUsada;
-	xTable* _tablaMetadatos;
+	static xTable* _tablaMetadatos;
 
 
-	bool _estaEnZonaCritica;//todos los metodos al final deben asignarle false
+	static bool _estaEnZonaCritica;//todos los metodos al final deben asignarle false
 
 	void vFreeAll();
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
-	void vFree(xEntry* pEntry);
-	void garbageCollector();
+	static void vFree(xEntry* pEntry);
+	static void garbageCollector();
 
-	void* control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.
+
 
 
 public:
-	void* _ptrInicioMemoria;
-	void dumpMemory();
+	static void* _ptrInicioMemoria;
+	static void dumpMemory();
 	bool paginar(int pSize);
-	void* _ptrUltimaMemoriaLibre;
+	static void* _ptrUltimaMemoriaLibre;
 	static vHeap* getInstancia();
-	Encoder* _encoder;
+	static Encoder* _encoder;
 	vRef* vMalloc(int pSize, std::string pType);
 	void vFree(vRef* pRef);
-	void desfragmentar();
+	static void desfragmentar();
 	static void * hiloEjecucion(void* obj);
+
+	static void control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.
+	void hiloTotal ();
+	pthread_t  tl;
+	xTable* getTablaMetadatos();
 
 
 

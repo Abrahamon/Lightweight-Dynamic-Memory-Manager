@@ -21,7 +21,7 @@ public:
 	vInt();
 
 	vRef* operator= (const int &s);
-
+	void operator= ( vInt &&s);
 	int vIntData;
 
 	/*

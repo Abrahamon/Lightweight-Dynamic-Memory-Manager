@@ -8,7 +8,16 @@
 #include "../com.LDMM.MemoryManager/vHeap.h"
 #include <stdio.h>
 
+
 vHeap* vHeap::HEAP = 0;
+Encoder* vHeap::_encoder = 0;
+void* vHeap::_ptrInicioMemoria = 0;
+void* vHeap::_ptrUltimaMemoriaLibre=0;
+xTable* vHeap::_tablaMetadatos = 0;
+bool vHeap::_estaEnZonaCritica = 0;
+int vHeap::_contador = 0;
+int vHeap::_tamanovHeap = 0;
+
 
 /**
  * Construtor
@@ -17,18 +26,17 @@ vHeap* vHeap::HEAP = 0;
  */
 void *vHeap::hiloEjecucion(void *obj) {
 	while(true){
-		//desfragmentar();
-		sleep(3);
+		//cout<<"pi tread"<<endl;
+		control();
+		sleep(1);
 	}
 	pthread_exit(NULL);
-
-
 };
 vHeap::vHeap(int pSize, int pOverweight)
 {
-	//pthread_t hilo;
-//	pthread_create(&hilo, 0, vHeap::hiloEjecucion,(void*) this);
-	//pthread_detach(hilo);
+	pthread_t hilo;
+	pthread_create(&hilo, 0, vHeap::hiloEjecucion,(void*) this);
+	pthread_detach(hilo);
 
 	if(Constants::vDEBUG == "true"){
 		std::cout << "vHeap.vHeap	creo un vHeap de : "<<pSize<<" bytes"<<"\n";
@@ -116,21 +124,32 @@ void vHeap::dumpMemory(){
 
 	stringstream stream;
 	int numero = _contador;
+<<<<<<< HEAD
 	char palabra = (char)numero;
 	char*cantidad=&palabra;
+=======
+	char valor=(char)numero;
+	char* cantidad = &valor;
+	char palabra[100];
+	 strcpy (palabra,"dump");
+	 strcat (palabra,cantidad);
+	 strcat (palabra,".bin");
+>>>>>>> f294c772c57826007bde0fd72a6856990d586e59
 	fstream dump;
 
-	dump.open ("dump.bin", ios::out | ios::app | ios::binary);
+	dump.open (palabra, ios::out | ios::app | ios::binary);
 
 	if(dump.is_open()){
-		for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
+		vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead();
+		for(int a =0; a<_tablaMetadatos->getList()->getLength(); a++)
 		{
 			dump.write((char*)(_ptrInicioMemoria+i->getData()->getOffset()),i->getData()->getSize());
+			i=i->getNext();
 		}
 		_contador=_contador+1;
 	}
 	else{
-		cout<<"Error al abrir el archivo vHeap.bin \n";
+		cout<<"Error al abrir el archivo dump.bin \n";
 	}
 
 	if(Constants::vDEBUG=="true"){
@@ -191,14 +210,14 @@ void vHeap::desfragmentar()
  * Metodo control del manejador de memoria
  * LLama a el colector de basura, desfragmentador y vaciar la memoria
  */
-void* vHeap::control()			//hilo para metodo de control
+void vHeap::control()			//hilo para metodo de control
 {
-	while(_estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
-		//usleep(medioDeSegundoMili);
-	}							//cada metodo siguiente tiene zonas criticas individuales
-	this->garbageCollector();
-	this->desfragmentar();
-	this->dumpMemory();
+//	while(_estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
+//		//usleep(medioDeSegundoMili);
+//	}							//cada metodo siguiente tiene zonas criticas individuales
+	//garbageCollector();
+	desfragmentar();
+	dumpMemory();
 }
 
 
@@ -239,6 +258,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 		}
 		int id =_tablaMetadatos->getInstance()->addEntry(pSize, ptrUltimaPosicioLibreDecimal-ptrInicioDecimal,pType);
 		vRef* referencia = new vRef(id);
+
 
 		if(Constants::vGUI=="true"){
 			int pStart = (ptrUltimaPosicioLibreDecimal-ptrInicioDecimal)/8;
@@ -340,8 +360,6 @@ bool vHeap::paginar(int pSize)
 				nodetmp=nodetmp->getNext();
 
 				it = it+nodetmp->getData()->getSize();
-
-
 				archivoBinario.write((char*)(_ptrInicioMemoria+nodetmp->getData()->getOffset()),nodetmp->getData()->getSize());
 
 				if(Constants::vDEBUG=="true"){cout<<"pagino :"<<it<<" objetos\n";}
@@ -377,7 +395,7 @@ void vHeap::garbageCollector()
 		//usleep(medioDeSegundoMili);
 	}
 	_estaEnZonaCritica = true;
-	for(vNode<xEntry*>* iterador=this->_tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
+	for(vNode<xEntry*>* iterador=_tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
 	{
 		if(iterador->getData()->getReferenceCounter() == 0)
 		{
@@ -393,7 +411,6 @@ void vHeap::garbageCollector()
  */
 void vHeap::vFree(xEntry* pEntry)
 {
-	cout<<pEntry->getID()<<" asdas /n";
 	char* temp =(char*)( _ptrInicioMemoria + (pEntry->getOffset()));
 
 	for(int i=0; i < pEntry->getSize(); i++)				//colocar la memoria en ceros
@@ -408,9 +425,11 @@ void vHeap::vFree(xEntry* pEntry)
 	//}
 	_tablaMetadatos->getList()->deleteData(pEntry);
 
-	int pStart = pEntry->getOffset()/8;
-	int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
-	_encoder->sendMessage("false",pStart,pEnd);
+	if(Constants::vGUI=="true"){
+		int pStart = pEntry->getOffset()/8;
+		int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
+		_encoder->sendMessage("false",pStart,pEnd);
+	}
 
 
 	if(Constants::vDEBUG == "true")
@@ -452,9 +471,17 @@ void vHeap::vFree(vRef* pRef)
 	}
 	xEntry* pEntry = tempEn->getData();
 
-	int pStart = pEntry->getOffset()/8;
-	int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
-	_encoder->sendMessage("false",pStart,pEnd);
+	if(Constants::vGUI=="true"){
+		int pStart = pEntry->getOffset()/8;
+		int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
+		_encoder->sendMessage("false",pStart,pEnd);
+	}
+
 }
 
-
+/**
+ *
+ */
+xTable* vHeap::getTablaMetadatos(){
+	return this->_tablaMetadatos;
+}
