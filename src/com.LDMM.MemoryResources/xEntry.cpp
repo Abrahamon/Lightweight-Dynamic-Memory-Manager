@@ -7,6 +7,16 @@
 
 #include "xEntry.h"
 
+/**
+ * Constructor de la Clase
+ * Se inicializan las variables del xEntry, según los
+ * parámetros de entrada.
+ *
+ * @param pID
+ * @param pSize
+ * @param pOffset
+ * @param pType
+ */
 xEntry::xEntry(int pID,int pSize, int pOffset, string pType) {
 	_ID = pID;
 	_Size = pSize;

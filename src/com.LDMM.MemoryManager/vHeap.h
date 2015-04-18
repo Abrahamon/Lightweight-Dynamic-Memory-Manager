@@ -17,7 +17,7 @@
 #include "../com.LDMM.vObjects/vLong.h"
 #include "../com.LDMM.vObjects/vString.h"
 #include "../com.LDMM.MemoryResources/vRef.h"
-#include "../com.LDMM.DataAccess/XMLWriter.h"
+#include "../com.LDMM.DataAccess/logWriter.h"
 #include "../com.LDMM.DataStructures/vLinkedList.h"
 #include "../com.LDMM.DataStructures/vNode.h"
 
@@ -40,35 +40,30 @@ private:
 	static vHeap* HEAP;
 	int _overweight;
 	int _tamanovHeap;
-	int _contador;
+	static int _contador;
 	int _tamanoMemoriaPaginadaUsada;
-	xTable* _tablaMetadatos;
 
-
-	bool _estaEnZonaCritica;//todos los metodos al final deben asignarle false
-
+	static bool _estaEnZonaCritica;//todos los metodos al final deben asignarle false
 	void vFreeAll();
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
-	void vFree(xEntry* pEntry);
-	void garbageCollector();
-
-	void* control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.
-
+	static void vFree(xEntry* pEntry);
+	static void garbageCollector();
 
 public:
-	void* _ptrInicioMemoria;
-	void dumpMemory();
+	static void* _ptrInicioMemoria;
+	static xTable* _tablaMetadatos;
+	static void dumpMemory();
 	bool paginar(int pSize);
 	void* _ptrUltimaMemoriaLibre;
 	static vHeap* getInstancia();
-	Encoder* _encoder;
+	static Encoder* _encoder;
 	vRef* vMalloc(int pSize, std::string pType);
 	void vFree(vRef* pRef);
-	void desfragmentar();
+	 void desfragmentar();
 	static void * hiloEjecucion(void* obj);
-
-	pthread_t  tl;
+	void* control(); //hilo que controla fragmentacion, garbage colector y dump de memoria.
+	void hiloTotal ();
 
 
 

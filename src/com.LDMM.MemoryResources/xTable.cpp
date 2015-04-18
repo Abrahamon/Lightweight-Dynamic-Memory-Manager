@@ -17,6 +17,11 @@ xTable::~xTable() {}
 xTable* xTable::_xHashTable = 0;
 vLinkedList<xEntry*>* xTable::_ObjectsList;
 
+/*
+ * Método que permite obtener la instancia
+ * actual del xTable. Al ser una clase singleton
+ * debe existir una única instancia.
+ */
 xTable* xTable::getInstance(){
 	if(_xHashTable == 0){
 		static xTable self;
@@ -27,6 +32,12 @@ xTable* xTable::getInstance(){
 	return _xHashTable;
 }
 
+/*
+ * Método que retorna un xEntry con toda la
+ * información de un objeto específico.
+ *
+ * @param pID: id asociado al objeto.
+ */
 xEntry* xTable::getObjectInfo(int pID){
 	vNode<xEntry*>* tmpEntry = _ObjectsList->getHead();
 	for(int i = 0; i < pID; i++){
@@ -35,8 +46,13 @@ xEntry* xTable::getObjectInfo(int pID){
 	return tmpEntry->getData();
 }
 
-int xTable::getOffSetDelXEntry(int pID)
-{
+/*
+ * Método que permite obtener el Offset
+ * de un xEntry específico dentro de la tabla.
+ *
+ * @param pID: id del xEntry a buscar
+ */
+int xTable::getOffSetDelXEntry(int pID){
 	for(vNode<xEntry*>* tmpEntry = _ObjectsList->getHead(); tmpEntry != 0 ; tmpEntry = tmpEntry->getNext()){
 		if(tmpEntry->getData()->getID() == pID)
 		{
@@ -46,6 +62,16 @@ int xTable::getOffSetDelXEntry(int pID)
 	return -1;
 }
 
+/*
+ * Método que permite añadir un xEntry a la tabla, esto
+ * es necesario cada vez que se crea un nuevo objeto.
+ * Pues en el xEntry se almacena toda la información
+ * del nuevo objeto.
+ *
+ * @param pSize :Tamaño del nuevo dato
+ * @param pOffset:Offset del nuevo dato
+ * @param pType: tipo del nuevo dato
+ */
 int xTable::addEntry(int pSize,int pOffset,string pType){
 	int pID;
 	if( _ObjectsList->isEmpty() ){
@@ -60,8 +86,12 @@ int xTable::addEntry(int pSize,int pOffset,string pType){
 	return pID;
 }
 
-vLinkedList<xEntry*>* xTable::getList()
-{
 
+/*
+ * Método que permite obtener la lista de objetos
+ * actuales del xTable. De esta forma se puede
+ * buscar un xEntry específico
+ */
+vLinkedList<xEntry*>* xTable::getList(){
 	return this->_ObjectsList;
 }
