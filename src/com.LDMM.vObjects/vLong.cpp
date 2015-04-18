@@ -20,7 +20,10 @@ vRef* vLong::operator= (const long& s){
 	vLongData = s;
 	setVObjectData((void*)&vLongData);
 	setVObjectType(Constants::TYPE_LONG);
-	return vHeap::getInstancia()->vMalloc(40,"Long");
+	vRef* refe =vHeap::getInstancia()->vMalloc(32,Constants::TYPE_INT);
+	this->setID(refe->getID());
+	return refe;
+
 }
  vLong::vLong(){
 
