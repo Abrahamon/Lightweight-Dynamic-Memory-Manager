@@ -301,7 +301,11 @@ bool vHeap::paginar(int pSize)
 				stringstream pconvertir;
 				pconvertir << tmpXentry->getOffset();
 				string pOffset = pconvertir.str();
-				std::string pData = "#"+ tmpXentry->getType()+"#"+pID+"#"+pOffset+"#";
+
+				cout<<_ptrInicioMemoria<<"\n";
+				cout<<_ptrInicioMemoria+tmpXentry->getSize()<<"\n";
+
+				std::string pData = "#"+ tmpXentry->getType()+"#"+pID+"#"+pOffset+"#"+"#";
 				if(Constants::vDEBUG=="true"){
 					cout<<"vHeap.Paginar	Pagino un dato de la forma: "<<pData<<"  ( # type # ID # Offset # Data #)\n";
 				}
@@ -313,6 +317,9 @@ bool vHeap::paginar(int pSize)
 
 				it = it+nodetmp->getData()->getSize();
 
+				string b;
+//				string a = archivoBinario.read(b,sizeof(string));
+				cout<<"leyendo : "<<b<<" \n";
 			};
 
 			archivoBinario.close();
