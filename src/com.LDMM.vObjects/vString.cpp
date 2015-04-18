@@ -19,7 +19,9 @@ vRef* vString::operator= (const string& s){
 	vStringData = s;
 	setVObjectData((void*)&vStringData);
 	setVObjectType(Constants::TYPE_STRING);
-	return vHeap::getInstancia()->vMalloc(40,"String");
+	vRef* refe =vHeap::getInstancia()->vMalloc(32,Constants::TYPE_STRING);
+	this->setID(refe->getID());
+	return refe;
 }
  vString::vString(){
 
