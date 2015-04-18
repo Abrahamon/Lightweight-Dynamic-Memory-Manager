@@ -144,10 +144,8 @@ void vHeap::desfragmentar()
 
 	while(_estaEnZonaCritica)
 	{
-
 		//usleep(medioDeSegundoMili);
 	}
-
 	_estaEnZonaCritica = true;
 
 	int contador=0;
@@ -159,23 +157,13 @@ void vHeap::desfragmentar()
 		int dato = i->getData()->getOffset();
 		if(dato != contador) {
 			i->getData()->setOffset(contador);
-
 			memmove(posiciones+contador,posiciones+dato,i->getData()->getSize());
 			contador = contador+i->getData()->getSize();
-
 		}
-
 		else
-		{
 			contador = contador+i->getData()->getSize();
-		}
 	}
 	char* temp =(char*)(_ptrInicioMemoria+contador);
-
-	//for(int i=contador; i <_tamanovHeap ; i++)				//colocar la memoria en ceros
-	//{
-	//	*(temp+i) = 0;
-	//}
 	_estaEnZonaCritica = false;
 
 };
@@ -335,12 +323,14 @@ bool vHeap::paginar(int pSize)
 				it = it+nodetmp->getData()->getSize();
 				archivoBinario.write((char*)(_ptrInicioMemoria+nodetmp->getData()->getOffset()),nodetmp->getData()->getSize());
 
-				char* a;
-				cout<<"a \n";
+				char a [8];
+				cout<<" \n";
 				archivoBinario.seekg(0);
+				for (int i = 0; i<8 ; i++){
 
-				archivoBinario.read(a,sizeof(string));
-				cout<<a<<"  a \n";
+					archivoBinario.read(a,sizeof(string));
+					cout<<a[i]<<"  \n"<<endl;
+					}
 			};
 
 			archivoBinario.close();
@@ -431,6 +421,12 @@ void vHeap::vFree(vRef* pRef)
 			return vFree(i->getData());
 		}
 	}
+
+/*	for the viewed data in vHeap.bin()
+*	Check if the Id is there
+*	if so, delete it
+*	otherwise return false
+*/
 	if (Constants::vDEBUG=="true")
 	{
 		if(borre)
