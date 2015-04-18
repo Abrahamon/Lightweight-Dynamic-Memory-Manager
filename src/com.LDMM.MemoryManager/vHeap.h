@@ -16,11 +16,13 @@
 #include "../com.LDMM.DataAccess/XMLWriter.h"
 #include "../com.LDMM.DataStructures/vLinkedList.h"
 #include "../com.LDMM.DataStructures/vNode.h"
+
 #include "../com.LDMM.DataAccess/Encoder.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <iostream>
+#include <sstream>
 #include <algorithm>
 #include <string>
 #include <fstream>
@@ -34,6 +36,7 @@ private:
 	static vHeap* HEAP;
 	int _overweight;
 	int _tamanovHeap;
+	int _contador;
 	int _tamanoMemoriaPaginadaUsada;
 	xTable* _tablaMetadatos;
 
@@ -44,7 +47,6 @@ private:
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
 	void vFree(xEntry* pEntry);
-	XMLWriter* escritorXML;
 	void garbageCollector();
 
 	void* control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.

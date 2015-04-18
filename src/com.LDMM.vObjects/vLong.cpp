@@ -23,6 +23,7 @@ vRef* vLong::operator= (const long& s){
 	vRef* refe =vHeap::getInstancia()->vMalloc(32,Constants::TYPE_INT);
 	this->setID(refe->getID());
 	return refe;
+
 }
  vLong::vLong(){
 
