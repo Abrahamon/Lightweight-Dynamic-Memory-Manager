@@ -9,7 +9,11 @@
 #include <stdio.h>
 
 vHeap* vHeap::HEAP = 0;
-
+Encoder* vHeap::_encoder = 0;
+void* vHeap::_ptrInicioMemoria = 0;
+xTable* vHeap::_tablaMetadatos = 0;
+bool vHeap::_estaEnZonaCritica = 0;
+int vHeap::_contador = 0;
 /**
  * Construtor
  * @param pSize tamaño que solicita el vHeap para guardar datos
@@ -17,18 +21,16 @@ vHeap* vHeap::HEAP = 0;
  */
 void *vHeap::hiloEjecucion(void *obj) {
 	while(true){
-		//desfragmentar();
+		//cout<<"pi tread"<<endl;
 		sleep(3);
 	}
 	pthread_exit(NULL);
-
-
 };
 vHeap::vHeap(int pSize, int pOverweight)
 {
-	//pthread_t hilo;
-//	pthread_create(&hilo, 0, vHeap::hiloEjecucion,(void*) this);
-	//pthread_detach(hilo);
+	pthread_t hilo;
+	pthread_create(&hilo, 0, vHeap::hiloEjecucion,(void*) this);
+	pthread_detach(hilo);
 
 	if(Constants::vDEBUG == "true"){
 		std::cout << "vHeap.vHeap	creo un vHeap de : "<<pSize<<" bytes"<<"\n";
@@ -151,9 +153,7 @@ void vHeap::desfragmentar()
 	_estaEnZonaCritica = true;
 
 	int contador=0;
-	for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead();
-			i < _tablaMetadatos->getList()->getLength();
-			i = i->getNext())
+	for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
 	{
 		void* posiciones=_ptrInicioMemoria;
 		int dato = i->getData()->getOffset();
@@ -172,10 +172,10 @@ void vHeap::desfragmentar()
 	}
 	char* temp =(char*)(_ptrInicioMemoria+contador);
 
-	//for(int i=contador; i <_tamanovHeap ; i++)				//colocar la memoria en ceros
-	//{
-	//	*(temp+i) = 0;
-	//}
+	for(int i=contador; i <_tamanovHeap ; i++)				//colocar la memoria en ceros
+	{
+		*(temp+i) = 0;
+	}
 	_estaEnZonaCritica = false;
 
 };
@@ -186,9 +186,9 @@ void vHeap::desfragmentar()
  */
 void* vHeap::control()			//hilo para metodo de control
 {
-	while(_estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
-		//usleep(medioDeSegundoMili);
-	}							//cada metodo siguiente tiene zonas criticas individuales
+//	while(_estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
+//		//usleep(medioDeSegundoMili);
+//	}							//cada metodo siguiente tiene zonas criticas individuales
 	this->garbageCollector();
 	this->desfragmentar();
 	this->dumpMemory();
@@ -369,7 +369,7 @@ void vHeap::garbageCollector()
 		//usleep(medioDeSegundoMili);
 	}
 	_estaEnZonaCritica = true;
-	for(vNode<xEntry*>* iterador=this->_tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
+	for(vNode<xEntry*>* iterador=_tablaMetadatos->getList()->getHead(); iterador != 0; iterador=iterador->getNext())
 	{
 		if(iterador->getData()->getReferenceCounter() == 0)
 		{
