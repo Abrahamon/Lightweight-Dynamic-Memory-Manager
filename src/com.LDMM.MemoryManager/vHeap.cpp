@@ -117,6 +117,7 @@ void vHeap::dumpMemory(){
 	stringstream stream;
 	int numero = _contador;
 	char palabra = (char)numero;
+	char*cantidad=&palabra;
 	fstream dump;
 
 	dump.open ("dump.bin", ios::out | ios::app | ios::binary);
