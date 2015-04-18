@@ -56,17 +56,19 @@ public:
 	static void* _ptrInicioMemoria;
 	static void dumpMemory();
 	bool paginar(int pSize);
-	void* _ptrUltimaMemoriaLibre;
+	static void* _ptrUltimaMemoriaLibre;
 	static vHeap* getInstancia();
 	static Encoder* _encoder;
 	vRef* vMalloc(int pSize, std::string pType);
 	void vFree(vRef* pRef);
 	static void desfragmentar();
 	static void * hiloEjecucion(void* obj);
+
 	static void control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.
 	void hiloTotal ();
 	pthread_t  tl;
 	xTable* getTablaMetadatos();
+
 
 
 

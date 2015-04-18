@@ -30,8 +30,8 @@ bool SocketCliente::connect(const char* targetIP,int targetPORT)
      return false;
 
     pthread_t hilo;
-    pthread_create(&hilo,0,SocketCliente::controlador,(void *)this);
-    pthread_detach(hilo);
+   //thread_create(&hilo,0,SocketCliente::controlador,(void *)this);
+   // pthread_detach(hilo);
     return true;
 }
 

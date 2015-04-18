@@ -12,10 +12,13 @@
 vHeap* vHeap::HEAP = 0;
 Encoder* vHeap::_encoder = 0;
 void* vHeap::_ptrInicioMemoria = 0;
+void* vHeap::_ptrUltimaMemoriaLibre=0;
 xTable* vHeap::_tablaMetadatos = 0;
 bool vHeap::_estaEnZonaCritica = 0;
 int vHeap::_contador = 0;
 int vHeap::_tamanovHeap = 0;
+
+
 /**
  * Construtor
  * @param pSize tamaño que solicita el vHeap para guardar datos
@@ -25,7 +28,7 @@ void *vHeap::hiloEjecucion(void *obj) {
 	while(true){
 		//cout<<"pi tread"<<endl;
 		control();
-		sleep(3);
+		sleep(1);
 	}
 	pthread_exit(NULL);
 };
@@ -123,7 +126,9 @@ void vHeap::dumpMemory(){
 	int numero = _contador;
 	char palabra = (char)numero;
 	fstream dump;
+
 	dump.open ("dump.bin", ios::out | ios::app | ios::binary);
+
 	if(dump.is_open()){
 		for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
 		{
@@ -146,39 +151,45 @@ void vHeap::dumpMemory(){
  */
 void vHeap::desfragmentar()
 {
-
 	while(_estaEnZonaCritica)
 	{
-
 		//usleep(medioDeSegundoMili);
 	}
-
 	_estaEnZonaCritica = true;
-
 	int contador=0;
-	for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
+	vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead();
+	for( int a =0; a<_tablaMetadatos->getList()->getLength(); a++)
 	{
 		void* posiciones=_ptrInicioMemoria;
 		int dato = i->getData()->getOffset();
 		if(dato != contador) {
 			i->getData()->setOffset(contador);
-
 			memmove(posiciones+contador,posiciones+dato,i->getData()->getSize());
 			contador = contador+i->getData()->getSize();
-
+			i=i->getNext();
 		}
-
 		else
 		{
 			contador = contador+i->getData()->getSize();
+			i=i->getNext();
 		}
 	}
-	char* temp =(char*)(_ptrInicioMemoria+contador);
+	char* temp =(char*)(_ptrInicioMemoria);
+	_ptrUltimaMemoriaLibre=_ptrInicioMemoria+contador;
 
 	for(int i=contador; i <_tamanovHeap ; i++)				//colocar la memoria en ceros
 	{
 		*(temp+i) = 0;
 	}
+	if(Constants::vGUI=="true"){
+		long ptrInicioDecimal = reinterpret_cast<long>(_ptrInicioMemoria);
+		long ptrUltimaPosicioLibreDecimal = reinterpret_cast<long>(_ptrUltimaMemoriaLibre);
+		int pStart = (ptrUltimaPosicioLibreDecimal-ptrInicioDecimal)/8;
+	//	int pEnd = (ptrUltimaPosicioLibreDecimal-ptrInicioDecimal)/8;
+		_encoder->sendMessage("true",0,pStart);
+		_encoder->sendMessage("false",pStart,_tamanovHeap/8);
+	}
+
 	_estaEnZonaCritica = false;
 
 };
@@ -192,7 +203,7 @@ void vHeap::control()			//hilo para metodo de control
 //	while(_estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
 //		//usleep(medioDeSegundoMili);
 //	}							//cada metodo siguiente tiene zonas criticas individuales
-	garbageCollector();
+	//garbageCollector();
 	desfragmentar();
 	dumpMemory();
 }
