@@ -19,6 +19,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <iostream>
+#include <sstream>
 #include <algorithm>
 #include <string>
 #include <fstream>
@@ -30,6 +31,7 @@ private:
 	static vHeap* HEAP;
 	int _overweight;
 	int _tamanovHeap;
+	int _contador;
 	int _tamanoMemoriaPaginadaUsada;
 	xTable* _tablaMetadatos;
 	void* _ptrInicioMemoria;

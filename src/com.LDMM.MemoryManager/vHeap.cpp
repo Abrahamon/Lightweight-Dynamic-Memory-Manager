@@ -28,6 +28,7 @@ vHeap::vHeap(int pSize, int pOverweight)
 	this->_ptrUltimaMemoriaLibre = _ptrInicioMemoria;
 	this->_tablaMetadatos = xTable::getInstance();
 	this->_estaEnZonaCritica = 0;
+	this->_contador=1;
 	this->escritorXML = new XMLWriter();
 
 };
@@ -96,32 +97,21 @@ void vHeap::dumpMemory(){
 		//usleep(medioDeSegundoMili);
 	}
 	_estaEnZonaCritica = true;
-	void* posiciones=_ptrInicioMemoria;
-	for(int i=0;i< _tamanovHeap;i++){
-		char* tmp=(char*)(posiciones+i);
-		string s;
-		int decimal=(char)(*tmp+0);
-		ofstream fs("dump.txt");
-		if (decimal!=0){
-			while(decimal>1)
-			{
-				int resto=decimal%2;
-				if(resto==1)s+="1";
-				else s+="0";
-				decimal/=2;
-			}
-			s+="1";
-			reverse(s.begin(),s.end());
-			for(int i=0;i< 8-s.length();i++){
-				fs << 0;
-			}
-			fs << s;
+	stringstream stream;
+	int numero = _contador;
+	char palabra = (char)numero;
+	fstream dump;
+	dump.open ("dump"+palabra+".bin", ios::out | ios::app | ios::binary);
+	if(dump.is_open()){
+		for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
+		{
+			dump.write((char*)(_ptrInicioMemoria+i->getData()->getOffset()),i->getData()->getSize());
 		}
-		else{
-			fs << 0;
-		}
-	//	fs.close();
-	};
+		_contador=_contador+1;
+	}
+	else{
+		cout<<"Error al abrir el archivo vHeap.bin \n";
+	}
 
 	if(Constants::vDEBUG=="TRUE"){
 		cout<<"vHeap.dumpMemory() 	DUMP de memoria \n";
@@ -178,6 +168,7 @@ void vHeap::control()			//hilo para metodo de control
 
 
 }
+
 
 /**
  * Cuando se le solicita memoria al manejador de codigo se hacer por este metodo
