@@ -102,11 +102,9 @@ void vHeap::dumpMemory(){
 	int numero = _contador;
 	char palabra = (char)numero;
 	fstream dump;
-<<<<<<< HEAD
-	//dump.open ("dump"+palabra+".bin", ios::out | ios::app | ios::binary);
-=======
+
 	dump.open ("dump.bin", ios::out | ios::app | ios::binary);
->>>>>>> 757a49eaf9bf599a3e7310dd916ba82b53dce0f7
+
 	if(dump.is_open()){
 		for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
 		{
