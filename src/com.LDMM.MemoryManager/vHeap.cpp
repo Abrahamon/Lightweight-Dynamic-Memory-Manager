@@ -399,9 +399,11 @@ void vHeap::vFree(xEntry* pEntry)
 	//}
 	_tablaMetadatos->getList()->deleteData(pEntry);
 
-	int pStart = pEntry->getOffset()/8;
-	int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
-	_encoder->sendMessage("false",pStart,pEnd);
+	if(Constants::vGUI=="true"){
+		int pStart = pEntry->getOffset()/8;
+		int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
+		_encoder->sendMessage("false",pStart,pEnd);
+	}
 
 
 	if(Constants::vDEBUG == "true")
@@ -443,9 +445,12 @@ void vHeap::vFree(vRef* pRef)
 	}
 	xEntry* pEntry = tempEn->getData();
 
-	int pStart = pEntry->getOffset()/8;
-	int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
-	_encoder->sendMessage("false",pStart,pEnd);
+	if(Constants::vGUI=="true"){
+		int pStart = pEntry->getOffset()/8;
+		int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
+		_encoder->sendMessage("false",pStart,pEnd);
+	}
+
 }
 
 

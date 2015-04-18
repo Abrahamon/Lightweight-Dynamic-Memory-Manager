@@ -88,6 +88,15 @@ void InputHandler::manageData(std::string pCommand, std::string pType, std::stri
 			int ref = createString(pValue);
 			std::cout<< "Object created with ID: " << ref << std::endl;
 		}
+		else if(pType == "vChar"){
+			int ref = createChar(pValue.c_str());
+			std::cout<< "Object created with ID: " << ref << std::endl;
+		}
+		else if(pType == "vLong"){
+			long pLong = atol(pValue.c_str());
+			int ref = createLong(pLong);
+			std::cout<< "Object created with ID: " << ref << std::endl;
+		}
 	}
 	else if(pCommand == "remove"){
 		int value = atoi(pValue.c_str());
@@ -118,6 +127,20 @@ int InputHandler::createBool(bool pData){
 
 int InputHandler::createString(std::string pData){
 	vString* num = new (vHeap::getInstancia()->_ptrUltimaMemoriaLibre) vString();
+	vRef* referencia = *num = pData;
+
+	return referencia->getID();
+}
+
+int InputHandler::createChar(const char* pData){
+	vChar* num = new (vHeap::getInstancia()->_ptrUltimaMemoriaLibre) vChar();
+	vRef* referencia = *num = pData;
+
+	return referencia->getID();
+}
+
+int InputHandler::createLong(long pData){
+	vLong* num = new (vHeap::getInstancia()->_ptrUltimaMemoriaLibre) vLong();
 	vRef* referencia = *num = pData;
 
 	return referencia->getID();
