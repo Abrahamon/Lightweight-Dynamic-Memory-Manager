@@ -27,6 +27,7 @@ std::string Constants::TYPE_FLOAT;
 std::string Constants::TYPE_ARRAY;
 std::string Constants::TYPE_BOOL;
 std::string Constants::TARGET_IP;
+std::string Constants::vGUI;
 int Constants::TARGET_PORT;
 
 Constants* Constants::getInstance(){
@@ -46,8 +47,7 @@ Constants::Constants(){
 	OVERWEIGHT = atoi(reader->getParameter("OVERWEIGHT"));
 	DUMP_FRECUENCY = atoi(reader->getParameter("DUMP_FRECUENCY"));
 	DUMP_PATH = reader->getParameter("DUMP_PATH");
-//	vDEBUG = reader->getParameter("vDEBUG");
-	vDEBUG = "TRUE";
+	vDEBUG = reader->getParameter("vDEBUG");
 	vDEBUG_PATH = reader->getParameter("vDEBUG_PATH");
 	GC_FRECUENCY = atoi(reader->getParameter("GC_FRECUENCY"));
 	cuartoDeSegundoMili = atoi(reader->getParameter("cuartoDeSegundoMili"));
@@ -66,4 +66,5 @@ Constants::Constants(){
 
 	TARGET_IP = reader->getParameter("TARGET_IP");
 	TARGET_PORT = atoi(reader->getParameter("TARGET_PORT"));
+	vGUI = reader->getParameter("vGUI");
 }

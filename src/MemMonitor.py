@@ -206,7 +206,7 @@ o que el bloque se encuentra libre
 """
 def setMemoryBlock(pUsageFlag,pStart,pEnd):
     global MemoryBlockList,memoryCanvas,entry
-    porcentajeCompletado = setMemoryGraphicBar()
+    
 
     if(pUsageFlag == True):
         for i in range(pStart,pEnd):
@@ -218,7 +218,7 @@ def setMemoryBlock(pUsageFlag,pStart,pEnd):
             if(vGUI):
                 memoryCanvas.itemconfig(MemoryBlockList[i][0],fill="white")
             MemoryBlockList[i][1] = False
-
+    porcentajeCompletado = setMemoryGraphicBar()
     if(vHARDWARE):
         setArduinoGraphicBar(porcentajeCompletado)
     else:
@@ -285,6 +285,8 @@ def manageData(pData):
             startViewer(int(pData[1]),int(pData[2]))
     if(pData[0] == "true"):
         setMemoryBlock(True,int(pData[1]),int(pData[2]))
+    if(pData[0] == "false"):
+        setMemoryBlock(False,int(pData[1]),int(pData[2]))
 def timer():
     global actualTIME
     initX1 = 13

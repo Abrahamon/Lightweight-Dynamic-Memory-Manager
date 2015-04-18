@@ -69,7 +69,9 @@ def setIP():
         TARGET_IP.set("value",pStr)
 
 mode = raw_input("Please enter configuration mode: ")
-if(mode == "user"):
+if(mode == "run"):
+    print("")
+elif(mode == "user"):
     print("***** User Mode *****")
     setDEBUG()
     setGUI()
