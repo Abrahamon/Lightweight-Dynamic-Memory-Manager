@@ -143,15 +143,11 @@ void vHeap::dumpMemory(){
  */
 void vHeap::desfragmentar()
 {
-
 	while(_estaEnZonaCritica)
 	{
-
 		//usleep(medioDeSegundoMili);
 	}
-
 	_estaEnZonaCritica = true;
-
 	int contador=0;
 	vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead();
 	for( int a =0; a<_tablaMetadatos->getList()->getLength(); a++)
@@ -163,9 +159,7 @@ void vHeap::desfragmentar()
 			memmove(posiciones+contador,posiciones+dato,i->getData()->getSize());
 			contador = contador+i->getData()->getSize();
 			i=i->getNext();
-
 		}
-
 		else
 		{
 			contador = contador+i->getData()->getSize();
@@ -173,11 +167,20 @@ void vHeap::desfragmentar()
 		}
 	}
 	char* temp =(char*)(_ptrInicioMemoria);
+	_ptrUltimaMemoriaLibre=_ptrInicioMemoria+contador;
 
 	for(int i=contador; i <_tamanovHeap ; i++)				//colocar la memoria en ceros
 	{
 		*(temp+i) = 0;
 	}
+	if(Constants::vGUI=="true"){
+		long ptrInicioDecimal = reinterpret_cast<long>(_ptrInicioMemoria);
+		long ptrUltimaPosicioLibreDecimal = reinterpret_cast<long>(_ptrUltimaMemoriaLibre);
+		int pEnd = (ptrUltimaPosicioLibreDecimal-ptrInicioDecimal)/8;
+
+		_encoder->sendMessage("true",0,pEnd);
+	}
+
 	_estaEnZonaCritica = false;
 
 };
