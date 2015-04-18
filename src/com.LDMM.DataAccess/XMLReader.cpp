@@ -19,7 +19,6 @@ XMLReader::~XMLReader() {}
 /**
  * Carga el archivo config.xml, para poder leer sus datos
  */
-
 void XMLReader::loadXMLFile(std::string pData){
 	bool loadOkay = documento.LoadFile("src/configs.xml");
 	if (!loadOkay){

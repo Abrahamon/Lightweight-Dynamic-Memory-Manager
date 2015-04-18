@@ -7,6 +7,7 @@
 
 #include "socketcliente.h"
 #include "pthread.h"
+#include <thread>
 #include <string>
 
 SocketCliente::SocketCliente(){

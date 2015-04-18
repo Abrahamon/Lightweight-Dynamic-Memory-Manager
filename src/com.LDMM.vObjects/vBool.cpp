@@ -20,7 +20,7 @@ vRef* vBool::operator= (const bool& s){
 	vBoolData = s;
 	setVObjectData((void*)&vBoolData);
 	setVObjectType(Constants::TYPE_BOOL);
-	return vHeap::getInstancia()->vMalloc(32,Constants::TYPE_BOOL);;
+	return vHeap::getInstancia()->vMalloc(32,"Bool");
 }
  vBool::vBool(){
 

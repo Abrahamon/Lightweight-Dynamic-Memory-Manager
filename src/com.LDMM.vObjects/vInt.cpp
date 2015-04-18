@@ -23,13 +23,13 @@ vRef* vInt::operator= (const int& s){
 	vIntData = s;
 	setVObjectData((void*)&vIntData);
 	setVObjectType(Constants::TYPE_INT);
-	return vHeap::getInstancia()->vMalloc(32,Constants::TYPE_INT);
-
+	vRef* refe =vHeap::getInstancia()->vMalloc(32,Constants::TYPE_INT);
+	this->setID(refe->getID());
+	return refe;
 }
 
 vInt::vInt(){
 	vIntData = 0;
-
 }
 
 

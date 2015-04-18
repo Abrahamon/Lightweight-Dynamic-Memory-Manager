@@ -30,6 +30,7 @@ def loadXMLParameters():
     rutaFinal=str(ruta)+"/configs.xml"
     xmlDoc = minidom.parse(rutaFinal)
 
+
     pPort = xmlDoc.getElementsByTagName('TARGET_PORT')
     pDebug= xmlDoc.getElementsByTagName('vDEBUG')
     pHard = xmlDoc.getElementsByTagName('vHARDWARE')

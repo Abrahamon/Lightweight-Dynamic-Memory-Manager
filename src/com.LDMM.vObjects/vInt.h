@@ -19,15 +19,16 @@ using namespace std;
 class vInt: public vRef {
 public:
 	vInt();
+
 	vRef* operator= (const int &s);
+
 	int vIntData;
+
 	/*
-	 *
 	 * placement new
 	 * Se sobreescribe el new, ahora en lugar de esperar solo la llamada al
 	 * constructor de la clase, recibe un primer parametro que es la direccion
 	 * del espacio de memoria donde se desea almacenar el objeto a crear
-	 *
 	 */
 	void* operator new(size_t sz, void *pvObject){
 		return pvObject;

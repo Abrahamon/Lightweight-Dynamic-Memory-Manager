@@ -26,9 +26,21 @@ y de la divison.
 
 def loadXMLParameters():
     global vPORT,vDEBUG,vHARDWARE,vGUI,vUSB
+<<<<<<< HEAD
+<<<<<<< HEAD
+    #xmlDoc = minidom.parse("/home/fabian/workspace2/C++/LDMM/Lightweight-Dynamic-Memory-Manager/src/config.xml")
+    #XML DE PRUEBA
+    xmlDoc = minidom.parse("/home/tvlenin/Proyectos c++/Lightweight-Dynamic-Memory-Manager/src/config_pbs.xml")
+=======
     ruta=os.getcwd()
     rutaFinal=str(ruta)+"/configs.xml"
     xmlDoc = minidom.parse(rutaFinal)
+>>>>>>> 0a2227beedaba73c44f8b0a6dce8869d3796d395
+=======
+    ruta=os.getcwd()
+    rutaFinal=str(ruta)+"/configs.xml"
+    xmlDoc = minidom.parse(rutaFinal)
+>>>>>>> cd602ae25cdfccefe0a86b5ff90eb13775e13382
 
     pPort = xmlDoc.getElementsByTagName('TARGET_PORT')
     pDebug= xmlDoc.getElementsByTagName('vDEBUG')
