@@ -229,6 +229,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 		int id =_tablaMetadatos->getInstance()->addEntry(pSize, ptrUltimaPosicioLibreDecimal-ptrInicioDecimal,pType);
 		vRef* referencia = new vRef(id);
 
+
 		if(Constants::vGUI=="true"){
 			int pStart = (ptrUltimaPosicioLibreDecimal-ptrInicioDecimal)/8;
 			int pEnd = (pStart) + pSize/8;
@@ -329,8 +330,6 @@ bool vHeap::paginar(int pSize)
 				nodetmp=nodetmp->getNext();
 
 				it = it+nodetmp->getData()->getSize();
-
-
 				archivoBinario.write((char*)(_ptrInicioMemoria+nodetmp->getData()->getOffset()),nodetmp->getData()->getSize());
 
 				if(Constants::vDEBUG=="true"){cout<<"pagino :"<<it<<" objetos\n";}
@@ -382,7 +381,6 @@ void vHeap::garbageCollector()
  */
 void vHeap::vFree(xEntry* pEntry)
 {
-	cout<<pEntry->getID()<<" asdas /n";
 	char* temp =(char*)( _ptrInicioMemoria + (pEntry->getOffset()));
 
 	for(int i=0; i < pEntry->getSize(); i++)				//colocar la memoria en ceros
@@ -397,9 +395,11 @@ void vHeap::vFree(xEntry* pEntry)
 	//}
 	_tablaMetadatos->getList()->deleteData(pEntry);
 
-	int pStart = pEntry->getOffset()/8;
-	int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
-	_encoder->sendMessage("false",pStart,pEnd);
+	if(Constants::vGUI=="true"){
+		int pStart = pEntry->getOffset()/8;
+		int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
+		_encoder->sendMessage("false",pStart,pEnd);
+	}
 
 
 	if(Constants::vDEBUG == "true")
@@ -441,9 +441,12 @@ void vHeap::vFree(vRef* pRef)
 	}
 	xEntry* pEntry = tempEn->getData();
 
-	int pStart = pEntry->getOffset()/8;
-	int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
-	_encoder->sendMessage("false",pStart,pEnd);
+	if(Constants::vGUI=="true"){
+		int pStart = pEntry->getOffset()/8;
+		int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
+		_encoder->sendMessage("false",pStart,pEnd);
+	}
+
 }
 
 
