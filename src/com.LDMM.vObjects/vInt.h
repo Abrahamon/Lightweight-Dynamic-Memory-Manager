@@ -19,7 +19,7 @@ using namespace std;
 class vInt: public vRef {
 public:
 	vInt();
-	vRef* operator = (const int& s); //era vRef*
+	vRef* operator= (const int &s);
 
 	int vIntData;
 	/*

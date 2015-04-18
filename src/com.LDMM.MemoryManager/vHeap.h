@@ -15,6 +15,8 @@
 #include "../com.LDMM.DataAccess/XMLWriter.h"
 #include "../com.LDMM.DataStructures/vLinkedList.h"
 #include "../com.LDMM.DataStructures/vNode.h"
+
+#include "../com.LDMM.DataAccess/Encoder.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -42,7 +44,6 @@ private:
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
 	void vFree(xEntry* pEntry);
-	XMLWriter* escritorXML;
 	void garbageCollector();
 
 	void control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.
@@ -53,6 +54,7 @@ public:
 	bool paginar(int pSize);
 	void* _ptrUltimaMemoriaLibre;
 	static vHeap* getInstancia();
+	Encoder* _encoder;
 	vRef* vMalloc(int pSize, std::string pType);
 	void vFree(vRef* pRef);
 	void desfragmentar();

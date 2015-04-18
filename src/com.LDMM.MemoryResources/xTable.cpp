@@ -47,18 +47,14 @@ int xTable::getOffSetDelXEntry(int pID)
 }
 
 int xTable::addEntry(int pSize,int pOffset,string pType){
-	//int pID = _ObjectsList->getLength();
 	int pID;
 	if( _ObjectsList->isEmpty() ){
+
 		pID=0;
 	}
 	else{
-		int pID = (_ObjectsList->getTail()->getData()->getID())+1;
+		pID = (_ObjectsList->getTail()->getData()->getID())+1;
 	}
-	/*int* pointer = (int*)malloc(1 * sizeof(xEntry));
-	xEntry temp = new xEntry(pID,pSize,pOffset,pType);
-	xEntry temp = *pointer;*/
-
 	xEntry* temp = new xEntry(pID,pSize,pOffset,pType);
 	_ObjectsList->insertTail(temp);
 	return pID;
