@@ -38,7 +38,7 @@ void InputHandler::handleEvents(){
 		std::string pValue = "";
 
 		std::cin >> pCommand;
-		if(pCommand != "create" && pCommand != "remove"){
+		if(pCommand != "create" && pCommand != "remove" && pCommand != "defrag"){
 			std::cout << "Bad input" << std::endl;
 			continue;
 		}
@@ -54,6 +54,9 @@ void InputHandler::handleEvents(){
 
 			std::cout << "Enter Value: ";
 			std::cin >> pValue;
+		}
+		else if(pCommand == "defrag"){
+			manageData(pCommand,"0","0");
 		}
 		else{
 			std::cout << "Enter ID: ";
@@ -109,6 +112,10 @@ void InputHandler::manageData(std::string pCommand, std::string pType, std::stri
 	else if(pCommand == "remove"){
 		int value = atoi(pValue.c_str());
 		remove(value);
+	}
+	else if(pCommand == "defrag"){
+		vHeap::getInstancia()->desfragmentar();
+		std::cout<< "Memory defrag" <<std::endl;
 	}
 }
 
