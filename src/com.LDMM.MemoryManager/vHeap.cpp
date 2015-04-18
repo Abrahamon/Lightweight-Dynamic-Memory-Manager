@@ -153,31 +153,31 @@ void vHeap::desfragmentar()
 	_estaEnZonaCritica = true;
 
 	int contador=0;
-	for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead();
-			i < _tablaMetadatos->getList()->getLength();
-			i = i->getNext())
+	vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead();
+	for( int a =0; a<_tablaMetadatos->getList()->getLength(); a++)
 	{
 		void* posiciones=_ptrInicioMemoria;
 		int dato = i->getData()->getOffset();
 		if(dato != contador) {
 			i->getData()->setOffset(contador);
-
 			memmove(posiciones+contador,posiciones+dato,i->getData()->getSize());
 			contador = contador+i->getData()->getSize();
+			i=i->getNext();
 
 		}
 
 		else
 		{
 			contador = contador+i->getData()->getSize();
+			i=i->getNext();
 		}
 	}
-	char* temp =(char*)(_ptrInicioMemoria+contador);
+	char* temp =(char*)(_ptrInicioMemoria);
 
-	//for(int i=contador; i <_tamanovHeap ; i++)				//colocar la memoria en ceros
-	//{
-	//	*(temp+i) = 0;
-	//}
+	for(int i=contador; i <_tamanovHeap ; i++)				//colocar la memoria en ceros
+	{
+		*(temp+i) = 0;
+	}
 	_estaEnZonaCritica = false;
 
 };

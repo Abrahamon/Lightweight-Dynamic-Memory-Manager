@@ -64,7 +64,6 @@ public:
 	void desfragmentar();
 	static void * hiloEjecucion(void* obj);
 
-	pthread_t  tl;
 
 
 
