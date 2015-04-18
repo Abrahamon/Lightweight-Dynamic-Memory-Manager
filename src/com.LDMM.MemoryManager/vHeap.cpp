@@ -15,19 +15,36 @@ vHeap* vHeap::HEAP = 0;
  * @param pSize tamaño que solicita el vHeap para guardar datos
  * @param pOverweight	sobrecarga, para la paginacion
  */
+void *vHeap::hiloEjecucion(void *obj) {
+	while(true){
+		//desfragmentar();
+		sleep(3);
+	}
+	pthread_exit(NULL);
+
+
+};
 vHeap::vHeap(int pSize, int pOverweight)
 {
+	//pthread_t hilo;
+//	pthread_create(&hilo, 0, vHeap::hiloEjecucion,(void*) this);
+	//pthread_detach(hilo);
+
 	if(Constants::vDEBUG == "true"){
 		std::cout << "vHeap.vHeap	creo un vHeap de : "<<pSize<<" bytes"<<"\n";
-		std:: cout <<"\n";
 	}
 	this->_overweight= pOverweight;
 	this->_tamanoMemoriaPaginadaUsada = 0;
 	this->_tamanovHeap = pSize;
+	this->_encoder = new Encoder();
 	this->_ptrInicioMemoria = calloc(1,pSize);
 	this->_ptrUltimaMemoriaLibre = _ptrInicioMemoria;
 	this->_tablaMetadatos = xTable::getInstance();
 	this->_estaEnZonaCritica = 0;
+	if(Constants::vGUI == "true"){
+		_encoder->connectToMemoryViewer();
+		_encoder->sendMessage("xStart",pSize,8);
+	}
 };
 
 /**
@@ -52,7 +69,9 @@ vHeap* vHeap::getInstancia()
 	if( HEAP != 0)
 	{
 		return HEAP;
-	}else{
+	}
+	else
+	{
 		HEAP = new vHeap(Constants::SIZE,Constants::OVERWEIGHT);
 		return HEAP;
 	}
@@ -78,7 +97,7 @@ void vHeap::vFreeAll(){
     myfile.close();
     _tamanoMemoriaPaginadaUsada=0;
 
-	if (Constants::vDEBUG == "True")
+	if (Constants::vDEBUG == "true")
 	{
 		cout<<"vHeap.vFreeAll 	vacie el vHeap por completo \n";
 	}
@@ -94,34 +113,24 @@ void vHeap::dumpMemory(){
 		//usleep(medioDeSegundoMili);
 	}
 	_estaEnZonaCritica = true;
-	void* posiciones=_ptrInicioMemoria;
-	for(int i=0;i< _tamanovHeap;i++){
-		char* tmp=(char*)(posiciones+i);
-		string s;
-		int decimal=(char)(*tmp+0);
-		ofstream fs("dump.txt");
-		if (decimal!=0){
-			while(decimal>1)
-			{
-				int resto=decimal%2;
-				if(resto==1)s+="1";
-				else s+="0";
-				decimal/=2;
-			}
-			s+="1";
-			reverse(s.begin(),s.end());
-			for(int i=0;i< 8-s.length();i++){
-				fs << 0;
-			}
-			fs << s;
-		}
-		else{
-			fs << 0;
-		}
-	//	fs.close();
-	};
 
-	if(Constants::vDEBUG=="TRUE"){
+	stringstream stream;
+	int numero = _contador;
+	char palabra = (char)numero;
+	fstream dump;
+	dump.open ("dump.bin", ios::out | ios::app | ios::binary);
+	if(dump.is_open()){
+		for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
+		{
+			dump.write((char*)(_ptrInicioMemoria+i->getData()->getOffset()),i->getData()->getSize());
+		}
+		_contador=_contador+1;
+	}
+	else{
+		cout<<"Error al abrir el archivo vHeap.bin \n";
+	}
+
+	if(Constants::vDEBUG=="true"){
 		cout<<"vHeap.dumpMemory() 	DUMP de memoria \n";
 	}
 	_estaEnZonaCritica = false;
@@ -132,19 +141,50 @@ void vHeap::dumpMemory(){
  */
 void vHeap::desfragmentar()
 {
+
 	while(_estaEnZonaCritica)
 	{
+
 		//usleep(medioDeSegundoMili);
 	}
+
 	_estaEnZonaCritica = true;
+
+	int contador=0;
+	for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead();
+			i < _tablaMetadatos->getList()->getLength();
+			i = i->getNext())
+	{
+		void* posiciones=_ptrInicioMemoria;
+		int dato = i->getData()->getOffset();
+		if(dato != contador) {
+			i->getData()->setOffset(contador);
+
+			memmove(posiciones+contador,posiciones+dato,i->getData()->getSize());
+			contador = contador+i->getData()->getSize();
+
+		}
+
+		else
+		{
+			contador = contador+i->getData()->getSize();
+		}
+	}
+	char* temp =(char*)(_ptrInicioMemoria+contador);
+
+	//for(int i=contador; i <_tamanovHeap ; i++)				//colocar la memoria en ceros
+	//{
+	//	*(temp+i) = 0;
+	//}
 	_estaEnZonaCritica = false;
+
 };
 
 /**
  * Metodo control del manejador de memoria
  * LLama a el colector de basura, desfragmentador y vaciar la memoria
  */
-void vHeap::control()			//hilo para metodo de control
+void* vHeap::control()			//hilo para metodo de control
 {
 	while(_estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
 		//usleep(medioDeSegundoMili);
@@ -152,9 +192,8 @@ void vHeap::control()			//hilo para metodo de control
 	this->garbageCollector();
 	this->desfragmentar();
 	this->dumpMemory();
-
-
 }
+
 
 /**
  * Cuando se le solicita memoria al manejador de codigo se hacer por este metodo
@@ -164,37 +203,43 @@ void vHeap::control()			//hilo para metodo de control
  */
 vRef* vHeap::vMalloc(int pSize, std::string pType)
 {
+
 	while(_estaEnZonaCritica){				//esperar hasta que se libere de zona critica
 		usleep(Constants::medioDeSegundoMili);
 		//sleep(1);
 	}
 	this->_estaEnZonaCritica = true;
+	long ptrInicioDecimal = reinterpret_cast<long>(_ptrInicioMemoria);
+	long ptrUltimaPosicioLibreDecimal = reinterpret_cast<long>(_ptrUltimaMemoriaLibre);
+	int memLibre = _tamanovHeap-(ptrUltimaPosicioLibreDecimal-ptrInicioDecimal);
 
-	long b = reinterpret_cast<long>(_ptrInicioMemoria);
-	long a = reinterpret_cast<long>(_ptrUltimaMemoriaLibre);
-	int memLibre = _tamanovHeap-(a-b);
+	if(Constants::vDEBUG == "true"){
+		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
+		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<ptrInicioDecimal<<"\n";
+		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<ptrUltimaPosicioLibreDecimal<<"\n";
+		cout<<"vHeap.vMalloc	"<< memLibre	<<" bytes de memoria libre  \n";
 
-
-
-	if(Constants::vDEBUG == "TRUE"){
-//		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
-//		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<b<<"\n";
-//		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<a<<"\n";
-//		cout<<"vHeap.vMalloc	"<< memLibre	<<" bytes de memoria libre  \n";
-//
-//		cout<<"ingreso: "<<""<<"dato ingresado, leido de memoria: "<<*(int*)(ptrUltimaMemoriaLibre-4)<<"\n";
+		cout<<"ingreso: "<<""<<"dato ingresado, leido de memoria: "<<*(int*)(_ptrUltimaMemoriaLibre-4)<<"\n";
 
 	}
 
 	if(memLibre >= pSize)
 	{
-		if(Constants::vDEBUG == "TRUE"){
-			//cout <<"vHeap.vMalloc	Si hay espacio suficiente para un "<<pType<<"\n";
-			//cout<< "\n";
+		if(Constants::vDEBUG == "true"){
+			cout <<"vHeap.vMalloc	Si hay espacio suficiente para un "<<pType<<"\n";
+			cout<< "\n";
 
 		}
-		int id =_tablaMetadatos->addEntry(pSize, a-b,pType);
+		int id =_tablaMetadatos->getInstance()->addEntry(pSize, ptrUltimaPosicioLibreDecimal-ptrInicioDecimal,pType);
 		vRef* referencia = new vRef(id);
+
+		if(Constants::vGUI=="true"){
+			int pStart = (ptrUltimaPosicioLibreDecimal-ptrInicioDecimal)/8;
+			int pEnd = (pStart) + pSize/8;
+			//cout <<"Valores: "<<pStart<<"  "<<pEnd << endl;
+			_encoder->sendMessage("true",pStart,pEnd);
+		}
+
 		this->_ptrUltimaMemoriaLibre = _ptrUltimaMemoriaLibre+pSize;
 
 		this->_estaEnZonaCritica = false;
@@ -202,28 +247,28 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 		return referencia;
 
 	}else{	//no cabe el dato, ahora tratemos de paginar.
-		if(Constants::vDEBUG == "TRUE")
+		if(Constants::vDEBUG == "true")
 		{
 			cout<< "Los "<<pSize<<" bytes solicitados no caben en: "<<_tamanovHeap<< ". Hay que paginar\n";
 		}
 		this->_estaEnZonaCritica = false;
 		if(paginar(pSize))				//tratamos de paginar un tamaño mayor al pedido en vMalloc
 		{
-			if(Constants::vDEBUG =="TRUE")
+			if(Constants::vDEBUG =="true")
 			{
 				cout<<"vHeap.vMalloc 	paginamos con exito\n";
 			}
 			this->desfragmentar();		//para asegurarnos que quepa
 			long d = reinterpret_cast<long>(_ptrUltimaMemoriaLibre);
-			int id =_tablaMetadatos->addEntry(pSize, d-b,pType);
+			int id =_tablaMetadatos->addEntry(pSize, d-ptrInicioDecimal,pType);
 			vRef* referencia = new vRef(id);
 			this->_ptrUltimaMemoriaLibre = _ptrUltimaMemoriaLibre+pSize;
 			this->_estaEnZonaCritica = false;
 			return referencia;
 		}
 		else							// el objeto no cabe en ningun lugar
-			if(Constants::vDEBUG=="TRUE")
-				cout<<"vHeap.vMalloc() 	No hay espacio para la paginacion, ni espacio en la memoria \n";
+			if(Constants::vDEBUG=="true")
+				cout<<"vHeap.vMalloc() 	No se logro la paginacion \n";
 	}
 };
 
@@ -237,9 +282,13 @@ bool vHeap::paginar(int pSize)
 {
 	if((_tamanovHeap*_overweight)-_tamanoMemoriaPaginadaUsada-Constants::MAX_SIZE_OF_ANY_OBJECT < pSize)
 	{
-		//el tamaño que se requiere escribir en memoria no cabe. No hay paginacion disponible
-		//menos MAX_SIZE_OF_ANY_OBJECT ya que siempre queremos el tamaño maximo disponible para
-		//guardar el objeto mas grande en memoria en caso de que debamos guardar uno para traer otro
+		/*el tamaño que se requiere escribir en memoria no cabe. No hay paginacion disponible
+		*menos MAX_SIZE_OF_ANY_OBJECT ya que siempre queremos el tamaño maximo disponible para
+		*guardar el objeto mas grande en memoria en caso de que debamos guardar uno para traer otro guardar
+		*/
+		if(Constants::vDEBUG=="true"){
+			cout<<"El tamaño de datos que se desea paginar es mayor al disponible para la paginacion\n";
+		}
 		return false;
 	}
 	else			//si hay espacio suficiente solo hay que hacer paginacion
@@ -248,33 +297,63 @@ bool vHeap::paginar(int pSize)
 		//pero que no sobre pasen el tamaño de la paginacion posible
 
 		vNode<xEntry*>* nodetmp = xTable::getInstance()->getList()->getHead();
-		fstream myfile;
-		myfile.open ("vHeap.bin", ios::out | ios::app | ios::trunc);
 
-		if(!myfile.is_open() && Constants::vDEBUG=="TRUE")
-		{
-			cout<<"vHeap.paginar() 	error en abrir el arcchivo vHeap.bin \n";
-			return false;
-		}
+		fstream archivoBinario;
+		archivoBinario.open ("vHeap.bin", ios::out | ios::app | ios::binary);
 
-		else{
-			for(int it = 0; it < pSize; it = it+0){
-				myfile.write((char*)(&_ptrInicioMemoria+nodetmp->getData()->getOffset()),nodetmp->getData()->getSize());
+		if(archivoBinario.is_open()){
+			for(int it = 0; it < pSize; it = it+0){	// en este punto tenemos la lista de seleccionados para paginar.
+				if(nodetmp == 0){					// si nodetmp es nulo, no hay suficientes para paginar
+					if(Constants::vDEBUG == "true"){
+						cout<<"no hay datos libres suficientes para paginar lo solicitado\n";
+					}
+					return false; 					//no hay datos suficientes para paginar y guardar la memoria deseada;
+				}
+				xEntry* tmpXentry = nodetmp->getData();
+
+				stringstream convertir;			//convertir los atributos del xentre en binario
+				convertir << tmpXentry->getID();
+				string pID = convertir.str();
+				stringstream pconvertir;
+				pconvertir << tmpXentry->getOffset();
+				string pOffset = pconvertir.str();
+
+				cout<<_ptrInicioMemoria<<"\n";
+				cout<<_ptrInicioMemoria+tmpXentry->getSize()<<"\n";
+
+				std::string pData = "#"+ tmpXentry->getType()+"#"+pID+"#"+pOffset+"#"+"#";
+				if(Constants::vDEBUG=="true"){
+					cout<<"vHeap.Paginar	Pagino un dato de la forma: "<<pData<<"  ( # type # ID # Offset # Data #)\n";
+				}
+				archivoBinario.write((char*)(&pData),sizeof(string));
+
+
 				_tamanoMemoriaPaginadaUsada = _tamanoMemoriaPaginadaUsada+(nodetmp->getData()->getSize());
 				xTable::getInstance()->getList()->deleteData(nodetmp->getData());
 				nodetmp=nodetmp->getNext();
+
 				it = it+nodetmp->getData()->getSize();
-				if(Constants::vDEBUG=="TRUE")
-			{
-			cout<<"pagino :"<<it<<" objetos\n";
-			}
-				if(nodetmp == 0){
-				return false; 					//no hay datos suficientes para paginar y guardar la memoria deseada;
-			}
-			};								// en este punto tenemos la lista de seleccionados para paginar.
-			myfile.close();
+
+
+				archivoBinario.write((char*)(_ptrInicioMemoria+nodetmp->getData()->getOffset()),nodetmp->getData()->getSize());
+
+				if(Constants::vDEBUG=="true"){cout<<"pagino :"<<it<<" objetos\n";}
+
+				string b;
+//				string a = archivoBinario.read(b,sizeof(string));
+				//cout<<"";
+				cout<<"leyendo : "<<b<<" \n";
+			};
+
+			archivoBinario.close();
 			return true;
 		}
+		else{
+			if(Constants::vDEBUG =="true"){
+				cout<<"Error al abrir el archivo vHeap.bin \n";
+			}
+		}
+		return false;
 	}
 }
 
@@ -307,17 +386,31 @@ void vHeap::garbageCollector()
  */
 void vHeap::vFree(xEntry* pEntry)
 {
+	cout<<pEntry->getID()<<" asdas /n";
 	char* temp =(char*)( _ptrInicioMemoria + (pEntry->getOffset()));
 
 	for(int i=0; i < pEntry->getSize(); i++)				//colocar la memoria en ceros
 	{
 		*(temp+i) = 0;
 	}
+	//if(pEntry->getType()=="vLong" ||pEntry->getType()=="vFloat"){
+	//	free( (vLong*) _ptrInicioMemoria + (pEntry->getOffset()));
+	//}
+	//else{
+	//	free( (vInt*) _ptrInicioMemoria + (pEntry->getOffset()));
+	//}
 	_tablaMetadatos->getList()->deleteData(pEntry);
-	if(Constants::vDEBUG == "TRUE")
+
+	int pStart = pEntry->getOffset()/8;
+	int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
+	_encoder->sendMessage("false",pStart,pEnd);
+
+
+	if(Constants::vDEBUG == "true")
 	{
-		cout<<"Borre un elemento de la xTable \n";
+		cout<<"Elemento eliminado de la xTable \n";
 	}
+
 }
 
 /**
@@ -327,6 +420,9 @@ void vHeap::vFree(xEntry* pEntry)
  */
 void vHeap::vFree(vRef* pRef)
 {
+	if(pRef->getID()==0)
+		return;
+
 	bool borre = false;
 	for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
 	{
@@ -336,15 +432,22 @@ void vHeap::vFree(vRef* pRef)
 			return vFree(i->getData());
 		}
 	}
-	if (Constants::vDEBUG=="TRUE")
+	if (Constants::vDEBUG=="true")
 	{
 		if(borre)
 			cout<<"vHeap.vFree	Borre un dato con ID: "<<pRef->getID()<<"\n";
 		else
 			cout<<"vHeap.vFree	no pude borrar un dato con ID: "<<pRef->getID()<<"\n";
 	}
+	vNode<xEntry*>* tempEn = _tablaMetadatos->getList()->getHead();
+	for (int i = 0; i < pRef->getID(); i++){
+		tempEn->getNext();
+	}
+	xEntry* pEntry = tempEn->getData();
+
+	int pStart = pEntry->getOffset()/8;
+	int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
+	_encoder->sendMessage("false",pStart,pEnd);
 }
-
-
 
 
