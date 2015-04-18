@@ -62,5 +62,6 @@ int xTable::addEntry(int pSize,int pOffset,string pType){
 
 vLinkedList<xEntry*>* xTable::getList()
 {
+
 	return this->_ObjectsList;
 }

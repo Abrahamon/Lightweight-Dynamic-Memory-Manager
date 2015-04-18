@@ -269,6 +269,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
  */
 bool vHeap::paginar(int pSize)
 {
+
 	if((_tamanovHeap*_overweight)-_tamanoMemoriaPaginadaUsada-Constants::MAX_SIZE_OF_ANY_OBJECT < pSize)
 	{	//el tamaño que se requiere escribir en memoria no cabe. No hay paginacion disponible
 		//menos MAX_SIZE_OF_ANY_OBJECT ya que siempre queremos el tamaño maximo disponible para
@@ -281,35 +282,51 @@ bool vHeap::paginar(int pSize)
 	else			//si hay espacio suficiente solo hay que hacer paginacion
 	{				//seleccionar un grupo de objetos que juntos sean igual o mas grandes que el tamaño requerido
 					//pero que no sobre pasen el tamaño de la paginacion posible
+
+
+		cout<<"si se puede paginar \n";
 		vNode<xEntry*>* nodetmp = xTable::getInstance()->getList()->getHead();
+
+		cout<<"tengo esto:  ";
+		cout<<nodetmp->getData()->getID()<<" \n";
+
 		fstream archivoBinario;
 		archivoBinario.open ("vHeap.bin", ios::out | ios::app | ios::binary);
 
+
 		if(archivoBinario.is_open()){
+
 			for(int it = 0; it < pSize; it = it+0){	// en este punto tenemos la lista de seleccionados para paginar.
+
 				if(nodetmp == 0){					// si nodetmp es nulo, no hay suficientes para paginar
 					if(Constants::vDEBUG == "true"){
 						cout<<"no hay datos libres suficientes para paginar lo solicitado\n";
 					}
 					return false; 					//no hay datos suficientes para paginar y guardar la memoria deseada;
 				}
-				xEntry* tmpXentry = nodetmp->getData();
+
+				//xEntry* tmpXentry = nodetmp->getData();
 
 				stringstream convertir;			//convertir los atributos del xentre en binario
-				convertir << tmpXentry->getID();
-				string pID = convertir.str();
+				stringstream pconver;
 				stringstream pconvertir;
-				pconvertir << tmpXentry->getOffset();
+				cout<<nodetmp->getData()->getType();
+				cout<<nodetmp->getData()->getID();
+				cout<<" sSI\n";
+				convertir << nodetmp->getData()->getID();
+
+				string pID = convertir.str();
+				pconvertir << nodetmp->getData()->getOffset();
 				string pOffset = pconvertir.str();
 
-				stringstream pconver;
 
-				if(tmpXentry->getType()== "vLong")
-					pconver << ((vLong*)(_ptrInicioMemoria+tmpXentry->getOffset()))->vLongData;
+				if(nodetmp->getData()->getType()== "vLong")
+					pconver << ((vLong*)(_ptrInicioMemoria+nodetmp->getData()->getOffset()))->vLongData;
 				else
-					pconver << ((vInt*)(_ptrInicioMemoria+tmpXentry->getOffset()))->vIntData;
-				string dataString = pconver.str();
-				std::string pData = "#"+ tmpXentry->getType()+"#"+pID+"#"+pOffset+"#"+dataString+"#";
+					pconver << ((vInt*)(_ptrInicioMemoria+nodetmp->getData()->getOffset()))->vIntData;
+				 string dataString = pconver.str();
+
+				std::string pData = "#"+ nodetmp->getData()->getType()+"#"+pID+"#"+pOffset+"#"+dataString+"#";
 
 				if(Constants::vDEBUG=="true"){
 					cout<<"vHeap.Paginar	Pagino un dato de la forma: "<<pData<<"  ( # type # ID # Offset # Data #)\n";
