@@ -56,7 +56,8 @@ void InputHandler::handleEvents(){
 			std::cin >> pValue;
 		}
 		else if(pCommand == "defrag"){
-			manageData(pCommand,"0","0");
+			manageData(pCommand,pType,pValue);
+			continue;
 		}
 		else{
 			std::cout << "Enter ID: ";
@@ -116,6 +117,7 @@ void InputHandler::manageData(std::string pCommand, std::string pType, std::stri
 	else if(pCommand == "defrag"){
 		vHeap::getInstancia()->desfragmentar();
 		std::cout<< "Memory defrag" <<std::endl;
+		pCommand = "";
 	}
 }
 

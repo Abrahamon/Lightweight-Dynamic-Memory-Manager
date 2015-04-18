@@ -180,9 +180,10 @@ void vHeap::desfragmentar()
 		long ptrUltimaPosicioLibreDecimal = reinterpret_cast<long>(_ptrUltimaMemoriaLibre);
 
 		int pStart = (ptrUltimaPosicioLibreDecimal-ptrInicioDecimal)/8;
-		int pEnd = (ptrUltimaPosicioLibreDecimal-ptrInicioDecimal)/8;
 		_encoder->sendMessage("true",0,pStart);
-		//_encoder->sendMessage("false",pEnd,_tamanovHeap/8);
+		int end = (_tamanovHeap)/8;
+		usleep(100000);
+		_encoder->sendMessage("false",pStart,end);
 	}
 
 	_estaEnZonaCritica = false;
@@ -268,7 +269,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 			{
 				cout<<"vHeap.vMalloc 	paginamos con exito\n";
 			}
-			this->desfragmentar();		//para asegurarnos que quepa
+			//this->desfragmentar();		//para asegurarnos que quepa
 			long d = reinterpret_cast<long>(_ptrUltimaMemoriaLibre);
 			int id =_tablaMetadatos->addEntry(pSize, d-ptrInicioDecimal,pType);
 			vRef* referencia = new vRef(id);
