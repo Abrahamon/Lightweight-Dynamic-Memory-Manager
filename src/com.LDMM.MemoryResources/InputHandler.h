@@ -24,6 +24,8 @@ public:
 	int createString(std::string pData);
 	int createChar(const char* pData);
 	int createLong(long pData);
+	bool checkInput(std::string pValue);
+	bool checkBool(std::string pValue);
 	void remove(int ref);
 };
 

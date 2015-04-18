@@ -68,6 +68,10 @@ void InputHandler::handleEvents(){
 void InputHandler::manageData(std::string pCommand, std::string pType, std::string pValue){
 	if(pCommand == "create"){
 		if(pType == "vInt"){
+			if(checkInput(pValue)== false){
+				std::cout << "Bad input" << std::endl;
+				return;
+			}
 			int value = atoi(pValue.c_str());
 			int ref = createInteger(value);
 			std::cout<< "Object created with ID: " << ref << std::endl;
@@ -79,6 +83,10 @@ void InputHandler::manageData(std::string pCommand, std::string pType, std::stri
 		}
 		else if(pType == "vBool"){
 			bool pBool;
+			if(checkBool(pValue)==false){
+				std::cout << "Bad input" << std::endl;
+				return;
+			}
 			if(pValue == "true") pBool = true;
 			else if(pValue=="false") pBool = false;
 			int ref = createBool(pBool);
@@ -144,6 +152,22 @@ int InputHandler::createLong(long pData){
 	vRef* referencia = *num = pData;
 
 	return referencia->getID();
+}
+
+bool InputHandler::checkInput(std::string pValue){
+	for (int i = 0; i < pValue.length(); i++){
+		if(!isdigit(pValue[i])){
+			return false;
+		}
+	}
+	return true;
+}
+
+bool InputHandler::checkBool(std::string pValue){
+
+	if(pValue != "false") return false;
+	else if(pValue != "true") return false;
+	return true;
 }
 
 void InputHandler::remove(int ref){
