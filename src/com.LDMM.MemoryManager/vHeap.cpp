@@ -17,7 +17,7 @@ vHeap* vHeap::HEAP = 0;
  */
 vHeap::vHeap(int pSize, int pOverweight)
 {
-	if(Constants::vDEBUG == "TRUE"){
+	if(Constants::vDEBUG == "true"){
 		std::cout << "vHeap.vHeap	creo un vHeap de : "<<pSize<<" bytes"<<"\n";
 	}
 	this->_overweight= pOverweight;
@@ -63,7 +63,7 @@ vHeap* vHeap::getInstancia()
 	{
 		return HEAP;
 	}else{
-		HEAP = new vHeap(200,Constants::OVERWEIGHT);
+		HEAP = new vHeap(Constants::SIZE,Constants::OVERWEIGHT);
 		return HEAP;
 	}
 };
@@ -88,7 +88,7 @@ void vHeap::vFreeAll(){
     myfile.close();
     _tamanoMemoriaPaginadaUsada=0;
 
-	if (Constants::vDEBUG == "True")
+	if (Constants::vDEBUG == "true")
 	{
 		cout<<"vHeap.vFreeAll 	vacie el vHeap por completo \n";
 	}
@@ -131,7 +131,7 @@ void vHeap::dumpMemory(){
 	//	fs.close();
 	};
 
-	if(Constants::vDEBUG=="TRUE"){
+	if(Constants::vDEBUG=="true"){
 		cout<<"vHeap.dumpMemory() 	DUMP de memoria \n";
 	}
 	_estaEnZonaCritica = false;
@@ -208,7 +208,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 
 
 
-	if(Constants::vDEBUG == "TRUE"){
+	if(Constants::vDEBUG == "true"){
 		std:: cout<< "vHeap.vMalloc	llamada a vMaloc por "<<pSize<<" bytes" <<"\n";
 		cout<<"vHeap.vMalloc	ptr Inicio de memoria :"<<ptrInicioDecimal<<"\n";
 		cout<<"vHeap.vMalloc	ptr Fin de memoria :"<<ptrUltimaPosicioLibreDecimal<<"\n";
@@ -220,7 +220,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 
 	if(memLibre >= pSize)
 	{
-		if(Constants::vDEBUG == "TRUE"){
+		if(Constants::vDEBUG == "true"){
 			cout <<"vHeap.vMalloc	Si hay espacio suficiente para un "<<pType<<"\n";
 			cout<< "\n";
 
@@ -230,7 +230,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 
 		int pStart = (ptrUltimaPosicioLibreDecimal-ptrInicioDecimal)/8;
 		int pEnd = (pStart) + pSize/8;
-		cout <<"Valores: "<<pStart<<"  "<<pEnd << endl;
+		//cout <<"Valores: "<<pStart<<"  "<<pEnd << endl;
 		_encoder->sendMessage("true",pStart,pEnd);
 
 		this->_ptrUltimaMemoriaLibre = _ptrUltimaMemoriaLibre+pSize;
@@ -240,14 +240,14 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 		return referencia;
 
 	}else{	//no cabe el dato, ahora tratemos de paginar.
-		if(Constants::vDEBUG == "TRUE")
+		if(Constants::vDEBUG == "true")
 		{
 			cout<< "Los "<<pSize<<" bytes solicitados no caben en: "<<_tamanovHeap<< ". Hay que paginar\n";
 		}
 		this->_estaEnZonaCritica = false;
 		if(paginar(pSize))				//tratamos de paginar un tamaño mayor al pedido en vMalloc
 		{
-			if(Constants::vDEBUG =="TRUE")
+			if(Constants::vDEBUG =="true")
 			{
 				cout<<"vHeap.vMalloc 	paginamos con exito\n";
 			}
@@ -260,7 +260,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 			return referencia;
 		}
 		else							// el objeto no cabe en ningun lugar
-			if(Constants::vDEBUG=="TRUE")
+			if(Constants::vDEBUG=="true")
 				cout<<"vHeap.vMalloc() 	No se logro la paginacion \n";
 	}
 };
@@ -308,7 +308,7 @@ bool vHeap::paginar(int pSize)
 				it = it+nodetmp->getData()->getSize();
 				archivoBinario.write((char*)(_ptrInicioMemoria+nodetmp->getData()->getOffset()),nodetmp->getData()->getSize());
 
-				if(Constants::vDEBUG=="TRUE"){cout<<"pagino :"<<it<<" objetos\n";}
+				if(Constants::vDEBUG=="true"){cout<<"pagino :"<<it<<" objetos\n";}
 
 
 				if(nodetmp == 0){
@@ -320,7 +320,7 @@ bool vHeap::paginar(int pSize)
 			return true;
 		}
 		else{
-			if(Constants::vDEBUG =="TRUE"){
+			if(Constants::vDEBUG =="true"){
 				cout<<"Error al abrir el archivo vHeap.bin \n";
 			}
 		}
@@ -370,7 +370,7 @@ void vHeap::vFree(xEntry* pEntry)
 	_encoder->sendMessage("false",pStart,pEnd);
 
 
-	if(Constants::vDEBUG == "TRUE")
+	if(Constants::vDEBUG == "true")
 	{
 		cout<<"Elemento eliminado de la xTable \n";
 	}
@@ -393,7 +393,7 @@ void vHeap::vFree(vRef* pRef)
 			return vFree(i->getData());
 		}
 	}
-	if (Constants::vDEBUG=="TRUE")
+	if (Constants::vDEBUG=="true")
 	{
 		if(borre)
 			cout<<"vHeap.vFree	Borre un dato con ID: "<<pRef->getID()<<"\n";
