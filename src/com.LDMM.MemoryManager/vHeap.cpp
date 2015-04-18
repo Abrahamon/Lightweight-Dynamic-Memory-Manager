@@ -177,9 +177,9 @@ void vHeap::desfragmentar()
 		long ptrInicioDecimal = reinterpret_cast<long>(_ptrInicioMemoria);
 		long ptrUltimaPosicioLibreDecimal = reinterpret_cast<long>(_ptrUltimaMemoriaLibre);
 		int pStart = (ptrUltimaPosicioLibreDecimal-ptrInicioDecimal)/8;
-		int pEnd = (ptrUltimaPosicioLibreDecimal-ptrInicioDecimal)/8;
+	//	int pEnd = (ptrUltimaPosicioLibreDecimal-ptrInicioDecimal)/8;
 		_encoder->sendMessage("true",0,pStart);
-		_encoder->sendMessage("false",pEnd,_tamanovHeap/8);
+		_encoder->sendMessage("false",pStart,_tamanovHeap/8);
 	}
 
 	_estaEnZonaCritica = false;
