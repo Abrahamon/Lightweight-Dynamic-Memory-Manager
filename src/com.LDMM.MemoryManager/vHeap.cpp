@@ -9,7 +9,11 @@
 #include <stdio.h>
 
 vHeap* vHeap::HEAP = 0;
-
+Encoder* vHeap::_encoder = 0;
+void* vHeap::_ptrInicioMemoria = 0;
+xTable* vHeap::_tablaMetadatos = 0;
+bool vHeap::_estaEnZonaCritica = 0;
+int vHeap::_contador = 0;
 /**
  * Construtor
  * @param pSize tamaño que solicita el vHeap para guardar datos
@@ -17,7 +21,7 @@ vHeap* vHeap::HEAP = 0;
  */
 void *vHeap::hiloEjecucion(void *obj) {
 	while(true){
-		cout<<"pi tread"<<endl;
+		//cout<<"pi tread"<<endl;
 		sleep(3);
 	}
 	pthread_exit(NULL);

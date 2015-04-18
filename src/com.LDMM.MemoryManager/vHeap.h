@@ -58,7 +58,7 @@ public:
 	bool paginar(int pSize);
 	void* _ptrUltimaMemoriaLibre;
 	static vHeap* getInstancia();
-	Encoder* _encoder;
+	static Encoder* _encoder;
 	vRef* vMalloc(int pSize, std::string pType);
 	void vFree(vRef* pRef);
 	 void desfragmentar();
