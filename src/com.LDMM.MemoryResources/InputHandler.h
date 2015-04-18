@@ -20,6 +20,8 @@ public:
 
 	int createInteger(const int &pData);
 	int createFloat(const float &pData);
+	int createBool(bool pData);
+	int createString(std::string pData);
 	void remove(int ref);
 };
 

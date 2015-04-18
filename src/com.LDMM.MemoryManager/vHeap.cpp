@@ -385,7 +385,6 @@ void vHeap::garbageCollector()
  */
 void vHeap::vFree(xEntry* pEntry)
 {
-	cout<<pEntry->getID()<<" asdas /n";
 	char* temp =(char*)( _ptrInicioMemoria + (pEntry->getOffset()));
 
 	for(int i=0; i < pEntry->getSize(); i++)				//colocar la memoria en ceros
