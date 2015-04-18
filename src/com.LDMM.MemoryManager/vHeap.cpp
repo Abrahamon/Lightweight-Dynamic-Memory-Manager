@@ -237,8 +237,6 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 		logWriter::write("");
 		logWriter::write("");*/
 	}
-	cout<<pSize<<" psiza  mem libre :"<<memLibre<<endl;
-
 	if(memLibre >= pSize)
 	{
 		if(Constants::vDEBUG == "true"){
@@ -264,21 +262,11 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 
 	}
 	else{
-
-		//cout<<"====================================================";
 		bool x = paginar(pSize);
-	}/*//if(Constants::vDEBUG == "true"){
-			//cout<< "Los "<<pSize<<" bytes solicitados no caben en: "<<_tamanovHeap<< ". Hay que paginar\n";
-		//}
-		this->_estaEnZonaCritica = false;
-		cout<<"====================================================";
-		if(paginar(pSize))				//tratamos de paginar un tamaño mayor al pedido en vMalloc
-		{
-			if(Constants::vDEBUG =="true")
-			{
-				cout<<"vHeap.vMalloc 	paginamos con exito\n";
+		if(x == true){
+			if(Constants::vDEBUG == "true"){
+				cout<< "Paginamos con éxito"<<endl;
 			}
-			//this->desfragmentar();		//para asegurarnos que quepa
 			long d = reinterpret_cast<long>(_ptrUltimaMemoriaLibre);
 			int id =_tablaMetadatos->addEntry(pSize, d-ptrInicioDecimal,pType);
 			vRef* referencia = new vRef(id);
@@ -286,10 +274,12 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 			this->_estaEnZonaCritica = false;
 			return referencia;
 		}
-		else							// el objeto no cabe en ningun lugar
-			if(Constants::vDEBUG=="true")
-				cout<<"vHeap.vMalloc() 	No se logro la paginacion \n";
-	}*/
+		else{
+			if(Constants::vDEBUG == "true"){
+				cout<< "No se logró la paginación"<<endl;
+			}
+		}
+	}
 }
 
 /**
@@ -300,11 +290,10 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
  */
 bool vHeap::paginar(int pSize)
 {
-	cout<<"PAGINAR"<<endl;
+
 	this->_estaEnZonaCritica=true;
 	if((_tamanovHeap*_overweight)-_tamanoMemoriaPaginadaUsada-Constants::MAX_SIZE_OF_ANY_OBJECT < pSize)
 	{
-		cout<<"PAGINAR if"<<endl;
 		/*el tamaño que se requiere escribir en memoria no cabe. No hay paginacion disponible
 		*menos MAX_SIZE_OF_ANY_OBJECT ya que siempre queremos el tamaño maximo disponible para
 		*guardar el objeto mas grande en memoria en caso de que debamos guardar uno para traer otro guardar
@@ -316,7 +305,6 @@ bool vHeap::paginar(int pSize)
 	}
 	else			//si hay espacio suficiente solo hay que hacer paginacion
 	{
-		cout<<"PAGINAR else"<<endl;
 		//seleccionar un grupo de objetos que juntos sean igual o mas grandes que el tamaño requerido
 		//pero que no sobre pasen el tamaño de la paginacion posible
 
@@ -327,8 +315,7 @@ bool vHeap::paginar(int pSize)
 
 		if(archivoBinario.is_open()){
 
-			for(int it = 0; it < pSize; it = it+0){	// en este punto tenemos la lista de seleccionados para paginar.
-				cout<<"PAGINAR else"<<endl;
+			for(int tamanoIteradoPaginado = 0; tamanoIteradoPaginado < pSize; tamanoIteradoPaginado = tamanoIteradoPaginado+0){	// en este punto tenemos la lista de seleccionados para paginar.
 				if(nodetmp == 0){					// si nodetmp es nulo, no hay suficientes para paginar
 					if(Constants::vDEBUG == "true"){
 						cout<<"no hay datos libres suficientes para paginar lo solicitado\n";
@@ -345,21 +332,18 @@ bool vHeap::paginar(int pSize)
 				stringstream pconvertir;
 				pconvertir << tmpXentry->getOffset();
 				string pOffset = pconvertir.str();
-*/
-				cout<<_ptrInicioMemoria<<"\n";
-				cout<<_ptrInicioMemoria+tmpXentry->getSize()<<"\n";
+				*/
 
 
-			//	std::string pData = "#"+ tmpXentry->getType()+"#"+pID+"#"+pOffset+"#"+"#";
-			//	archivoBinario.write((char*)(&pData),sizeof(string));
 				if(Constants::vDEBUG=="true"){
 					cout<<"vHeap.Paginar	Pagino un dato de la forma X: "<<"  ( # type # ID # Offset # Data #)\n";
 				}
 
 				_tamanoMemoriaPaginadaUsada = _tamanoMemoriaPaginadaUsada+(nodetmp->getData()->getSize());
-				xTable::getInstance()->getList()->deleteData(nodetmp->getData());
+
+
 				this->_ptrUltimaMemoriaLibre = this->_ptrUltimaMemoriaLibre-nodetmp->getData()->getSize();
-				nodetmp=nodetmp->getNext();
+
 
 				if(Constants::vGUI=="true"){
 					long ptrInicioDecimal = reinterpret_cast<long>(_ptrInicioMemoria);
@@ -367,21 +351,30 @@ bool vHeap::paginar(int pSize)
 					int pStart = (nodetmp->getData()->getOffset())/8;
 					int pEnd = (nodetmp->getData()->getOffset()) + nodetmp->getData()->getSize()/8;
 					//cout <<"Valores: "<<pStart<<"  "<<pEnd << endl;
+
 					_encoder->sendMessage("false",pStart,pEnd);
+					usleep(500000);
+					_encoder->sendMessage("true",pStart,pEnd);
 				}
+
 
 				archivoBinario.write((char*)(_ptrInicioMemoria+nodetmp->getData()->getOffset()),nodetmp->getData()->getSize());
 
 				string b;
 //				string a = archivoBinario.read(b,sizeof(string));
 				//cout<<"";
-				cout<<"leyendo : "<<b<<" \n";
-				it = it+nodetmp->getData()->getSize(); 			// nos indica los bytes paginados
 
+				// nos indica los bytes paginados
+				tamanoIteradoPaginado = tamanoIteradoPaginado+nodetmp->getData()->getSize();
+				xTable::getInstance()->getList()->deleteData(nodetmp->getData());
+				cout<<"leyendo : "<<b<<" \n";
+				nodetmp=nodetmp->getNext();
+				cout<<"leyendo : "<<b<<" \n";
 			};
 
 			archivoBinario.close();
 			this->_estaEnZonaCritica=false;
+			cout<<"leyendo FINAL: "<<" \n";
 			return true;
 		}
 		else{

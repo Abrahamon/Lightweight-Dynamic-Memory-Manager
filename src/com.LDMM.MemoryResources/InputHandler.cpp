@@ -154,9 +154,6 @@ void InputHandler::manageData(std::string pCommand, std::string pType, std::stri
 		std::cout<< "Memory defrag" <<std::endl;
 		pCommand = "";
 	}
-
-	std::cout<< "LEEEEEEEEEEEEEEENGTH: "
-			<< vHeap::getInstancia()->_tablaMetadatos->getList()->getHead()->getData()->getID() << std::endl;
 }
 
 /*
@@ -167,6 +164,7 @@ int InputHandler::createInteger(const int &pData, int number){
 		vInt* num = new (vHeap::getInstancia()->_ptrUltimaMemoriaLibre) vInt();
 		vRef* referencia = *num = i;
 		std::cout<< "Object created with ID: " << referencia->getID() << std::endl;
+		usleep(100000);
 	}
 	return 0;
 }

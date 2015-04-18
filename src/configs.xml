@@ -1,5 +1,5 @@
 <root>
-	<SIZE value="1000" />
+	<SIZE value="96" />
 	<OVERWEIGHT value="50" />
 	<DUMP_FRECUENCY value="150" />
 	<DUMP_PATH value="src/" />
@@ -11,7 +11,7 @@
 	<SegundoMili value="1000000" />
 	<TARGET_IP value="192.168.1.104" />
 	<TARGET_PORT value="7878" />
-	<vHARDWARE value="true" />
+	<vHARDWARE value="false" />
 	<vGUI value="true" />
 	<vUSB value="/dev/ttyACM0" />
 </root>
