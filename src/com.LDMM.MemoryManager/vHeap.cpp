@@ -8,12 +8,14 @@
 #include "../com.LDMM.MemoryManager/vHeap.h"
 #include <stdio.h>
 
+
 vHeap* vHeap::HEAP = 0;
 Encoder* vHeap::_encoder = 0;
 void* vHeap::_ptrInicioMemoria = 0;
 xTable* vHeap::_tablaMetadatos = 0;
 bool vHeap::_estaEnZonaCritica = 0;
 int vHeap::_contador = 0;
+int vHeap::_tamanovHeap = 0;
 /**
  * Construtor
  * @param pSize tamaño que solicita el vHeap para guardar datos
@@ -22,6 +24,7 @@ int vHeap::_contador = 0;
 void *vHeap::hiloEjecucion(void *obj) {
 	while(true){
 		//cout<<"pi tread"<<endl;
+		control();
 		sleep(3);
 	}
 	pthread_exit(NULL);
@@ -184,14 +187,14 @@ void vHeap::desfragmentar()
  * Metodo control del manejador de memoria
  * LLama a el colector de basura, desfragmentador y vaciar la memoria
  */
-void* vHeap::control()			//hilo para metodo de control
+void vHeap::control()			//hilo para metodo de control
 {
 //	while(_estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
 //		//usleep(medioDeSegundoMili);
 //	}							//cada metodo siguiente tiene zonas criticas individuales
-	this->garbageCollector();
-	this->desfragmentar();
-	this->dumpMemory();
+	garbageCollector();
+	desfragmentar();
+	dumpMemory();
 }
 
 
@@ -453,4 +456,9 @@ void vHeap::vFree(vRef* pRef)
 
 }
 
-
+/**
+ *
+ */
+xTable* vHeap::getTablaMetadatos(){
+	return this->_tablaMetadatos;
+}

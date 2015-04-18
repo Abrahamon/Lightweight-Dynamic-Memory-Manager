@@ -64,3 +64,15 @@ vLinkedList<xEntry*>* xTable::getList()
 {
 	return this->_ObjectsList;
 }
+
+xEntry* xTable::getXEntry(int pId){
+	vNode<xEntry*>* node = _ObjectsList->getHead();
+	for(vNode<xEntry*>* i =0; i<_ObjectsList->getLength();i++){
+		if(node->getData()->getID()==pId){
+			return node->getData();
+		}else
+		{
+			node = node->getNext();
+		}
+	}
+}

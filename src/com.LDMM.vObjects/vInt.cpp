@@ -25,7 +25,21 @@ vRef* vInt::operator= (const int& s){
 	setVObjectType(Constants::TYPE_INT);
 	vRef* refe =vHeap::getInstancia()->vMalloc(32,Constants::TYPE_INT);
 	this->setID(refe->getID());
+	std::cout << "increase" << refe->getID() << std::endl;
 	return refe;
+}
+
+void vInt::operator= (vInt&& s){
+	int pID = s._ID;
+	this->setID(pID);
+	xEntry* xentrada = vHeap::getInstancia()->getTablaMetadatos()->getXEntry(pID);
+	xentrada->IncreaseRef();
+
+//	setVObjectData(s.vObjectData);
+	//setVObjectType(Constants::TYPE_INT);
+
+	std::cout << "INCREASED" <<std::endl;
+	//return refe;
 }
 
 vInt::vInt(){

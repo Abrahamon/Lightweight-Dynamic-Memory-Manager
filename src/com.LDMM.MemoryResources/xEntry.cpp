@@ -6,7 +6,8 @@
  */
 
 #include "xEntry.h"
-
+#include <string>
+#include <iostream>
 xEntry::xEntry(int pID,int pSize, int pOffset, string pType) {
 	_ID = pID;
 	_Size = pSize;
@@ -31,7 +32,10 @@ void xEntry::setSize(int pSize){ _Size = pSize; }
 void xEntry::setOffset(int pOffset){ _Offset = pOffset; }
 void xEntry::setUseFlag(bool pFlag){ _UseFlag = pFlag; }
 void xEntry::setType(string pType){ _Type = pType; }
-void xEntry::IncreaseRef(){ _RefCounter++; }
+void xEntry::IncreaseRef(){
+	std::cout << "increase";
+	_RefCounter++;
+}
 void xEntry::DecreaseRef(){
 	if(_RefCounter <= 0){
 		_RefCounter = 0;

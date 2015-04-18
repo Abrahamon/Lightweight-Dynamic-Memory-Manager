@@ -35,7 +35,7 @@ class vHeap{
 private:
 	static vHeap* HEAP;
 	int _overweight;
-	int _tamanovHeap;
+	static int _tamanovHeap;
 	static int _contador;
 	int _tamanoMemoriaPaginadaUsada;
 	static xTable* _tablaMetadatos;
@@ -61,11 +61,12 @@ public:
 	static Encoder* _encoder;
 	vRef* vMalloc(int pSize, std::string pType);
 	void vFree(vRef* pRef);
-	 void desfragmentar();
+	static void desfragmentar();
 	static void * hiloEjecucion(void* obj);
-	void* control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.
+	static void control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.
 	void hiloTotal ();
 	pthread_t  tl;
+	xTable* getTablaMetadatos();
 
 
 
