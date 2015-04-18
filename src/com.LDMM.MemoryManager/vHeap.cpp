@@ -8,12 +8,17 @@
 #include "../com.LDMM.MemoryManager/vHeap.h"
 #include <stdio.h>
 
+
 vHeap* vHeap::HEAP = 0;
 Encoder* vHeap::_encoder = 0;
 void* vHeap::_ptrInicioMemoria = 0;
+void* vHeap::_ptrUltimaMemoriaLibre=0;
 xTable* vHeap::_tablaMetadatos = 0;
 bool vHeap::_estaEnZonaCritica = 0;
 int vHeap::_contador = 0;
+int vHeap::_tamanovHeap = 0;
+
+
 /**
  * Construtor
  * @param pSize tamaño que solicita el vHeap para guardar datos
@@ -22,7 +27,8 @@ int vHeap::_contador = 0;
 void *vHeap::hiloEjecucion(void *obj) {
 	while(true){
 		//cout<<"pi tread"<<endl;
-		sleep(3);
+		control();
+		sleep(1);
 	}
 	pthread_exit(NULL);
 };
@@ -120,20 +126,27 @@ void vHeap::dumpMemory(){
 
 	stringstream stream;
 	int numero = _contador;
-	char palabra = (char)numero;
+	char valor=(char)numero;
+	char* cantidad = &valor;
+	char palabra[100];
+	 strcpy (palabra,"dump");
+	 strcat (palabra,cantidad);
+	 strcat (palabra,".bin");
 	fstream dump;
 
-	dump.open ("dump.bin", ios::out | ios::app | ios::binary);
+	dump.open (palabra, ios::out | ios::app | ios::binary);
 
 	if(dump.is_open()){
-		for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
+		vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead();
+		for(int a =0; a<_tablaMetadatos->getList()->getLength(); a++)
 		{
 			dump.write((char*)(_ptrInicioMemoria+i->getData()->getOffset()),i->getData()->getSize());
+			i=i->getNext();
 		}
 		_contador=_contador+1;
 	}
 	else{
-		cout<<"Error al abrir el archivo vHeap.bin \n";
+		cout<<"Error al abrir el archivo dump.bin \n";
 	}
 
 	if(Constants::vDEBUG=="true"){
@@ -197,14 +210,14 @@ void vHeap::desfragmentar()
  * Metodo control del manejador de memoria
  * LLama a el colector de basura, desfragmentador y vaciar la memoria
  */
-void* vHeap::control()			//hilo para metodo de control
+void vHeap::control()			//hilo para metodo de control
 {
 //	while(_estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
 //		//usleep(medioDeSegundoMili);
 //	}							//cada metodo siguiente tiene zonas criticas individuales
-	this->garbageCollector();
-	this->desfragmentar();
-	this->dumpMemory();
+	//garbageCollector();
+	desfragmentar();
+	dumpMemory();
 }
 
 
@@ -485,4 +498,9 @@ void vHeap::vFree(vRef* pRef)
 
 }
 
-
+/**
+ *
+ */
+xTable* vHeap::getTablaMetadatos(){
+	return this->_tablaMetadatos;
+}

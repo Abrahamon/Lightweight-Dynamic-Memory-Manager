@@ -7,6 +7,8 @@
 
 #include "xEntry.h"
 
+#include <string>
+#include <iostream>
 /**
  * Constructor de la Clase
  * Se inicializan las variables del xEntry, según los
@@ -41,7 +43,10 @@ void xEntry::setSize(int pSize){ _Size = pSize; }
 void xEntry::setOffset(int pOffset){ _Offset = pOffset; }
 void xEntry::setUseFlag(bool pFlag){ _UseFlag = pFlag; }
 void xEntry::setType(string pType){ _Type = pType; }
-void xEntry::IncreaseRef(){ _RefCounter++; }
+void xEntry::IncreaseRef(){
+	std::cout << "increase";
+	_RefCounter++;
+}
 void xEntry::DecreaseRef(){
 	if(_RefCounter <= 0){
 		_RefCounter = 0;
