@@ -300,6 +300,7 @@ bool vHeap::paginar(int pSize)
 				}
 				archivoBinario.write((char*)(&pData),sizeof(string));
 
+
 				_tamanoMemoriaPaginadaUsada = _tamanoMemoriaPaginadaUsada+(nodetmp->getData()->getSize());
 				xTable::getInstance()->getList()->deleteData(nodetmp->getData());
 				nodetmp=nodetmp->getNext();
@@ -308,6 +309,7 @@ bool vHeap::paginar(int pSize)
 
 				string b;
 //				string a = archivoBinario.read(b,sizeof(string));
+				//cout<<"";
 				cout<<"leyendo : "<<b<<" \n";
 			};
 
