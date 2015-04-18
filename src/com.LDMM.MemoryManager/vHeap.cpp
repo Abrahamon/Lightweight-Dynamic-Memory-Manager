@@ -15,8 +15,21 @@ vHeap* vHeap::HEAP = 0;
  * @param pSize tamaño que solicita el vHeap para guardar datos
  * @param pOverweight	sobrecarga, para la paginacion
  */
+void *vHeap::hiloEjecucion(void *obj) {
+	while(true){
+		//desfragmentar();
+		sleep(3);
+	}
+	pthread_exit(NULL);
+
+
+};
 vHeap::vHeap(int pSize, int pOverweight)
 {
+	//pthread_t hilo;
+//	pthread_create(&hilo, 0, vHeap::hiloEjecucion,(void*) this);
+	//pthread_detach(hilo);
+
 	if(Constants::vDEBUG == "true"){
 		std::cout << "vHeap.vHeap	creo un vHeap de : "<<pSize<<" bytes"<<"\n";
 	}
@@ -56,7 +69,9 @@ vHeap* vHeap::getInstancia()
 	if( HEAP != 0)
 	{
 		return HEAP;
-	}else{
+	}
+	else
+	{
 		HEAP = new vHeap(Constants::SIZE,Constants::OVERWEIGHT);
 		return HEAP;
 	}
@@ -98,6 +113,7 @@ void vHeap::dumpMemory(){
 		//usleep(medioDeSegundoMili);
 	}
 	_estaEnZonaCritica = true;
+
 	stringstream stream;
 	int numero = _contador;
 	char palabra = (char)numero;
@@ -125,47 +141,57 @@ void vHeap::dumpMemory(){
  */
 void vHeap::desfragmentar()
 {
+
 	while(_estaEnZonaCritica)
 	{
+
 		//usleep(medioDeSegundoMili);
 	}
+
 	_estaEnZonaCritica = true;
-	_estaEnZonaCritica = false;
+
 	int contador=0;
-	for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
-		{
+	for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead();
+			i < _tablaMetadatos->getList()->getLength();
+			i = i->getNext())
+	{
 		void* posiciones=_ptrInicioMemoria;
-		int dato=i->getData()->getOffset();
-		if(dato!=contador) {
+		int dato = i->getData()->getOffset();
+		if(dato != contador) {
 			i->getData()->setOffset(contador);
+
 			memmove(posiciones+contador,posiciones+dato,i->getData()->getSize());
-			contador=contador+i->getData()->getSize();
+			contador = contador+i->getData()->getSize();
+
 		}
+
 		else
 		{
-			contador=contador+i->getData()->getSize();
+			contador = contador+i->getData()->getSize();
 		}
-		}
+	}
 	char* temp =(char*)(_ptrInicioMemoria+contador);
 
-	for(int i=contador; i <_tamanovHeap ; i++)				//colocar la memoria en ceros
-	{
-		*(temp+i) = 0;
-	}
+	//for(int i=contador; i <_tamanovHeap ; i++)				//colocar la memoria en ceros
+	//{
+	//	*(temp+i) = 0;
+	//}
+	_estaEnZonaCritica = false;
+
 };
 
 /**
  * Metodo control del manejador de memoria
  * LLama a el colector de basura, desfragmentador y vaciar la memoria
  */
-void vHeap::control()			//hilo para metodo de control
+void* vHeap::control()			//hilo para metodo de control
 {
 	while(_estaEnZonaCritica){			// en caso de que otro hilo esta tratando el vHeap
 		//usleep(medioDeSegundoMili);
 	}							//cada metodo siguiente tiene zonas criticas individuales
-	this->garbageCollector();
-	this->desfragmentar();
-	this->dumpMemory();
+	//this->garbageCollector();
+	//this->desfragmentar();
+	//this->dumpMemory();
 }
 
 
@@ -207,10 +233,11 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 		int id =_tablaMetadatos->getInstance()->addEntry(pSize, ptrUltimaPosicioLibreDecimal-ptrInicioDecimal,pType);
 		vRef* referencia = new vRef(id);
 
+
 		if(Constants::vGUI=="true"){
 			int pStart = (ptrUltimaPosicioLibreDecimal-ptrInicioDecimal)/8;
 			int pEnd = (pStart) + pSize/8;
-			cout <<"Valores: "<<pStart<<"  "<<pEnd << endl;
+			//cout <<"Valores: "<<pStart<<"  "<<pEnd << endl;
 			_encoder->sendMessage("true",pStart,pEnd);
 		}
 
@@ -301,17 +328,19 @@ bool vHeap::paginar(int pSize)
 				}
 				archivoBinario.write((char*)(&pData),sizeof(string));
 
-
 				_tamanoMemoriaPaginadaUsada = _tamanoMemoriaPaginadaUsada+(nodetmp->getData()->getSize());
 				xTable::getInstance()->getList()->deleteData(nodetmp->getData());
 				nodetmp=nodetmp->getNext();
 
 				it = it+nodetmp->getData()->getSize();
+				archivoBinario.write((char*)(_ptrInicioMemoria+nodetmp->getData()->getOffset()),nodetmp->getData()->getSize());
 
-				string b;
-			//	string dataString = archivoBinario.read(b,sizeof(string));
-				//cout<<"";
-				cout<<"leyendo : "<<b<<" \n";
+				char* a;
+				cout<<"a \n";
+				archivoBinario.seekg(0);
+
+				archivoBinario.read(a,sizeof(string));
+				cout<<a<<"  a \n";
 			};
 
 			archivoBinario.close();
@@ -361,6 +390,12 @@ void vHeap::vFree(xEntry* pEntry)
 	{
 		*(temp+i) = 0;
 	}
+	//if(pEntry->getType()=="vLong" ||pEntry->getType()=="vFloat"){
+	//	free( (vLong*) _ptrInicioMemoria + (pEntry->getOffset()));
+	//}
+	//else{
+	//	free( (vInt*) _ptrInicioMemoria + (pEntry->getOffset()));
+	//}
 	_tablaMetadatos->getList()->deleteData(pEntry);
 
 	int pStart = pEntry->getOffset()/8;
@@ -382,6 +417,9 @@ void vHeap::vFree(xEntry* pEntry)
  */
 void vHeap::vFree(vRef* pRef)
 {
+	if(pRef->getID()==0)
+		return;
+
 	bool borre = false;
 	for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
 	{
@@ -408,7 +446,5 @@ void vHeap::vFree(vRef* pRef)
 	int pEnd = (pEntry->getOffset()+pEntry->getSize())/8;
 	_encoder->sendMessage("false",pStart,pEnd);
 }
-
-
 
 

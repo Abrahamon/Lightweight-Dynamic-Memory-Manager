@@ -31,6 +31,8 @@
 #include <string>
 #include <fstream>
 #include <cstring>
+#include <pthread.h>
+#include <time.h>
 
 class vHeap{
 
@@ -41,7 +43,7 @@ private:
 	int _contador;
 	int _tamanoMemoriaPaginadaUsada;
 	xTable* _tablaMetadatos;
-	void* _ptrInicioMemoria;
+
 
 	bool _estaEnZonaCritica;//todos los metodos al final deben asignarle false
 
@@ -51,10 +53,11 @@ private:
 	void vFree(xEntry* pEntry);
 	void garbageCollector();
 
-	void control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.
+	void* control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.
 
 
 public:
+	void* _ptrInicioMemoria;
 	void dumpMemory();
 	bool paginar(int pSize);
 	void* _ptrUltimaMemoriaLibre;
@@ -63,6 +66,9 @@ public:
 	vRef* vMalloc(int pSize, std::string pType);
 	void vFree(vRef* pRef);
 	void desfragmentar();
+	static void * hiloEjecucion(void* obj);
+
+	pthread_t  tl;
 
 
 

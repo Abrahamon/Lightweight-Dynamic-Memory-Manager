@@ -20,8 +20,9 @@ vRef*  vChar::operator= (const char& s){
 	vCharData = s;
 	setVObjectData((void*)&vCharData);
 	setVObjectType(Constants::TYPE_CHAR);
-	return vHeap::getInstancia()->vMalloc(32,"Char");
-	//return ;
+	vRef* refe =vHeap::getInstancia()->vMalloc(32,Constants::TYPE_CHAR);
+	this->setID(refe->getID());
+	return refe;
 }
  vChar::vChar(){
 

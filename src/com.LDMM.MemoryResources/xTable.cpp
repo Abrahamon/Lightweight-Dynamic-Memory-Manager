@@ -50,7 +50,7 @@ int xTable::addEntry(int pSize,int pOffset,string pType){
 	int pID;
 	if( _ObjectsList->isEmpty() ){
 
-		pID=0;
+		pID=1;
 	}
 	else{
 		pID = (_ObjectsList->getTail()->getData()->getID())+1;
