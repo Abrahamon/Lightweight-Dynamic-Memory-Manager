@@ -255,8 +255,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 bool vHeap::paginar(int pSize)
 {
 	if((_tamanovHeap*_overweight)-_tamanoMemoriaPaginadaUsada-Constants::MAX_SIZE_OF_ANY_OBJECT < pSize)
-	{
-		//el tamaño que se requiere escribir en memoria no cabe. No hay paginacion disponible
+	{	//el tamaño que se requiere escribir en memoria no cabe. No hay paginacion disponible
 		//menos MAX_SIZE_OF_ANY_OBJECT ya que siempre queremos el tamaño maximo disponible para
 		//guardar el objeto mas grande en memoria en caso de que debamos guardar uno para traer otro
 		if(Constants::vDEBUG=="true"){
@@ -265,12 +264,9 @@ bool vHeap::paginar(int pSize)
 		return false;
 	}
 	else			//si hay espacio suficiente solo hay que hacer paginacion
-	{
-		//seleccionar un grupo de objetos que juntos sean igual o mas grandes que el tamaño requerido
-		//pero que no sobre pasen el tamaño de la paginacion posible
-
+	{				//seleccionar un grupo de objetos que juntos sean igual o mas grandes que el tamaño requerido
+					//pero que no sobre pasen el tamaño de la paginacion posible
 		vNode<xEntry*>* nodetmp = xTable::getInstance()->getList()->getHead();
-
 		fstream archivoBinario;
 		archivoBinario.open ("vHeap.bin", ios::out | ios::app | ios::binary);
 
@@ -291,10 +287,15 @@ bool vHeap::paginar(int pSize)
 				pconvertir << tmpXentry->getOffset();
 				string pOffset = pconvertir.str();
 
-				cout<<_ptrInicioMemoria<<"\n";
-				cout<<_ptrInicioMemoria+tmpXentry->getSize()<<"\n";
+				stringstream pconver;
 
-				std::string pData = "#"+ tmpXentry->getType()+"#"+pID+"#"+pOffset+"#"+"#";
+				if(tmpXentry->getType()== "vLong")
+					pconver << ((vLong*)(_ptrInicioMemoria+tmpXentry->getOffset()))->vLongData;
+				else
+					pconver << ((vInt*)(_ptrInicioMemoria+tmpXentry->getOffset()))->vIntData;
+				string dataString = pconver.str();
+				std::string pData = "#"+ tmpXentry->getType()+"#"+pID+"#"+pOffset+"#"+dataString+"#";
+
 				if(Constants::vDEBUG=="true"){
 					cout<<"vHeap.Paginar	Pagino un dato de la forma: "<<pData<<"  ( # type # ID # Offset # Data #)\n";
 				}
@@ -308,7 +309,7 @@ bool vHeap::paginar(int pSize)
 				it = it+nodetmp->getData()->getSize();
 
 				string b;
-//				string a = archivoBinario.read(b,sizeof(string));
+				string dataString = archivoBinario.read(b,sizeof(string));
 				//cout<<"";
 				cout<<"leyendo : "<<b<<" \n";
 			};
