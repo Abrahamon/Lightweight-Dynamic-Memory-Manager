@@ -14,6 +14,13 @@ SocketCliente::SocketCliente(){
 	descriptor = 0;
 }
 
+/*
+ * Método que permite establecer la conexión vía socket hacia
+ * un puerto e IP específicos.
+ *
+ * @param targetIP: IP destino de la conexion
+ * @param targetPORT: Puerto destino de la conexion
+ */
 bool SocketCliente::connect(const char* targetIP,int targetPORT)
 {
     descriptor = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
@@ -30,12 +37,17 @@ bool SocketCliente::connect(const char* targetIP,int targetPORT)
      return false;
 
     pthread_t hilo;
-   //thread_create(&hilo,0,SocketCliente::controlador,(void *)this);
-   // pthread_detach(hilo);
+    pthread_create(&hilo,0,SocketCliente::controlador,(void *)this);
+    pthread_detach(hilo);
     return true;
 }
 
-
+/*
+ * Método que controla los mensajes enviados y recibidos
+ * a través de la conexión del socket
+ *
+ * @param obj: objeto necesario para la referencia del pThread
+ */
 void * SocketCliente::controlador(void *obj)
 {
     SocketCliente *padre = (SocketCliente*)obj;
@@ -59,7 +71,12 @@ void * SocketCliente::controlador(void *obj)
     pthread_exit(NULL);
 }
 
-
+/*
+ * Método que permite enviar un mensaje a través de la
+ * conexion del socket.
+ *
+ * @param msn: Mensaje a enviar.
+ */
 void SocketCliente::sendMessage(const char *msn){
 	send(descriptor,msn,strlen(msn),0);
 	//cout << "bytes enviados "<< send(descriptor,msn,strlen(msn),0) << endl;

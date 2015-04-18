@@ -13,7 +13,7 @@
 #include "../com.LDMM.vObjects/vInt.h"
 #include "../com.LDMM.vObjects/vLong.h"
 #include "../com.LDMM.MemoryResources/vRef.h"
-#include "../com.LDMM.DataAccess/XMLWriter.h"
+#include "../com.LDMM.DataAccess/logWriter.h"
 #include "../com.LDMM.DataStructures/vLinkedList.h"
 #include "../com.LDMM.DataStructures/vNode.h"
 
@@ -38,22 +38,17 @@ private:
 	int _tamanovHeap;
 	static int _contador;
 	int _tamanoMemoriaPaginadaUsada;
-	static xTable* _tablaMetadatos;
-
 
 	static bool _estaEnZonaCritica;//todos los metodos al final deben asignarle false
-
 	void vFreeAll();
 	vHeap(int pSize, int pOverweight);
 	~vHeap();
 	static void vFree(xEntry* pEntry);
 	static void garbageCollector();
 
-
-
-
 public:
 	static void* _ptrInicioMemoria;
+	static xTable* _tablaMetadatos;
 	static void dumpMemory();
 	bool paginar(int pSize);
 	void* _ptrUltimaMemoriaLibre;
@@ -63,9 +58,8 @@ public:
 	void vFree(vRef* pRef);
 	 void desfragmentar();
 	static void * hiloEjecucion(void* obj);
-	void* control(); //hilo que controla fragmentacion, garbage colector y dump de memoriaa.
+	void* control(); //hilo que controla fragmentacion, garbage colector y dump de memoria.
 	void hiloTotal ();
-	pthread_t  tl;
 
 
 

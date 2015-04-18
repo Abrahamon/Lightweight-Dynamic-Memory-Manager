@@ -1,17 +1,17 @@
 <root>
-	<SIZE value="2000" />
+	<SIZE value="1000" />
 	<OVERWEIGHT value="50" />
 	<DUMP_FRECUENCY value="150" />
 	<DUMP_PATH value="src/" />
-	<vDEBUG value="false" />
+	<vDEBUG value="true" />
 	<vDEBUG_PATH value="src/" />
 	<GC_FRECUENCY value="150" />
 	<cuartoDeSegundoMili value="250000" />
 	<medioDeSegundoMili value="500000" />
 	<SegundoMili value="1000000" />
 	<TARGET_IP value="192.168.1.104" />
-	<TARGET_PORT value="7979" />
-	<vHARDWARE value="false" />
+	<TARGET_PORT value="7878" />
+	<vHARDWARE value="true" />
 	<vGUI value="true" />
 	<vUSB value="/dev/ttyACM0" />
 </root>

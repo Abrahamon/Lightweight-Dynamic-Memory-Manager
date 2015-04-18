@@ -164,11 +164,11 @@ def createVisualMemory(Size,MemDivision):
             xGraphCanvas.create_text(5, 370-(i*35), anchor=W, font="Arial",text=str(i*10)+"%")
             graphCanvas.create_text(5+(i*45), 382, anchor=W, font="Arial",text=str((i+1)*10))
         
-        botonA = Button(window,width=7,height=2,command=lambda: debugMemory(0,"","",""),text="Change",bg="#000000",fg="#FFFFFF")
-        botonA.place(x=335,y=550)
+        #botonA = Button(window,width=7,height=2,command=lambda: debugMemory(0,"","",""),text="Change",bg="#000000",fg="#FFFFFF")
+        #botonA.place(x=335,y=550)
 
-        entry = Entry(window)
-        entry.place(x=420,y=560)
+        #entry = Entry(window)
+        #entry.place(x=420,y=560)
 
         startTIMER()
     ############################################################################################
