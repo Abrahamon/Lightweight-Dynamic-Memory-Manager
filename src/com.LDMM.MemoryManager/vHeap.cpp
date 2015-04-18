@@ -102,7 +102,11 @@ void vHeap::dumpMemory(){
 	int numero = _contador;
 	char palabra = (char)numero;
 	fstream dump;
+<<<<<<< HEAD
 	//dump.open ("dump"+palabra+".bin", ios::out | ios::app | ios::binary);
+=======
+	dump.open ("dump.bin", ios::out | ios::app | ios::binary);
+>>>>>>> 757a49eaf9bf599a3e7310dd916ba82b53dce0f7
 	if(dump.is_open()){
 		for(vNode<xEntry*>* i = _tablaMetadatos->getList()->getHead(); i !=0 ; i = i->getNext())
 		{
@@ -290,7 +294,11 @@ bool vHeap::paginar(int pSize)
 				stringstream pconvertir;
 				pconvertir << tmpXentry->getOffset();
 				string pOffset = pconvertir.str();
-				std::string pData = "#"+ tmpXentry->getType()+"#"+pID+"#"+pOffset+"#";
+
+				cout<<_ptrInicioMemoria<<"\n";
+				cout<<_ptrInicioMemoria+tmpXentry->getSize()<<"\n";
+
+				std::string pData = "#"+ tmpXentry->getType()+"#"+pID+"#"+pOffset+"#"+"#";
 				if(Constants::vDEBUG=="true"){
 					cout<<"vHeap.Paginar	Pagino un dato de la forma: "<<pData<<"  ( # type # ID # Offset # Data #)\n";
 				}
@@ -302,6 +310,9 @@ bool vHeap::paginar(int pSize)
 
 				it = it+nodetmp->getData()->getSize();
 
+				string b;
+//				string a = archivoBinario.read(b,sizeof(string));
+				cout<<"leyendo : "<<b<<" \n";
 			};
 
 			archivoBinario.close();
