@@ -262,6 +262,7 @@ vRef* vHeap::vMalloc(int pSize, std::string pType)
 			int pEnd = (pStart) + pSize/8;
 			//cout <<"Valores: "<<pStart<<"  "<<pEnd << endl;
 			_encoder->sendMessage("true",pStart,pEnd);
+			usleep(10000);
 		}
 
 		this->_ptrUltimaMemoriaLibre = _ptrUltimaMemoriaLibre+pSize;

@@ -163,7 +163,7 @@ int InputHandler::createInteger(const int &pData, int number){
 		vInt* num = new (vHeap::getInstancia()->_ptrUltimaMemoriaLibre) vInt();
 		vRef* referencia = *num = i;
 		std::cout<< "Object created with ID: " << referencia->getID() << std::endl;
-		usleep(100000);
+		usleep(200000);
 	}
 	return 0;
 }

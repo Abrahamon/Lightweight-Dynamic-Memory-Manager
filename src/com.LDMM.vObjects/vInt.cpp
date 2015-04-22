@@ -25,7 +25,6 @@ vRef* vInt::operator= (const int& s){
 	setVObjectType(Constants::TYPE_INT);
 	vRef* refe =vHeap::getInstancia()->vMalloc(32,Constants::TYPE_INT);
 	this->setID(refe->getID());
-	std::cout << "increase" << refe->getID() << std::endl;
 	return refe;
 }
 
